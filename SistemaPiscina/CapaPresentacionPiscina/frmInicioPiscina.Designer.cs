@@ -29,8 +29,6 @@
         private void InitializeComponent()
         {
             this.panelMenu = new System.Windows.Forms.Panel();
-            this.panelCerrarSesion = new System.Windows.Forms.Panel();
-            this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelMenuBotones = new System.Windows.Forms.Panel();
             this.btnMantenedor = new FontAwesome.Sharp.IconButton();
             this.btnReportes = new FontAwesome.Sharp.IconButton();
@@ -41,21 +39,23 @@
             this.btnProveedores = new FontAwesome.Sharp.IconButton();
             this.btnProductos = new FontAwesome.Sharp.IconButton();
             this.btnUsuarios = new FontAwesome.Sharp.IconButton();
+            this.panelUsuarioInfo = new System.Windows.Forms.Panel();
+            this.lblUsuarioActual = new System.Windows.Forms.Label();
+            this.iconUsuario = new FontAwesome.Sharp.IconPictureBox();
+            this.panelCerrarSesion = new System.Windows.Forms.Panel();
+            this.btnCerrarSesion = new FontAwesome.Sharp.IconButton();
             this.panelHeaderMenu = new System.Windows.Forms.Panel();
             this.iconLogo = new FontAwesome.Sharp.IconPictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panelSeparador = new System.Windows.Forms.Panel();
             this.panelContenedor = new System.Windows.Forms.Panel();
-            this.panelUsuarioInfo = new System.Windows.Forms.Panel();
-            this.iconUsuario = new FontAwesome.Sharp.IconPictureBox();
-            this.lblUsuarioActual = new System.Windows.Forms.Label();
             this.panelMenu.SuspendLayout();
-            this.panelCerrarSesion.SuspendLayout();
             this.panelMenuBotones.SuspendLayout();
-            this.panelHeaderMenu.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).BeginInit();
             this.panelUsuarioInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconUsuario)).BeginInit();
+            this.panelCerrarSesion.SuspendLayout();
+            this.panelHeaderMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // panelMenu
@@ -70,39 +70,6 @@
             this.panelMenu.Name = "panelMenu";
             this.panelMenu.Size = new System.Drawing.Size(230, 681);
             this.panelMenu.TabIndex = 0;
-            // 
-            // panelCerrarSesion
-            // 
-            this.panelCerrarSesion.Controls.Add(this.btnCerrarSesion);
-            this.panelCerrarSesion.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelCerrarSesion.Location = new System.Drawing.Point(0, 636);
-            this.panelCerrarSesion.Name = "panelCerrarSesion";
-            this.panelCerrarSesion.Size = new System.Drawing.Size(227, 45);
-            this.panelCerrarSesion.TabIndex = 3;
-            // 
-            // btnCerrarSesion
-            // 
-            this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnCerrarSesion.FlatAppearance.BorderSize = 0;
-            this.btnCerrarSesion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCerrarSesion.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCerrarSesion.ForeColor = System.Drawing.Color.White;
-            this.btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.DoorOpen;
-            this.btnCerrarSesion.IconColor = System.Drawing.Color.White;
-            this.btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnCerrarSesion.IconSize = 22;
-            this.btnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCerrarSesion.Location = new System.Drawing.Point(0, 0);
-            this.btnCerrarSesion.Name = "btnCerrarSesion";
-            this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            this.btnCerrarSesion.Size = new System.Drawing.Size(227, 45);
-            this.btnCerrarSesion.TabIndex = 6;
-            this.btnCerrarSesion.Text = "Cerrar Sesion";
-            this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnCerrarSesion.UseVisualStyleBackColor = false;
             // 
             // panelMenuBotones
             // 
@@ -331,6 +298,73 @@
             this.btnUsuarios.UseVisualStyleBackColor = true;
             this.btnUsuarios.Click += new System.EventHandler(this.btnUsuarios_Click);
             // 
+            // panelUsuarioInfo
+            // 
+            this.panelUsuarioInfo.Controls.Add(this.lblUsuarioActual);
+            this.panelUsuarioInfo.Controls.Add(this.iconUsuario);
+            this.panelUsuarioInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelUsuarioInfo.Location = new System.Drawing.Point(0, 0);
+            this.panelUsuarioInfo.Name = "panelUsuarioInfo";
+            this.panelUsuarioInfo.Size = new System.Drawing.Size(227, 70);
+            this.panelUsuarioInfo.TabIndex = 9;
+            // 
+            // lblUsuarioActual
+            // 
+            this.lblUsuarioActual.AutoSize = true;
+            this.lblUsuarioActual.BackColor = System.Drawing.Color.Transparent;
+            this.lblUsuarioActual.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsuarioActual.ForeColor = System.Drawing.Color.White;
+            this.lblUsuarioActual.Location = new System.Drawing.Point(49, 27);
+            this.lblUsuarioActual.Name = "lblUsuarioActual";
+            this.lblUsuarioActual.Size = new System.Drawing.Size(65, 13);
+            this.lblUsuarioActual.TabIndex = 1;
+            this.lblUsuarioActual.Text = "Usuario: ---";
+            // 
+            // iconUsuario
+            // 
+            this.iconUsuario.BackColor = System.Drawing.Color.Transparent;
+            this.iconUsuario.IconChar = FontAwesome.Sharp.IconChar.UserCircle;
+            this.iconUsuario.IconColor = System.Drawing.Color.White;
+            this.iconUsuario.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.iconUsuario.Location = new System.Drawing.Point(8, 20);
+            this.iconUsuario.Name = "iconUsuario";
+            this.iconUsuario.Size = new System.Drawing.Size(34, 32);
+            this.iconUsuario.TabIndex = 0;
+            this.iconUsuario.TabStop = false;
+            // 
+            // panelCerrarSesion
+            // 
+            this.panelCerrarSesion.Controls.Add(this.btnCerrarSesion);
+            this.panelCerrarSesion.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelCerrarSesion.Location = new System.Drawing.Point(0, 636);
+            this.panelCerrarSesion.Name = "panelCerrarSesion";
+            this.panelCerrarSesion.Size = new System.Drawing.Size(227, 45);
+            this.panelCerrarSesion.TabIndex = 3;
+            // 
+            // btnCerrarSesion
+            // 
+            this.btnCerrarSesion.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+            this.btnCerrarSesion.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCerrarSesion.FlatAppearance.BorderSize = 0;
+            this.btnCerrarSesion.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.btnCerrarSesion.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCerrarSesion.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCerrarSesion.ForeColor = System.Drawing.Color.White;
+            this.btnCerrarSesion.IconChar = FontAwesome.Sharp.IconChar.DoorOpen;
+            this.btnCerrarSesion.IconColor = System.Drawing.Color.White;
+            this.btnCerrarSesion.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCerrarSesion.IconSize = 22;
+            this.btnCerrarSesion.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.Location = new System.Drawing.Point(0, 0);
+            this.btnCerrarSesion.Name = "btnCerrarSesion";
+            this.btnCerrarSesion.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            this.btnCerrarSesion.Size = new System.Drawing.Size(227, 45);
+            this.btnCerrarSesion.TabIndex = 6;
+            this.btnCerrarSesion.Text = "Cerrar Sesion";
+            this.btnCerrarSesion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCerrarSesion.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCerrarSesion.UseVisualStyleBackColor = false;
+            // 
             // panelHeaderMenu
             // 
             this.panelHeaderMenu.Controls.Add(this.iconLogo);
@@ -384,41 +418,6 @@
             this.panelContenedor.TabIndex = 1;
             this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContenedor_Paint);
             // 
-            // panelUsuarioInfo
-            // 
-            this.panelUsuarioInfo.Controls.Add(this.lblUsuarioActual);
-            this.panelUsuarioInfo.Controls.Add(this.iconUsuario);
-            this.panelUsuarioInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelUsuarioInfo.Location = new System.Drawing.Point(0, 0);
-            this.panelUsuarioInfo.Name = "panelUsuarioInfo";
-            this.panelUsuarioInfo.Size = new System.Drawing.Size(227, 70);
-            this.panelUsuarioInfo.TabIndex = 9;
-            // 
-            // iconUsuario
-            // 
-            this.iconUsuario.BackColor = System.Drawing.Color.Transparent;
-            this.iconUsuario.IconChar = FontAwesome.Sharp.IconChar.UserCircle;
-            this.iconUsuario.IconColor = System.Drawing.Color.White;
-            this.iconUsuario.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconUsuario.IconSize = 35;
-            this.iconUsuario.Location = new System.Drawing.Point(8, 20);
-            this.iconUsuario.Name = "iconUsuario";
-            this.iconUsuario.Size = new System.Drawing.Size(34, 32);
-            this.iconUsuario.TabIndex = 0;
-            this.iconUsuario.TabStop = false;
-            // 
-            // lblUsuarioActual
-            // 
-            this.lblUsuarioActual.AutoSize = true;
-            this.lblUsuarioActual.BackColor = System.Drawing.Color.Transparent;
-            this.lblUsuarioActual.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUsuarioActual.ForeColor = System.Drawing.Color.White;
-            this.lblUsuarioActual.Location = new System.Drawing.Point(49, 31);
-            this.lblUsuarioActual.Name = "lblUsuarioActual";
-            this.lblUsuarioActual.Size = new System.Drawing.Size(65, 13);
-            this.lblUsuarioActual.TabIndex = 1;
-            this.lblUsuarioActual.Text = "Usuario: ---";
-            // 
             // frmInicioPiscina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -433,14 +432,14 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmInicioPiscina";
             this.panelMenu.ResumeLayout(false);
-            this.panelCerrarSesion.ResumeLayout(false);
             this.panelMenuBotones.ResumeLayout(false);
-            this.panelHeaderMenu.ResumeLayout(false);
-            this.panelHeaderMenu.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).EndInit();
             this.panelUsuarioInfo.ResumeLayout(false);
             this.panelUsuarioInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconUsuario)).EndInit();
+            this.panelCerrarSesion.ResumeLayout(false);
+            this.panelHeaderMenu.ResumeLayout(false);
+            this.panelHeaderMenu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).EndInit();
             this.ResumeLayout(false);
 
         }

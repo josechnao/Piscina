@@ -4,3 +4,9 @@ C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEnti
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.csproj.CoreCompileInputs.cache
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.dll
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.pdb
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\bin\Debug\CapaEntidadPiscina.dll
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\bin\Debug\CapaEntidadPiscina.pdb
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.csproj.AssemblyReference.cache
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.csproj.CoreCompileInputs.cache
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.dll
+C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaEntidadPiscina\obj\Debug\CapaEntidadPiscina.pdb

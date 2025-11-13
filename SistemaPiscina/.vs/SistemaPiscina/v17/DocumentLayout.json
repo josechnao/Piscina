@@ -1,14 +1,10 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\",
+  "WorkspaceRootPath": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\menus\\frmusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\menus\\frmusuarios.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,26 +19,15 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "frmUsuarios.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmUsuarios.cs",
-              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Menus\\frmUsuarios.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmUsuarios.cs [Dise\u00F1o]",
-              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmUsuarios.cs [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-13T05:25:13.313Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "frmInicioPiscina.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs [Dise\u00F1o]",
-              "RelativeToolTip": "CapaPresentacionPiscina\\frmInicioPiscina.cs [Dise\u00F1o]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-13T04:13:37.83Z",
-              "EditorCaption": " [Dise\u00F1o]"
+              "Title": "App.config",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\App.config",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\App.config",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\App.config",
+              "RelativeToolTip": "CapaPresentacionPiscina\\App.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2025-11-13T22:07:19.645Z",
+              "EditorCaption": ""
             }
           ]
         }

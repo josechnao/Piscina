@@ -16,8 +16,22 @@ namespace CapaEntidadPiscina
         public string Clave { get; set; }
         public int IdRol { get; set; }
         public bool Estado { get; set; }
+
         public Rol oRol { get; set; }
+
+        // SOLO para mostrar en el DGV
+        public string RolDescripcion
+        {
+            get { return oRol != null ? oRol.Descripcion : ""; }
+        }
+
+        // SOLO para mostrar el texto de estado
+        public string EstadoTexto
+        {
+            get { return Estado ? "Activo" : "Inactivo"; }
+        }
     }
 }
+
 
 

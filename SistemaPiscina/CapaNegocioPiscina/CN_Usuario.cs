@@ -1,6 +1,7 @@
 ﻿using CapaDatosPiscina;
 using CapaEntidadPiscina;
 using System;
+using System.Collections.Generic;
 
 namespace CapaNegocioPiscina
 {
@@ -17,5 +18,22 @@ namespace CapaNegocioPiscina
 
             return objCapaDatos.Login(documento, clave);
         }
+
+        public List<Usuario> Listar()
+        {
+            return objCapaDatos.Listar();
+        }
+
+        public int Guardar(Usuario u)
+        {
+            return objCapaDatos.Guardar(u);
+        }
+
+        public bool Eliminar(int idUsuario)
+        {
+            return objCapaDatos.Eliminar(idUsuario);
+        }
+
+
     }
 }
