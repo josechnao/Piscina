@@ -65,6 +65,12 @@
     <Compile Include="frmLoginPiscina.Designer.cs">
       <DependentUpon>frmLoginPiscina.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menus\frmProveedores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menus\frmProveedores.Designer.cs">
+      <DependentUpon>frmProveedores.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menus\frmUsuarios.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +84,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmLoginPiscina.resx">
       <DependentUpon>frmLoginPiscina.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menus\frmProveedores.resx">
+      <DependentUpon>frmProveedores.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Menus\frmUsuarios.resx">
       <DependentUpon>frmUsuarios.cs</DependentUpon>

@@ -147,19 +147,57 @@ namespace CapaPresentacionPiscina.Menus
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Validar que se haya hecho clic en la columna Seleccionar
-            if (dataGridView1.Columns[e.ColumnIndex].Name == "btnSeleccionar" && e.RowIndex >= 0)
+            // Validar que se haya hecho clic en el botón Seleccionar
+            if (dataGridView1.Columns[e.ColumnIndex].Name == "btnSeleccionar")
             {
-                idUsuarioSeleccionado = Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells["IdUsuario"].Value);
+                int fila = e.RowIndex;
 
-                txtDocumento.Text = dataGridView1.Rows[e.RowIndex].Cells["Documento"].Value.ToString();
-                txtNombreCompleto.Text = dataGridView1.Rows[e.RowIndex].Cells["NombreCompleto"].Value.ToString();
-                txtClave.Text = dataGridView1.Rows[e.RowIndex].Cells["Clave"].Value.ToString();
-                txtConfirmarClave.Text = dataGridView1.Rows[e.RowIndex].Cells["Clave"].Value.ToString();
-                cboRol.SelectedValue = dataGridView1.Rows[e.RowIndex].Cells["IdRol"].Value;
-                cboEstado.SelectedValue = (dataGridView1.Rows[e.RowIndex].Cells["EstadoValor"].Value.ToString() == "Activo") ? 1 : 0;
+                // 1) 🔒 Evitar clic en encabezado o fila nueva
+                if (fila < 0 || dataGridView1.Rows[fila].IsNewRow)
+                {
+                    MessageBox.Show(
+                        "Seleccione una fila válida.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
+
+                // 2) 🔒 Validar que IdUsuario no sea null
+                if (dataGridView1.Rows[fila].Cells["IdUsuario"].Value == null)
+                {
+                    MessageBox.Show(
+                        "La fila seleccionada no contiene datos.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
+
+                // 3) ✔ Si todo OK, cargar datos normalmente
+                idUsuarioSeleccionado = Convert.ToInt32(dataGridView1.Rows[fila].Cells["IdUsuario"].Value);
+
+                txtDocumento.Text = dataGridView1.Rows[fila].Cells["Documento"].Value?.ToString() ?? "";
+                txtNombreCompleto.Text = dataGridView1.Rows[fila].Cells["NombreCompleto"].Value?.ToString() ?? "";
+                txtClave.Text = dataGridView1.Rows[fila].Cells["Clave"].Value?.ToString() ?? "";
+                txtConfirmarClave.Text = dataGridView1.Rows[fila].Cells["Clave"].Value?.ToString() ?? "";
+
+                cboRol.SelectedValue = dataGridView1.Rows[fila].Cells["IdRol"].Value;
+
+                // ESTADO (Activo / Inactivo) desde el texto visible
+                string estadoTexto = dataGridView1.Rows[fila].Cells["EstadoValor"].Value?.ToString();
+
+                if (estadoTexto == "Activo")
+                    cboEstado.SelectedValue = 1;
+                else
+                    cboEstado.SelectedValue = 0;
+
+
             }
         }
+
 
         private void btnGuardar_Click(object sender, EventArgs e)
         {
@@ -274,6 +312,79 @@ namespace CapaPresentacionPiscina.Menus
             cboFiltroBusqueda.SelectedIndex = 0;
         }
 
+        private void label7_Click(object sender, EventArgs e)
+        {
 
+        }
+
+        private void panelRegistro_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void cboEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboRol_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtConfirmarClave_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtClave_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtNombreCompleto_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtDocumento_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel3_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

@@ -56,5 +56,15 @@ namespace CapaPresentacionPiscina
         {
 
         }
+
+        private void btnProductos_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void btnProveedores_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new frmProveedores());
+        }
     }
 }

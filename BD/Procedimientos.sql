@@ -105,3 +105,102 @@ BEGIN
 
     SET @Resultado = 1;
 END;
+GO
+-------------------------
+----PROCEDIMIENTO PARA FORMULARIO DE PROVEEDORES
+-------------------------
+CREATE PROCEDURE SP_LISTARPROVEEDORES
+AS
+BEGIN
+    SELECT 
+        P.IdProveedor,
+        P.Nombre,
+        P.Documento,
+        P.Telefono,
+        P.Correo,
+        P.Estado,
+        CASE WHEN P.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS EstadoTexto
+    FROM Proveedor P
+END
+GO
+
+CREATE PROCEDURE SP_GUARDARPROVEEDOR
+(
+    @IdProveedor INT,
+    @Nombre VARCHAR(150),
+    @Documento VARCHAR(20),
+    @Telefono VARCHAR(20),
+    @Correo VARCHAR(100),
+    @Estado BIT,
+    @Resultado INT OUTPUT,
+    @Mensaje VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+
+    BEGIN TRY
+
+        IF (@IdProveedor = 0)
+        BEGIN
+            INSERT INTO Proveedor(Nombre, Documento, Telefono, Correo, Estado)
+            VALUES (@Nombre, @Documento, @Telefono, @Correo, @Estado);
+
+            SET @Resultado = SCOPE_IDENTITY();
+            SET @Mensaje = 'Proveedor registrado correctamente.';
+        END
+        ELSE
+        BEGIN
+            UPDATE Proveedor
+            SET 
+                Nombre = @Nombre,
+                Documento = @Documento,
+                Telefono = @Telefono,
+                Correo = @Correo,
+                Estado = @Estado
+            WHERE IdProveedor = @IdProveedor;
+
+            SET @Resultado = @IdProveedor;
+            SET @Mensaje = 'Proveedor actualizado correctamente.';
+        END
+
+    END TRY
+    BEGIN CATCH
+        SET @Resultado = 0;
+        SET @Mensaje = ERROR_MESSAGE();
+    END CATCH;
+END
+GO
+
+
+
+CREATE PROCEDURE SP_ELIMINARPROVEEDOR
+(
+    @IdProveedor INT,
+    @Resultado   INT OUTPUT,
+    @Mensaje     VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+
+    BEGIN TRY
+
+        UPDATE Proveedor
+        SET Estado = 0
+        WHERE IdProveedor = @IdProveedor;
+
+        SET @Resultado = 1;
+        SET @Mensaje = 'Proveedor eliminado correctamente.';
+
+    END TRY
+    BEGIN CATCH
+        SET @Resultado = 0;
+        SET @Mensaje = ERROR_MESSAGE();
+    END CATCH;
+
+END
+GO
+
