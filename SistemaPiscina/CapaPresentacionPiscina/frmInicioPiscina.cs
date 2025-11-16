@@ -49,6 +49,7 @@ namespace CapaPresentacionPiscina
 
         private void btnUsuarios_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmUsuarios());
         }
 
@@ -59,12 +60,34 @@ namespace CapaPresentacionPiscina
 
         private void btnProductos_Click(object sender, EventArgs e)
         {
-            
+            OcultarSubMenus();
+            MostrarSubMenu(pnlSubMenuProductos);
         }
+
 
         private void btnProveedores_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmProveedores());
+        }
+        private void MostrarSubMenu(Panel subMenu)
+        {
+            subMenu.Visible = !subMenu.Visible;
+        }
+
+
+        private void OcultarSubMenus()
+        {
+            pnlSubMenuProductos.Visible = false;
+            // En el futuro agregas más submenús aquí
+        }
+
+
+        private void btnRegistrarProducto_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new frmCategoria());
+            
+
         }
     }
 }

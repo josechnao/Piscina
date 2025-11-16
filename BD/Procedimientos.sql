@@ -204,3 +204,115 @@ BEGIN
 END
 GO
 
+-------------------------
+----PROCEDIMIENTO PARA FORMULARIO DE CATEGORIA
+-------------------------
+
+CREATE PROC SP_LISTARCATEGORIA
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdCategoria,
+        Descripcion,
+        Estado,
+        IIF(Estado = 1, 'Activo', 'Inactivo') AS EstadoValor
+    FROM Categoria;
+END;
+GO
+
+
+CREATE PROC SP_REGISTRARCATEGORIA
+(
+    @Descripcion VARCHAR(100),
+    @Estado BIT,
+    @Resultado INT OUTPUT,
+    @Mensaje VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+
+    -- Validación de duplicados
+    IF EXISTS (SELECT 1 FROM Categoria WHERE Descripcion = @Descripcion)
+    BEGIN
+        SET @Mensaje = 'La categoría ya existe.';
+        RETURN;
+    END
+
+    INSERT INTO Categoria (Descripcion, Estado)
+    VALUES (@Descripcion, @Estado);
+
+    SET @Resultado = SCOPE_IDENTITY();
+END;
+GO
+
+
+CREATE PROC SP_EDITARCATEGORIA
+(
+    @IdCategoria INT,
+    @Descripcion VARCHAR(100),
+    @Estado BIT,
+    @Resultado BIT OUTPUT,
+    @Mensaje VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+
+    -- Validación de duplicados
+    IF EXISTS (
+        SELECT 1 
+        FROM Categoria 
+        WHERE Descripcion = @Descripcion
+        AND IdCategoria <> @IdCategoria
+    )
+    BEGIN
+        SET @Mensaje = 'Ya existe otra categoría con esa descripción.';
+        RETURN;
+    END
+
+    UPDATE Categoria
+    SET Descripcion = @Descripcion,
+        Estado = @Estado
+    WHERE IdCategoria = @IdCategoria;
+
+    IF @@ROWCOUNT > 0
+        SET @Resultado = 1;
+    ELSE
+        SET @Mensaje = 'No se encontró la categoría.';
+END;
+GO
+
+
+CREATE PROC SP_CAMBIARESTADOCATEGORIA
+(
+    @IdCategoria INT,
+    @NuevoEstado BIT,
+    @Resultado BIT OUTPUT,
+    @Mensaje VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+
+    UPDATE Categoria
+    SET Estado = @NuevoEstado
+    WHERE IdCategoria = @IdCategoria;
+
+    IF @@ROWCOUNT > 0
+        SET @Resultado = 1;
+    ELSE
+        SET @Mensaje = 'No se encontró la categoría.';
+END;
+GO

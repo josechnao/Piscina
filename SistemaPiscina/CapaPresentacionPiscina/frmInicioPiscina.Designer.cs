@@ -49,6 +49,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panelSeparador = new System.Windows.Forms.Panel();
             this.panelContenedor = new System.Windows.Forms.Panel();
+            this.pnlSubMenuProductos = new System.Windows.Forms.Panel();
+            this.btnRegistrarProducto = new FontAwesome.Sharp.IconButton();
+            this.btnCategoria = new FontAwesome.Sharp.IconButton();
             this.panelMenu.SuspendLayout();
             this.panelMenuBotones.SuspendLayout();
             this.panelUsuarioInfo.SuspendLayout();
@@ -56,6 +59,7 @@
             this.panelCerrarSesion.SuspendLayout();
             this.panelHeaderMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).BeginInit();
+            this.pnlSubMenuProductos.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
@@ -80,6 +84,7 @@
             this.panelMenuBotones.Controls.Add(this.btnVentas);
             this.panelMenuBotones.Controls.Add(this.btnCompras);
             this.panelMenuBotones.Controls.Add(this.btnProveedores);
+            this.panelMenuBotones.Controls.Add(this.pnlSubMenuProductos);
             this.panelMenuBotones.Controls.Add(this.btnProductos);
             this.panelMenuBotones.Controls.Add(this.btnUsuarios);
             this.panelMenuBotones.Controls.Add(this.panelUsuarioInfo);
@@ -102,7 +107,7 @@
             this.btnMantenedor.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnMantenedor.IconSize = 22;
             this.btnMantenedor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMantenedor.Location = new System.Drawing.Point(0, 430);
+            this.btnMantenedor.Location = new System.Drawing.Point(0, 524);
             this.btnMantenedor.Name = "btnMantenedor";
             this.btnMantenedor.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnMantenedor.Size = new System.Drawing.Size(227, 45);
@@ -125,7 +130,7 @@
             this.btnReportes.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnReportes.IconSize = 22;
             this.btnReportes.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReportes.Location = new System.Drawing.Point(0, 385);
+            this.btnReportes.Location = new System.Drawing.Point(0, 479);
             this.btnReportes.Name = "btnReportes";
             this.btnReportes.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnReportes.Size = new System.Drawing.Size(227, 45);
@@ -148,7 +153,7 @@
             this.btnGastos.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnGastos.IconSize = 22;
             this.btnGastos.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnGastos.Location = new System.Drawing.Point(0, 340);
+            this.btnGastos.Location = new System.Drawing.Point(0, 434);
             this.btnGastos.Name = "btnGastos";
             this.btnGastos.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnGastos.Size = new System.Drawing.Size(227, 45);
@@ -171,7 +176,7 @@
             this.btnEntradasPromo.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnEntradasPromo.IconSize = 22;
             this.btnEntradasPromo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnEntradasPromo.Location = new System.Drawing.Point(0, 295);
+            this.btnEntradasPromo.Location = new System.Drawing.Point(0, 389);
             this.btnEntradasPromo.Name = "btnEntradasPromo";
             this.btnEntradasPromo.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnEntradasPromo.Size = new System.Drawing.Size(227, 45);
@@ -194,7 +199,7 @@
             this.btnVentas.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnVentas.IconSize = 22;
             this.btnVentas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnVentas.Location = new System.Drawing.Point(0, 250);
+            this.btnVentas.Location = new System.Drawing.Point(0, 344);
             this.btnVentas.Name = "btnVentas";
             this.btnVentas.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnVentas.Size = new System.Drawing.Size(227, 45);
@@ -217,7 +222,7 @@
             this.btnCompras.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnCompras.IconSize = 22;
             this.btnCompras.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCompras.Location = new System.Drawing.Point(0, 205);
+            this.btnCompras.Location = new System.Drawing.Point(0, 299);
             this.btnCompras.Name = "btnCompras";
             this.btnCompras.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnCompras.Size = new System.Drawing.Size(227, 45);
@@ -240,7 +245,7 @@
             this.btnProveedores.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnProveedores.IconSize = 22;
             this.btnProveedores.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnProveedores.Location = new System.Drawing.Point(0, 160);
+            this.btnProveedores.Location = new System.Drawing.Point(0, 254);
             this.btnProveedores.Name = "btnProveedores";
             this.btnProveedores.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
             this.btnProveedores.Size = new System.Drawing.Size(227, 45);
@@ -420,6 +425,64 @@
             this.panelContenedor.TabIndex = 1;
             this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContenedor_Paint);
             // 
+            // pnlSubMenuProductos
+            // 
+            this.pnlSubMenuProductos.Controls.Add(this.btnCategoria);
+            this.pnlSubMenuProductos.Controls.Add(this.btnRegistrarProducto);
+            this.pnlSubMenuProductos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSubMenuProductos.Location = new System.Drawing.Point(0, 160);
+            this.pnlSubMenuProductos.Name = "pnlSubMenuProductos";
+            this.pnlSubMenuProductos.Size = new System.Drawing.Size(227, 94);
+            this.pnlSubMenuProductos.TabIndex = 10;
+            this.pnlSubMenuProductos.Visible = false;
+            // 
+            // btnRegistrarProducto
+            // 
+            this.btnRegistrarProducto.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnRegistrarProducto.FlatAppearance.BorderSize = 0;
+            this.btnRegistrarProducto.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnRegistrarProducto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRegistrarProducto.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegistrarProducto.ForeColor = System.Drawing.Color.White;
+            this.btnRegistrarProducto.IconChar = FontAwesome.Sharp.IconChar.Truck;
+            this.btnRegistrarProducto.IconColor = System.Drawing.Color.White;
+            this.btnRegistrarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnRegistrarProducto.IconSize = 22;
+            this.btnRegistrarProducto.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRegistrarProducto.Location = new System.Drawing.Point(0, 0);
+            this.btnRegistrarProducto.Name = "btnRegistrarProducto";
+            this.btnRegistrarProducto.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnRegistrarProducto.Size = new System.Drawing.Size(227, 45);
+            this.btnRegistrarProducto.TabIndex = 3;
+            this.btnRegistrarProducto.Text = "Registrar producto";
+            this.btnRegistrarProducto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRegistrarProducto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnRegistrarProducto.UseVisualStyleBackColor = true;
+            this.btnRegistrarProducto.Click += new System.EventHandler(this.btnRegistrarProducto_Click);
+            // 
+            // btnCategoria
+            // 
+            this.btnCategoria.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCategoria.FlatAppearance.BorderSize = 0;
+            this.btnCategoria.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCategoria.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCategoria.ForeColor = System.Drawing.Color.White;
+            this.btnCategoria.IconChar = FontAwesome.Sharp.IconChar.Truck;
+            this.btnCategoria.IconColor = System.Drawing.Color.White;
+            this.btnCategoria.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCategoria.IconSize = 22;
+            this.btnCategoria.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCategoria.Location = new System.Drawing.Point(0, 45);
+            this.btnCategoria.Name = "btnCategoria";
+            this.btnCategoria.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnCategoria.Size = new System.Drawing.Size(227, 45);
+            this.btnCategoria.TabIndex = 4;
+            this.btnCategoria.Text = "Categoría";
+            this.btnCategoria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCategoria.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCategoria.UseVisualStyleBackColor = true;
+            // 
             // frmInicioPiscina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +505,7 @@
             this.panelHeaderMenu.ResumeLayout(false);
             this.panelHeaderMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).EndInit();
+            this.pnlSubMenuProductos.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -469,5 +533,8 @@
         private System.Windows.Forms.Panel panelUsuarioInfo;
         private FontAwesome.Sharp.IconPictureBox iconUsuario;
         private System.Windows.Forms.Label lblUsuarioActual;
+        private System.Windows.Forms.Panel pnlSubMenuProductos;
+        private FontAwesome.Sharp.IconButton btnCategoria;
+        private FontAwesome.Sharp.IconButton btnRegistrarProducto;
     }
 }
