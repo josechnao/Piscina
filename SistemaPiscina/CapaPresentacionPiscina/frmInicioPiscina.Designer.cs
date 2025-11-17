@@ -37,6 +37,9 @@
             this.btnVentas = new FontAwesome.Sharp.IconButton();
             this.btnCompras = new FontAwesome.Sharp.IconButton();
             this.btnProveedores = new FontAwesome.Sharp.IconButton();
+            this.pnlSubMenuProductos = new System.Windows.Forms.Panel();
+            this.btnCategoria = new FontAwesome.Sharp.IconButton();
+            this.btnRegistrarProducto = new FontAwesome.Sharp.IconButton();
             this.btnProductos = new FontAwesome.Sharp.IconButton();
             this.btnUsuarios = new FontAwesome.Sharp.IconButton();
             this.panelUsuarioInfo = new System.Windows.Forms.Panel();
@@ -49,17 +52,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panelSeparador = new System.Windows.Forms.Panel();
             this.panelContenedor = new System.Windows.Forms.Panel();
-            this.pnlSubMenuProductos = new System.Windows.Forms.Panel();
-            this.btnRegistrarProducto = new FontAwesome.Sharp.IconButton();
-            this.btnCategoria = new FontAwesome.Sharp.IconButton();
             this.panelMenu.SuspendLayout();
             this.panelMenuBotones.SuspendLayout();
+            this.pnlSubMenuProductos.SuspendLayout();
             this.panelUsuarioInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconUsuario)).BeginInit();
             this.panelCerrarSesion.SuspendLayout();
             this.panelHeaderMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).BeginInit();
-            this.pnlSubMenuProductos.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
@@ -256,6 +256,65 @@
             this.btnProveedores.UseVisualStyleBackColor = true;
             this.btnProveedores.Click += new System.EventHandler(this.btnProveedores_Click);
             // 
+            // pnlSubMenuProductos
+            // 
+            this.pnlSubMenuProductos.Controls.Add(this.btnCategoria);
+            this.pnlSubMenuProductos.Controls.Add(this.btnRegistrarProducto);
+            this.pnlSubMenuProductos.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSubMenuProductos.Location = new System.Drawing.Point(0, 160);
+            this.pnlSubMenuProductos.Name = "pnlSubMenuProductos";
+            this.pnlSubMenuProductos.Size = new System.Drawing.Size(227, 94);
+            this.pnlSubMenuProductos.TabIndex = 10;
+            this.pnlSubMenuProductos.Visible = false;
+            // 
+            // btnCategoria
+            // 
+            this.btnCategoria.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnCategoria.FlatAppearance.BorderSize = 0;
+            this.btnCategoria.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCategoria.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCategoria.ForeColor = System.Drawing.Color.White;
+            this.btnCategoria.IconChar = FontAwesome.Sharp.IconChar.Truck;
+            this.btnCategoria.IconColor = System.Drawing.Color.White;
+            this.btnCategoria.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnCategoria.IconSize = 22;
+            this.btnCategoria.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCategoria.Location = new System.Drawing.Point(0, 45);
+            this.btnCategoria.Name = "btnCategoria";
+            this.btnCategoria.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnCategoria.Size = new System.Drawing.Size(227, 45);
+            this.btnCategoria.TabIndex = 4;
+            this.btnCategoria.Text = "Categoría";
+            this.btnCategoria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnCategoria.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCategoria.UseVisualStyleBackColor = true;
+            this.btnCategoria.Click += new System.EventHandler(this.btnCategoria_Click);
+            // 
+            // btnRegistrarProducto
+            // 
+            this.btnRegistrarProducto.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnRegistrarProducto.FlatAppearance.BorderSize = 0;
+            this.btnRegistrarProducto.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnRegistrarProducto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRegistrarProducto.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRegistrarProducto.ForeColor = System.Drawing.Color.White;
+            this.btnRegistrarProducto.IconChar = FontAwesome.Sharp.IconChar.Truck;
+            this.btnRegistrarProducto.IconColor = System.Drawing.Color.White;
+            this.btnRegistrarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnRegistrarProducto.IconSize = 22;
+            this.btnRegistrarProducto.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRegistrarProducto.Location = new System.Drawing.Point(0, 0);
+            this.btnRegistrarProducto.Name = "btnRegistrarProducto";
+            this.btnRegistrarProducto.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnRegistrarProducto.Size = new System.Drawing.Size(227, 45);
+            this.btnRegistrarProducto.TabIndex = 3;
+            this.btnRegistrarProducto.Text = "Registrar producto";
+            this.btnRegistrarProducto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnRegistrarProducto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnRegistrarProducto.UseVisualStyleBackColor = true;
+            this.btnRegistrarProducto.Click += new System.EventHandler(this.btnRegistrarProducto_Click);
+            // 
             // btnProductos
             // 
             this.btnProductos.Dock = System.Windows.Forms.DockStyle.Top;
@@ -425,64 +484,6 @@
             this.panelContenedor.TabIndex = 1;
             this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContenedor_Paint);
             // 
-            // pnlSubMenuProductos
-            // 
-            this.pnlSubMenuProductos.Controls.Add(this.btnCategoria);
-            this.pnlSubMenuProductos.Controls.Add(this.btnRegistrarProducto);
-            this.pnlSubMenuProductos.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSubMenuProductos.Location = new System.Drawing.Point(0, 160);
-            this.pnlSubMenuProductos.Name = "pnlSubMenuProductos";
-            this.pnlSubMenuProductos.Size = new System.Drawing.Size(227, 94);
-            this.pnlSubMenuProductos.TabIndex = 10;
-            this.pnlSubMenuProductos.Visible = false;
-            // 
-            // btnRegistrarProducto
-            // 
-            this.btnRegistrarProducto.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnRegistrarProducto.FlatAppearance.BorderSize = 0;
-            this.btnRegistrarProducto.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnRegistrarProducto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRegistrarProducto.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRegistrarProducto.ForeColor = System.Drawing.Color.White;
-            this.btnRegistrarProducto.IconChar = FontAwesome.Sharp.IconChar.Truck;
-            this.btnRegistrarProducto.IconColor = System.Drawing.Color.White;
-            this.btnRegistrarProducto.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnRegistrarProducto.IconSize = 22;
-            this.btnRegistrarProducto.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRegistrarProducto.Location = new System.Drawing.Point(0, 0);
-            this.btnRegistrarProducto.Name = "btnRegistrarProducto";
-            this.btnRegistrarProducto.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnRegistrarProducto.Size = new System.Drawing.Size(227, 45);
-            this.btnRegistrarProducto.TabIndex = 3;
-            this.btnRegistrarProducto.Text = "Registrar producto";
-            this.btnRegistrarProducto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnRegistrarProducto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnRegistrarProducto.UseVisualStyleBackColor = true;
-            this.btnRegistrarProducto.Click += new System.EventHandler(this.btnRegistrarProducto_Click);
-            // 
-            // btnCategoria
-            // 
-            this.btnCategoria.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnCategoria.FlatAppearance.BorderSize = 0;
-            this.btnCategoria.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCategoria.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCategoria.ForeColor = System.Drawing.Color.White;
-            this.btnCategoria.IconChar = FontAwesome.Sharp.IconChar.Truck;
-            this.btnCategoria.IconColor = System.Drawing.Color.White;
-            this.btnCategoria.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnCategoria.IconSize = 22;
-            this.btnCategoria.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCategoria.Location = new System.Drawing.Point(0, 45);
-            this.btnCategoria.Name = "btnCategoria";
-            this.btnCategoria.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnCategoria.Size = new System.Drawing.Size(227, 45);
-            this.btnCategoria.TabIndex = 4;
-            this.btnCategoria.Text = "Categoría";
-            this.btnCategoria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnCategoria.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnCategoria.UseVisualStyleBackColor = true;
-            // 
             // frmInicioPiscina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -498,6 +499,7 @@
             this.Text = "frmInicioPiscina";
             this.panelMenu.ResumeLayout(false);
             this.panelMenuBotones.ResumeLayout(false);
+            this.pnlSubMenuProductos.ResumeLayout(false);
             this.panelUsuarioInfo.ResumeLayout(false);
             this.panelUsuarioInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconUsuario)).EndInit();
@@ -505,7 +507,6 @@
             this.panelHeaderMenu.ResumeLayout(false);
             this.panelHeaderMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).EndInit();
-            this.pnlSubMenuProductos.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

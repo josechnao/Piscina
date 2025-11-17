@@ -316,3 +316,99 @@ BEGIN
         SET @Mensaje = 'No se encontró la categoría.';
 END;
 GO
+
+-------------------------
+----PROCEDIMIENTO PARA PRODUCTOS
+-------------------------
+
+
+IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_LISTARPRODUCTOS')
+    DROP PROCEDURE SP_LISTARPRODUCTOS;
+GO
+
+CREATE PROCEDURE SP_LISTARPRODUCTOS
+AS
+BEGIN
+    SELECT 
+        p.IdProducto,
+        p.Codigo,
+        p.Nombre,
+        p.Descripcion,
+        p.IdCategoria,
+        c.Descripcion AS Categoria,
+        p.Stock,
+        p.PrecioCompra,
+        p.PrecioVenta,
+        p.Estado AS EstadoValor,
+        CASE WHEN p.Estado = 1 THEN 'Activo' ELSE 'Inactivo' END AS Estado
+    FROM Producto p
+    INNER JOIN Categoria c ON c.IdCategoria = p.IdCategoria;
+END
+GO
+
+
+IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_REGISTRARPRODUCTO')
+    DROP PROCEDURE SP_REGISTRARPRODUCTO;
+GO
+
+CREATE PROCEDURE SP_REGISTRARPRODUCTO
+(
+    @Codigo      VARCHAR(50),
+    @Nombre      VARCHAR(150),
+    @Descripcion VARCHAR(150),
+    @IdCategoria INT,
+    @Estado      BIT
+)
+AS
+BEGIN
+    INSERT INTO Producto
+        (Codigo, Nombre, Descripcion, IdCategoria, Estado)
+    VALUES
+        (@Codigo, @Nombre, @Descripcion, @IdCategoria, @Estado);
+END
+GO
+
+
+IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_EDITARPRODUCTO')
+    DROP PROCEDURE SP_EDITARPRODUCTO;
+GO
+
+CREATE PROCEDURE SP_EDITARPRODUCTO
+(
+    @IdProducto  INT,
+    @Codigo      VARCHAR(50),
+    @Nombre      VARCHAR(150),
+    @Descripcion VARCHAR(150),
+    @IdCategoria INT,
+    @Estado      BIT
+)
+AS
+BEGIN
+    UPDATE Producto
+    SET
+        Codigo      = @Codigo,
+        Nombre      = @Nombre,
+        Descripcion = @Descripcion,
+        IdCategoria = @IdCategoria,
+        Estado      = @Estado
+    WHERE IdProducto = @IdProducto;
+END
+GO
+
+IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_CAMBIARESTADO_PRODUCTO')
+    DROP PROCEDURE SP_CAMBIARESTADO_PRODUCTO;
+GO
+
+CREATE PROCEDURE SP_CAMBIARESTADO_PRODUCTO
+(
+    @IdProducto INT,
+    @Estado     BIT
+)
+AS
+BEGIN
+    UPDATE Producto
+    SET Estado = @Estado
+    WHERE IdProducto = @IdProducto;
+END
+GO
+

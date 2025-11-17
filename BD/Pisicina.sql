@@ -1,11 +1,4 @@
-/* OPCIONAL: si quieres eliminar la BD primero, descomenta esto
-IF DB_ID('PiscinaDB') IS NOT NULL
-BEGIN
-    ALTER DATABASE PiscinaDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE PiscinaDB;
-END
-GO
-*/
+
 
 CREATE DATABASE PiscinaDB;
 GO
@@ -136,6 +129,14 @@ CREATE TABLE Producto (
     Estado BIT NOT NULL DEFAULT 1,
     CONSTRAINT FK_Producto_Categoria FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
 );
+
+ALTER TABLE Producto
+ADD Nombre VARCHAR(150) NOT NULL;
+
+ALTER TABLE Producto
+ADD Codigo VARCHAR(50) NOT NULL;
+
+
 GO
 
 /* ===========================

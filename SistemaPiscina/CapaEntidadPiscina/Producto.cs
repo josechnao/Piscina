@@ -9,14 +9,17 @@ namespace CapaEntidadPiscina
     public class Producto
     {
         public int IdProducto { get; set; }
+        public string Codigo { get; set; }          // ← Faltaba
         public string Nombre { get; set; }
-        public int IdCategoria { get; set; }
         public string Descripcion { get; set; }
+        public int IdCategoria { get; set; }
+
         public decimal PrecioCompra { get; set; }
         public decimal PrecioVenta { get; set; }
         public int Stock { get; set; }
         public bool Estado { get; set; }
 
-        public Categoria oCategoria { get; set; }
+        public Categoria oCategoria { get; set; }   // ← Se usa para mostrar la categoría
     }
 }
+
