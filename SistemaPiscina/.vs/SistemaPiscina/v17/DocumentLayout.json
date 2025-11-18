@@ -1,12 +1,86 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\",
-  "Documents": [],
+  "WorkspaceRootPath": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\modals\\frmmodalproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\modals\\frmmodalproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\modals\\frmmodalproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\modals\\frmmodalproveedor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\menus\\frmcompras.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\menus\\frmcompras.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\menus\\frmcompras.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\menus\\frmcompras.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "frmCompras.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAywCYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T21:51:56.336Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "frmModalProveedor.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "ViewState": "AgIAAGQAAAAAAAAAAAAqwHwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T21:49:11.33Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "frmModalProveedor.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs [Dise\u00F1o]",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Modals\\frmModalProveedor.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T19:17:12.336Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "frmCompras.cs [Dise\u00F1o]",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Menus\\frmCompras.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmCompras.cs [Dise\u00F1o]",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmCompras.cs [Dise\u00F1o]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T15:00:55.804Z",
+              "EditorCaption": " [Dise\u00F1o]"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

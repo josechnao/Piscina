@@ -114,6 +114,30 @@ namespace CapaPresentacionPiscina.Menus
                 int indice = e.RowIndex;
                 if (indice >= 0)
                 {
+                    // 1) Evitar fila vacía (la fila "nueva")
+                    if (dgvCategoria.Rows[indice].IsNewRow)
+                    {
+                        MessageBox.Show(
+                            "Seleccione una fila válida.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return;
+                    }
+
+                    // 2) Evitar fila sin datos (IdCategoria null)
+                    if (dgvCategoria.Rows[indice].Cells["IdCategoria"].Value == null ||
+                        dgvCategoria.Rows[indice].Cells["IdCategoria"].Value.ToString() == "")
+                    {
+                        MessageBox.Show(
+                            "La fila seleccionada no contiene datos.",
+                            "Aviso",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                        return;
+                    }
                     idCategoriaSeleccionada = Convert.ToInt32(dgvCategoria.Rows[indice].Cells["IdCategoria"].Value);
 
                     txtDescripcion.Text = dgvCategoria.Rows[indice].Cells["Descripcion"].Value.ToString();

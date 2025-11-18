@@ -254,5 +254,9 @@ namespace CapaPresentacionPiscina.Menus
             }
         }
 
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            Limpiar();
+        }
     }
 }

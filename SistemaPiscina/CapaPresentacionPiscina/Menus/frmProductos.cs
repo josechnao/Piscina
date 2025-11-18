@@ -214,24 +214,51 @@ namespace CapaPresentacionPiscina.Menus
         {
             if (dgvData.Columns[e.ColumnIndex].Name == "btnSeleccionar" && e.RowIndex >= 0)
             {
-                indiceSeleccionado = e.RowIndex;
+                int indice = e.RowIndex;
 
-                idProductoSeleccionado = Convert.ToInt32(dgvData.Rows[e.RowIndex].Cells["IdProducto"].Value.ToString());
-                txtCodigo.Text = dgvData.Rows[e.RowIndex].Cells["Codigo"].Value.ToString();
-                txtNombre.Text = dgvData.Rows[e.RowIndex].Cells["Nombre"].Value.ToString();
-                txtDescripcion.Text = dgvData.Rows[e.RowIndex].Cells["Descripcion"].Value.ToString();
+                // 1) Evitar fila vacía (la fila "nueva" del DGV)
+                if (dgvData.Rows[indice].IsNewRow)
+                {
+                    MessageBox.Show(
+                        "Seleccione una fila válida.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
 
-                // Categoría (texto)
-                string categoriaTexto = dgvData.Rows[e.RowIndex].Cells["Categoria"].Value.ToString();
+                // 2) Evitar id nulo (fila sin datos)
+                if (dgvData.Rows[indice].Cells["IdProducto"].Value == null ||
+                    dgvData.Rows[indice].Cells["IdProducto"].Value.ToString() == "")
+                {
+                    MessageBox.Show(
+                        "La fila seleccionada no contiene datos.",
+                        "Aviso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
 
-                // Seleccionar categoría en el combo
+                // 3) --- TU CÓDIGO NORMAL (YA ES UNA FILA VÁLIDA) ---
+                idProductoSeleccionado = Convert.ToInt32(dgvData.Rows[indice].Cells["IdProducto"].Value.ToString());
+                txtCodigo.Text = dgvData.Rows[indice].Cells["Codigo"].Value.ToString();
+                txtNombre.Text = dgvData.Rows[indice].Cells["Nombre"].Value.ToString();
+                txtDescripcion.Text = dgvData.Rows[indice].Cells["Descripcion"].Value.ToString();
+
+                // Categoría
+                string categoriaTexto = dgvData.Rows[indice].Cells["Categoria"].Value.ToString();
                 cboCategoria.SelectedItem = categoriaTexto;
 
-                // Estado (Activo / Inactivo)
-                string estadoTexto = dgvData.Rows[e.RowIndex].Cells["Estado"].Value.ToString();
+                // Estado
+                string estadoTexto = dgvData.Rows[indice].Cells["Estado"].Value.ToString();
                 cboEstado.SelectedItem = estadoTexto;
+
+                indiceSeleccionado = indice;
             }
         }
+
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
