@@ -14,6 +14,7 @@ namespace CapaPresentacionPiscina.Modals
 {
     public partial class frmModalProveedor : Form
     {
+        private int indiceSeleccionado = -1;
         public Proveedor ProveedorSeleccionado { get; set; }
         public frmModalProveedor()
         {
@@ -34,12 +35,13 @@ namespace CapaPresentacionPiscina.Modals
 
             foreach (Proveedor item in lista)
             {
-                dgvProveedores.Rows.Add(
+                dgVProveedores.Rows.Add(
                     "",                    // Columna botón
                     item.Documento,
                     item.Nombre,
                     item.Telefono,
-                    item.Correo
+                    item.Correo,
+                    item.IdProveedor
                 );
             }
         }
@@ -55,7 +57,7 @@ namespace CapaPresentacionPiscina.Modals
                 return;
             }
 
-            foreach (DataGridViewRow row in dgvProveedores.Rows)
+            foreach (DataGridViewRow row in dgVProveedores.Rows)
             {
                 bool coincide = false;
 
@@ -81,7 +83,7 @@ namespace CapaPresentacionPiscina.Modals
             txtBusqueda.Text = "";
             cboBusqueda.SelectedIndex = 0;
 
-            foreach (DataGridViewRow row in dgvProveedores.Rows)
+            foreach (DataGridViewRow row in dgVProveedores.Rows)
             {
                 row.Visible = true;
             }
@@ -89,13 +91,20 @@ namespace CapaPresentacionPiscina.Modals
 
         private void dgvProveedores_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvProveedores.Columns[e.ColumnIndex].Name == "btnSeleccionar")
+            if (dgVProveedores.Columns[e.ColumnIndex].Name == "btnSeleccionar")
             {
-                txtDocumento.Text = dgvProveedores.Rows[e.RowIndex].Cells["Documento"].Value.ToString();
-                txtNombre.Text = dgvProveedores.Rows[e.RowIndex].Cells["Nombre"].Value.ToString();
-                txtTelefono.Text = dgvProveedores.Rows[e.RowIndex].Cells["Telefono"].Value.ToString();
-                txtCorreo.Text = dgvProveedores.Rows[e.RowIndex].Cells["Correo"].Value.ToString();
+                if (dgVProveedores.Rows[e.RowIndex].IsNewRow) return;
+
+                // Guardar índice del proveedor seleccionado
+                indiceSeleccionado = e.RowIndex;
+
+                // Ahora sí puedes usarlo sin romper nada
+                txtDocumento.Text = dgVProveedores.Rows[e.RowIndex].Cells["Documento"].Value.ToString();
+                txtNombre.Text = dgVProveedores.Rows[e.RowIndex].Cells["Nombre"].Value.ToString();
+                txtTelefono.Text = dgVProveedores.Rows[e.RowIndex].Cells["Telefono"].Value.ToString();
+                txtCorreo.Text = dgVProveedores.Rows[e.RowIndex].Cells["Correo"].Value.ToString();
             }
+
         }
 
         private void btnAgregarProducto_Click(object sender, EventArgs e)
@@ -108,6 +117,7 @@ namespace CapaPresentacionPiscina.Modals
 
             ProveedorSeleccionado = new Proveedor()
             {
+                IdProveedor = Convert.ToInt32(dgVProveedores.Rows[indiceSeleccionado].Cells["IdProveedor"].Value),
                 Documento = txtDocumento.Text,
                 Nombre = txtNombre.Text
             };

@@ -145,5 +145,45 @@ namespace CapaDatosPiscina
 
             return resultado;
         }
+
+        public bool ActualizarStock(int idProducto, int cantidad)
+        {
+            bool ok = false;
+
+            using (SqlConnection conn = new SqlConnection(Conexion.cadena))
+            {
+                SqlCommand cmd = new SqlCommand("SP_ActualizarStockProducto", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@IdProducto", idProducto);
+                cmd.Parameters.AddWithValue("@Cantidad", cantidad);
+
+                conn.Open();
+                ok = cmd.ExecuteNonQuery() > 0;
+            }
+
+            return ok;
+        }
+        public bool ActualizarPrecios(int idProducto, decimal precioCompra, decimal precioVenta)
+        {
+            bool ok = false;
+
+            using (SqlConnection conn = new SqlConnection(Conexion.cadena))
+            {
+                SqlCommand cmd = new SqlCommand("SP_ActualizarPreciosProducto", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@IdProducto", idProducto);
+                cmd.Parameters.AddWithValue("@PrecioCompra", precioCompra);
+                cmd.Parameters.AddWithValue("@PrecioVenta", precioVenta);
+
+                conn.Open();
+                ok = cmd.ExecuteNonQuery() > 0;
+            }
+
+            return ok;
+        }
+
+
     }
 }

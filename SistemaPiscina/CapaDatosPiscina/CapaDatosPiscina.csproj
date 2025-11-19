@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CD_Categoria.cs" />
+    <Compile Include="CD_Compra.cs" />
+    <Compile Include="CD_CorrelativoCompra.cs" />
+    <Compile Include="CD_DetalleCompra.cs" />
     <Compile Include="CD_Producto.cs" />
     <Compile Include="CD_Proveedor.cs" />
     <Compile Include="CD_Rol.cs" />

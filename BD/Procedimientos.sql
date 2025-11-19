@@ -1,4 +1,4 @@
-USE PiscinaDB;
+ï»¿USE PiscinaDB;
 GO
 
 -------------------------
@@ -237,10 +237,10 @@ BEGIN
     SET @Resultado = 0;
     SET @Mensaje = '';
 
-    -- Validación de duplicados
+    -- ValidaciÃ³n de duplicados
     IF EXISTS (SELECT 1 FROM Categoria WHERE Descripcion = @Descripcion)
     BEGIN
-        SET @Mensaje = 'La categoría ya existe.';
+        SET @Mensaje = 'La categorÃ­a ya existe.';
         RETURN;
     END
 
@@ -267,7 +267,7 @@ BEGIN
     SET @Resultado = 0;
     SET @Mensaje = '';
 
-    -- Validación de duplicados
+    -- ValidaciÃ³n de duplicados
     IF EXISTS (
         SELECT 1 
         FROM Categoria 
@@ -275,7 +275,7 @@ BEGIN
         AND IdCategoria <> @IdCategoria
     )
     BEGIN
-        SET @Mensaje = 'Ya existe otra categoría con esa descripción.';
+        SET @Mensaje = 'Ya existe otra categorÃ­a con esa descripciÃ³n.';
         RETURN;
     END
 
@@ -287,7 +287,7 @@ BEGIN
     IF @@ROWCOUNT > 0
         SET @Resultado = 1;
     ELSE
-        SET @Mensaje = 'No se encontró la categoría.';
+        SET @Mensaje = 'No se encontrÃ³ la categorÃ­a.';
 END;
 GO
 
@@ -313,7 +313,7 @@ BEGIN
     IF @@ROWCOUNT > 0
         SET @Resultado = 1;
     ELSE
-        SET @Mensaje = 'No se encontró la categoría.';
+        SET @Mensaje = 'No se encontrÃ³ la categorÃ­a.';
 END;
 GO
 
@@ -412,3 +412,120 @@ BEGIN
 END
 GO
 
+-------------------------
+----PROCEDIMIENTO PARA COMPRA
+-------------------------
+
+CREATE PROCEDURE SP_ObtenerCorrelativoCompra
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @UltimoNumero INT;
+
+    -- Buscar el correlativo del aÃ±o actual
+    SELECT @UltimoNumero = UltimoNumero
+    FROM CorrelativoCompra
+    WHERE YEAR(FechaActualizacion) = YEAR(GETDATE());
+
+    -- Si no existe â†’ crear uno nuevo
+    IF @UltimoNumero IS NULL
+    BEGIN
+        INSERT INTO CorrelativoCompra (UltimoNumero, FechaActualizacion)
+        VALUES (1, GETDATE());
+
+        SELECT 1 AS UltimoNumero;
+    END
+    ELSE
+    BEGIN
+        SELECT @UltimoNumero AS UltimoNumero;
+    END
+END
+GO
+
+CREATE PROCEDURE SP_IncrementarCorrelativoCompra
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE CorrelativoCompra
+    SET UltimoNumero = UltimoNumero + 1,
+        FechaActualizacion = GETDATE();
+END
+GO
+
+
+
+CREATE PROCEDURE SP_RegistrarCompra
+(
+    @IdUsuario INT,
+    @IdProveedor INT,
+    @TipoDocumento VARCHAR(20),
+    @NumeroDocumento VARCHAR(50),
+    @NumeroCorrelativo INT,
+    @MontoTotal DECIMAL(10,2),
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Compra(IdUsuario, IdProveedor, TipoDocumento, NumeroDocumento, NumeroCorrelativo, MontoTotal)
+    VALUES (@IdUsuario, @IdProveedor, @TipoDocumento, @NumeroDocumento, @NumeroCorrelativo, @MontoTotal);
+
+    SET @Resultado = SCOPE_IDENTITY();
+END
+GO
+
+
+CREATE PROCEDURE SP_RegistrarDetalleCompra
+(
+    @IdCompra INT,
+    @IdProducto INT,
+    @PrecioCompra DECIMAL(10,2),
+    @PrecioVenta DECIMAL(10,2),
+    @Cantidad INT,
+    @Subtotal DECIMAL(10,2)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO DetalleCompra (IdCompra, IdProducto, PrecioCompra, PrecioVenta, Cantidad, SubTotal)
+    VALUES (@IdCompra, @IdProducto, @PrecioCompra, @PrecioVenta, @Cantidad, @Subtotal);
+END
+GO
+
+
+CREATE PROCEDURE SP_ActualizarStockProducto
+(
+    @IdProducto INT,
+    @Cantidad INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Producto
+    SET Stock = Stock + @Cantidad
+    WHERE IdProducto = @IdProducto;
+END
+GO
+
+
+CREATE PROCEDURE SP_ActualizarPreciosProducto
+(
+    @IdProducto INT,
+    @PrecioCompra DECIMAL(10,2),
+    @PrecioVenta DECIMAL(10,2)
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Producto
+    SET PrecioCompra = @PrecioCompra,
+        PrecioVenta = @PrecioVenta
+    WHERE IdProducto = @IdProducto;
+END
+GO

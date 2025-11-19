@@ -165,6 +165,13 @@ CREATE TABLE Compra (
 );
 GO
 
+ALTER TABLE Compra
+ADD TipoDocumento VARCHAR(20) NOT NULL;
+
+ALTER TABLE Compra
+ADD NumeroCorrelativo INT NOT NULL;
+
+
 CREATE TABLE DetalleCompra (
     IdDetalleCompra INT IDENTITY(1,1) PRIMARY KEY,
     IdCompra INT NOT NULL,
@@ -176,6 +183,13 @@ CREATE TABLE DetalleCompra (
     CONSTRAINT FK_DetalleCompra_Compra FOREIGN KEY (IdCompra) REFERENCES Compra(IdCompra),
     CONSTRAINT FK_DetalleCompra_Producto FOREIGN KEY (IdProducto) REFERENCES Producto(IdProducto)
 );
+GO
+
+CREATE TABLE CorrelativoCompra (
+    IdCorrelativo INT IDENTITY(1,1) PRIMARY KEY,
+    UltimoNumero INT NOT NULL,
+    FechaActualizacion DATETIME NOT NULL
+)
 GO
 
 /* ===========================
