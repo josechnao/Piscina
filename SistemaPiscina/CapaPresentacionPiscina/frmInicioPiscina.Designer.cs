@@ -116,6 +116,7 @@
             this.btnMantenedor.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnMantenedor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnMantenedor.UseVisualStyleBackColor = true;
+            this.btnMantenedor.Click += new System.EventHandler(this.btnMantenedor_Click);
             // 
             // btnReportes
             // 
@@ -185,6 +186,7 @@
             this.btnEntradasPromo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnEntradasPromo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnEntradasPromo.UseVisualStyleBackColor = true;
+            this.btnEntradasPromo.Click += new System.EventHandler(this.btnEntradasPromo_Click);
             // 
             // btnVentas
             // 
@@ -208,6 +210,7 @@
             this.btnVentas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnVentas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnVentas.UseVisualStyleBackColor = true;
+            this.btnVentas.Click += new System.EventHandler(this.btnVentas_Click);
             // 
             // btnCompras
             // 

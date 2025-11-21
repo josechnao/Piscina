@@ -184,6 +184,46 @@ namespace CapaDatosPiscina
             return ok;
         }
 
+        public List<Producto> ListarProductosVenta()
+        {
+            List<Producto> lista = new List<Producto>();
+
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    SqlCommand cmd = new SqlCommand("SP_ListarProductosActivosVenta", oconexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconexion.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new Producto()
+                            {
+                                IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                                Nombre = dr["Nombre"].ToString(),
+                                Descripcion = dr["Descripcion"].ToString(),
+                                PrecioVenta = Convert.ToDecimal(dr["PrecioVenta"]),
+                                Stock = Convert.ToInt32(dr["Stock"]),
+                                oCategoria = new Categoria()
+                                {
+                                    Descripcion = dr["Categoria"].ToString()
+                                }
+                            });
+                        }
+                    }
+                }
+                catch
+                {
+                    lista = new List<Producto>();
+                }
+            }
+
+            return lista;
+        }
 
     }
 }

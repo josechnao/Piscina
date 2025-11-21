@@ -17,3 +17,14 @@ VALUES ('Postres', 1);
 
 INSERT INTO Producto (Codigo, Nombre, Descripcion, IdCategoria, Estado)
 VALUES ('P001', 'Coca Cola 600ml', 'Bebida gaseosa', 1, 1);
+
+INSERT INTO EntradaTipo (Descripcion, PrecioBase, Estado)
+VALUES 
+('Adulto', 20, 1),
+('Adolescente', 15, 1),
+('Niño', 10, 1),
+('Bebé', 0, 1);
+
+SELECT * FROM EntradaTipo;
+
+

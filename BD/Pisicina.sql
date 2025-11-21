@@ -48,14 +48,28 @@ GO
    2. CONFIGURACIÓN
    =========================== */
 
+-- Eliminamos Documento y RutaLogo
+-- Agregamos Ciudad
+-- Cambiamos RutaLogo por Logo VARBINARY(MAX)
+
+DROP TABLE IF EXISTS Negocio;
+GO
+
 CREATE TABLE Negocio (
-    IdNegocio INT IDENTITY(1,1) PRIMARY KEY,
+    IdNegocio INT PRIMARY KEY,
     NombreNegocio VARCHAR(150) NOT NULL,
-    Documento VARCHAR(20) NULL,
     Direccion VARCHAR(200) NULL,
+    Ciudad VARCHAR(150) NULL,
     Telefono VARCHAR(20) NULL,
-    RutaLogo VARCHAR(250) NULL
+    Logo VARBINARY(MAX) NULL
 );
+GO
+
+-- Insertamos el registro base vacío (ID = 1)
+INSERT INTO Negocio (IdNegocio, NombreNegocio, Direccion, Ciudad, Telefono, Logo)
+VALUES (1, '', '', '', '', NULL);
+GO
+
 GO
 
 CREATE TABLE Correlativo (
@@ -93,18 +107,39 @@ CREATE TABLE EntradaTipo (
 );
 GO
 
-CREATE TABLE EntradaPromocion (
+CREATE TABLE Promocion (
     IdPromocion INT IDENTITY(1,1) PRIMARY KEY,
-    IdEntradaTipo INT NOT NULL,
-    DescripcionPromo VARCHAR(200) NOT NULL,
-    TipoPromocion TINYINT NOT NULL,      -- 1=2x1, 2=%, 3=desc fijo, 4=precio especial
-    Valor DECIMAL(10,2) NULL,            -- % o monto según TipoPromocion
-    MaxCantidad INT NULL,                -- NULL = ilimitado
-    FechaInicio DATETIME NOT NULL,
-    FechaFin DATETIME NOT NULL,
-    Estado BIT NOT NULL DEFAULT 1,
-    CONSTRAINT FK_EntradaPromocion_EntradaTipo 
-        FOREIGN KEY (IdEntradaTipo) REFERENCES EntradaTipo(IdEntradaTipo)
+    TipoPromo VARCHAR(20) NOT NULL,   -- '2x1' o 'Descuento'
+    IdEntradaTipo INT NULL,           -- NULL = aplica a todas las categorías
+    Porcentaje DECIMAL(5,2) NULL,     -- solo para descuento
+    Estado BIT NOT NULL DEFAULT 1     -- 1 = activa, 0 = desactivada
+);
+GO
+
+CREATE TABLE PromocionCondicion (
+    IdPromocion INT PRIMARY KEY,
+    TipoCondicion VARCHAR(30) NOT NULL,
+    Cantidad INT NULL,
+    FOREIGN KEY (IdPromocion) REFERENCES Promocion(IdPromocion)
+);
+GO
+
+CREATE TABLE PromocionLimite (
+    IdPromocion INT PRIMARY KEY,
+    TipoLimite VARCHAR(20) NOT NULL,
+    CantidadLimite INT NULL,
+    CantidadUsada INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (IdPromocion) REFERENCES Promocion(IdPromocion)
+);
+GO
+
+CREATE TABLE PromocionVigencia (
+    IdPromocion INT PRIMARY KEY,
+    TipoVigencia VARCHAR(20) NOT NULL,
+    FechaInicio DATE NULL,
+    FechaFin DATE NULL,
+    FechaDia DATE NULL,
+    FOREIGN KEY (IdPromocion) REFERENCES Promocion(IdPromocion)
 );
 GO
 
@@ -239,6 +274,11 @@ CREATE TABLE DetalleVentaEntrada (
     CONSTRAINT FK_DetalleVentaEntrada_Venta FOREIGN KEY (IdVenta) REFERENCES Venta(IdVenta),
     CONSTRAINT FK_DetalleVentaEntrada_EntradaTipo FOREIGN KEY (IdEntradaTipo) REFERENCES EntradaTipo(IdEntradaTipo)
 );
+ALTER TABLE DetalleVentaEntrada
+ADD IdPromocion INT NULL
+    CONSTRAINT FK_DetalleVentaEntrada_Promocion 
+    FOREIGN KEY (IdPromocion) REFERENCES Promocion(IdPromocion);
+
 GO
 
 CREATE TABLE DetalleVentaProducto (

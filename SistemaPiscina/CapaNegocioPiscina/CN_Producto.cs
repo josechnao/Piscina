@@ -8,6 +8,8 @@ namespace CapaNegocioPiscina
     public class CN_Producto
     {
         private CD_Producto cDatos = new CD_Producto();
+        private CD_Producto objCD_Producto = new CD_Producto();
+
 
         public List<Producto> Listar()
         {
@@ -85,6 +87,12 @@ namespace CapaNegocioPiscina
             }
 
             return cDatos.CambiarEstado(idProducto, nuevoEstado, out Mensaje);
+        }
+
+        public List<Producto> ListarProductosVenta()
+        {
+            return objCD_Producto.ListarProductosVenta();
+
         }
     }
 }

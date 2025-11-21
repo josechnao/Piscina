@@ -10,12 +10,12 @@ namespace CapaEntidadPiscina
     {
         public int IdVenta { get; set; }
         public int IdUsuario { get; set; }
-        public DateTime FechaVenta { get; set; }
+        public int? IdCliente { get; set; }
+        public string NumeroVenta { get; set; }
+        public decimal MontoTotal { get; set; }
         public string MetodoPago { get; set; }
-        public decimal Total { get; set; }
-        public int Correlativo { get; set; }
-
-        public Usuario oUsuario { get; set; }
-        public List<DetalleVenta> oDetalleVenta { get; set; }
+        public DateTime FechaRegistro { get; set; }
+        public int IdCajaTurno { get; set; }
     }
+
 }

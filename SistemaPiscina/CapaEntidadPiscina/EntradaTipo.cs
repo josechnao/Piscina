@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace CapaEntidadPiscina
 {
-    public class PrecioEntrada
+    public class EntradaTipo
     {
-        public int IdPrecioEntrada { get; set; }
-        public decimal Precio { get; set; }
+        public int IdEntradaTipo { get; set; }
+        public string Descripcion { get; set; }
+        public decimal PrecioBase { get; set; }
         public bool Estado { get; set; }
     }
+
 }

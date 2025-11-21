@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,10 +47,17 @@
     <Compile Include="CD_Compra.cs" />
     <Compile Include="CD_CorrelativoCompra.cs" />
     <Compile Include="CD_DetalleCompra.cs" />
+    <Compile Include="CD_EntradaTipo.cs" />
+    <Compile Include="CD_Negocio.cs" />
     <Compile Include="CD_Producto.cs" />
+    <Compile Include="CD_Promociones.cs" />
+    <Compile Include="CD_PromocionCondicion.cs" />
+    <Compile Include="CD_PromocionLimite.cs" />
+    <Compile Include="CD_PromocionVigencia.cs" />
     <Compile Include="CD_Proveedor.cs" />
     <Compile Include="CD_Rol.cs" />
     <Compile Include="CD_Usuario.cs" />
+    <Compile Include="CD_VentaPiscina.cs" />
     <Compile Include="Conexion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
