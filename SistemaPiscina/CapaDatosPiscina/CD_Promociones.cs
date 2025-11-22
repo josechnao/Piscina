@@ -142,6 +142,47 @@ namespace CapaDatosPiscina
                 return false;
             }
         }
+        public PromocionConfiguracion ObtenerPromocionActiva()
+        {
+            PromocionConfiguracion promo = null;
+
+            using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
+            {
+                SqlCommand cmd = new SqlCommand("SP_PROMO_ACTIVA_COMPLETA", conexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                conexion.Open();
+                using (SqlDataReader dr = cmd.ExecuteReader())
+                {
+                    if (dr.Read())
+                    {
+                        promo = new PromocionConfiguracion()
+                        {
+                            IdPromocion = Convert.ToInt32(dr["IdPromocion"]),
+                            TipoPromo = dr["TipoPromo"].ToString(),
+                            IdEntradaTipo = Convert.ToInt32(dr["IdEntradaTipo"]),
+                            Porcentaje = dr["Porcentaje"] == DBNull.Value ? 0 : Convert.ToDecimal(dr["Porcentaje"]),
+                            Estado = Convert.ToBoolean(dr["Estado"]),
+                            NombreCategoria = dr["Categoria"] == DBNull.Value ? "" : dr["Categoria"].ToString(),
+                            TipoCondicion = dr["TipoCondicion"]?.ToString(),
+                            CantidadCondicion = dr["CantidadCondicion"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CantidadCondicion"]),
+
+                            TipoLimite = dr["TipoLimite"]?.ToString(),
+                            CantidadLimite = dr["CantidadLimite"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CantidadLimite"]),
+                            CantidadUsada = dr["CantidadUsada"] == DBNull.Value ? 0 : Convert.ToInt32(dr["CantidadUsada"]),
+
+                            TipoVigencia = dr["TipoVigencia"]?.ToString(),
+                            FechaInicio = dr["FechaInicio"] == DBNull.Value ? null : (DateTime?)dr["FechaInicio"],
+                            FechaFin = dr["FechaFin"] == DBNull.Value ? null : (DateTime?)dr["FechaFin"],
+                            FechaDia = dr["FechaDia"] == DBNull.Value ? null : (DateTime?)dr["FechaDia"]
+                        };
+                    }
+                }
+            }
+
+            return promo;
+        }
+
 
 
     }

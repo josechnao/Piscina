@@ -29,5 +29,11 @@ namespace CapaNegocioPiscina
         {
             return objCD.EliminarPromocion(idPromocion, out mensaje);
         }
+
+        public PromocionConfiguracion ObtenerPromocionActiva()
+        {
+            return objCD.ObtenerPromocionActiva();
+        }
+
     }
 }

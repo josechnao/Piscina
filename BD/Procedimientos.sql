@@ -649,10 +649,6 @@ BEGIN
 END
 GO
 
-EXEC SP_ListarPromociones;
-
-
-
 DROP PROCEDURE IF EXISTS SP_EliminarPromocion;
 GO
 
@@ -1307,3 +1303,53 @@ BEGIN
     WHERE p.Estado = 1;
 END
 GO
+CREATE PROCEDURE SP_PROMO_ACTIVA
+AS
+BEGIN
+    SELECT TOP 1 *
+    FROM Promocion
+    WHERE Estado = 1
+    ORDER BY IdPromocion DESC;
+END
+GO
+
+drop procedure SP_PROMO_ACTIVA;
+EXEC SP_PROMO_ACTIVA_COMPLETA;
+
+CREATE PROCEDURE SP_PROMO_ACTIVA_COMPLETA
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1
+        p.IdPromocion,
+        p.TipoPromo,
+        ISNULL(p.IdEntradaTipo, 0)              AS IdEntradaTipo,
+        ISNULL(et.Descripcion, 'Todas')         AS Categoria,
+        ISNULL(p.Porcentaje, 0)                 AS Porcentaje,
+        p.Estado,
+        ISNULL(pc.TipoCondicion, 'SinCondicion')    AS TipoCondicion,
+        ISNULL(pc.Cantidad, 0)                      AS CantidadCondicion,
+        ISNULL(pl.TipoLimite, 'SinLimite')          AS TipoLimite,
+        ISNULL(pl.CantidadLimite, 0)                AS CantidadLimite,
+        ISNULL(pl.CantidadUsada, 0)                 AS CantidadUsada,
+        ISNULL(pv.TipoVigencia, 'SinFecha')         AS TipoVigencia,
+        pv.FechaInicio,
+        pv.FechaFin,
+        pv.FechaDia
+    FROM Promocion p
+    LEFT JOIN EntradaTipo        et ON p.IdEntradaTipo  = et.IdEntradaTipo
+    LEFT JOIN PromocionCondicion pc ON p.IdPromocion    = pc.IdPromocion
+    LEFT JOIN PromocionLimite    pl ON p.IdPromocion    = pl.IdPromocion
+    LEFT JOIN PromocionVigencia  pv ON p.IdPromocion    = pv.IdPromocion
+    WHERE p.Estado = 1
+    ORDER BY 
+        CASE 
+            WHEN p.IdEntradaTipo IS NULL OR p.IdEntradaTipo = 0 THEN 0  -- global
+            ELSE 1                                                      -- por categoría
+        END,
+        p.IdPromocion DESC;  -- la más nueva
+END;
+GO
+
+

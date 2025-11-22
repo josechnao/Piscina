@@ -241,31 +241,42 @@ namespace CapaPresentacionPiscina.Menus
             if (e.RowIndex < 0) return;
 
             // Validar que se hizo clic en la columna "Eliminar"
-            if (dgvCompras.Columns[e.ColumnIndex].Name == "btnEliminar")
+            if (dgvCompras.Columns[e.ColumnIndex].Name != "btnEliminar")
+                return;
+
+            // Verificar si es la fila nueva (la del asterisco)
+            if (dgvCompras.Rows[e.RowIndex].IsNewRow)
             {
-                // Obtener el ID del producto de la fila seleccionada (lo tenemos en la columna oculta)
-                int idProducto = Convert.ToInt32(dgvCompras.Rows[e.RowIndex].Cells["IdProducto"].Value);
+                MessageBox.Show("Seleccione una fila con datos para eliminar.",
+                                "Aviso",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                return;
+            }
 
-                // Remover del DGV
-                dgvCompras.Rows.RemoveAt(e.RowIndex);
+            // Obtener el ID del producto de la fila seleccionada
+            int idProducto = Convert.ToInt32(dgvCompras.Rows[e.RowIndex].Cells["IdProducto"].Value);
 
-                // Remover de la lista interna
-                var item = _listaDetalles.FirstOrDefault(x => x.IdProducto == idProducto);
-                if (item != null)
-                    _listaDetalles.Remove(item);
+            // Remover del DGV
+            dgvCompras.Rows.RemoveAt(e.RowIndex);
 
-                // Recalcular total
-                CalcularTotal();
+            // Remover de la lista interna
+            var item = _listaDetalles.FirstOrDefault(x => x.IdProducto == idProducto);
+            if (item != null)
+                _listaDetalles.Remove(item);
 
-                // Si ya no hay productos, permitir cambiar proveedor de nuevo
-                if (_listaDetalles.Count == 0)
-                {
-                    _idProveedorSeleccionado = 0;
-                    txtDocumentoProveedor.Text = "";
-                    txtNombreProveedor.Text = "";
-                }
+            // Recalcular total
+            CalcularTotal();
+
+            // Si ya no hay productos, permitir cambiar proveedor de nuevo
+            if (_listaDetalles.Count == 0)
+            {
+                _idProveedorSeleccionado = 0;
+                txtDocumentoProveedor.Text = "";
+                txtNombreProveedor.Text = "";
             }
         }
+
 
     }
 }

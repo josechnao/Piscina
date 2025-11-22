@@ -1,5 +1,3 @@
-
-
 CREATE DATABASE PiscinaDB;
 GO
 
@@ -52,8 +50,6 @@ GO
 -- Agregamos Ciudad
 -- Cambiamos RutaLogo por Logo VARBINARY(MAX)
 
-DROP TABLE IF EXISTS Negocio;
-GO
 
 CREATE TABLE Negocio (
     IdNegocio INT PRIMARY KEY,
@@ -65,10 +61,7 @@ CREATE TABLE Negocio (
 );
 GO
 
--- Insertamos el registro base vacío (ID = 1)
-INSERT INTO Negocio (IdNegocio, NombreNegocio, Direccion, Ciudad, Telefono, Logo)
-VALUES (1, '', '', '', '', NULL);
-GO
+
 
 GO
 

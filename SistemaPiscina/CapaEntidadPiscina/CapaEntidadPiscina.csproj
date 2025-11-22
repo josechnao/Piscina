@@ -54,6 +54,7 @@
     <Compile Include="Producto.cs" />
     <Compile Include="Promocion.cs" />
     <Compile Include="PromocionCondicion.cs" />
+    <Compile Include="PromocionConfiguracion.cs" />
     <Compile Include="PromocionLimite.cs" />
     <Compile Include="PromocionListado.cs" />
     <Compile Include="PromocionVigencia.cs" />
