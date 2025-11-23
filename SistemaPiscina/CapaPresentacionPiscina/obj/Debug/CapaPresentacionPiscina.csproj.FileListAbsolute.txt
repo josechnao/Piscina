@@ -58,3 +58,4 @@ C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\Cap
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmEntradaPromo.resources
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmMantenedor.resources
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmVenta.resources
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmPreviewTicket.resources

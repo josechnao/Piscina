@@ -50,8 +50,12 @@ namespace CapaPresentacionPiscina
                 // Guardar usuario en sesión
                 SesionUsuario.UsuarioActual = oUsuario;
 
-                // Abrimos menú
-                frmInicioPiscina inicio = new frmInicioPiscina(oUsuario.NombreCompleto);
+                // ABRIR MENÚ PRINCIPAL PASANDO LOS DOS DATOS
+                frmInicioPiscina inicio = new frmInicioPiscina(
+                    oUsuario.NombreCompleto,
+                    oUsuario.IdUsuario
+                );
+
                 inicio.Show();
                 this.Hide();
             }
@@ -60,7 +64,7 @@ namespace CapaPresentacionPiscina
                 MessageBox.Show("Documento o clave incorrectos.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
+
     }
 }

@@ -13,9 +13,7 @@ namespace CapaEntidadPiscina
         public DateTime FechaApertura { get; set; }
         public DateTime? FechaCierre { get; set; }
         public decimal MontoInicial { get; set; }
-        public decimal MontoFinal { get; set; }
-        public string Observacion { get; set; }
-
-        public Usuario oUsuario { get; set; }
+        public bool Estado { get; set; }  // true = abierta
     }
 }
+

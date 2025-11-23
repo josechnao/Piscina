@@ -1,4 +1,5 @@
-﻿using CapaPresentacionPiscina.Menus;
+﻿using CapaEntidadPiscina;
+using CapaPresentacionPiscina.Menus;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,17 +16,13 @@ namespace CapaPresentacionPiscina
     {
         private Form formularioActivo = null;
 
+        public int usuarioActual { get; set; }
 
-        public frmInicioPiscina()
+
+        public frmInicioPiscina(string usuarioNombre, int idUsuario)
         {
             InitializeComponent();
-            MessageBox.Show(lblUsuarioActual.Text);
-            lblUsuarioActual.Text = "Usuario:";
-        }
-
-        public frmInicioPiscina(string usuarioNombre)
-        {
-            InitializeComponent();
+            usuarioActual = idUsuario;
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
 
@@ -103,8 +100,10 @@ namespace CapaPresentacionPiscina
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new frmVenta());
+            OcultarSubMenus();
+            AbrirFormularioEnPanel(new frmVenta(SesionUsuario.UsuarioActual.IdUsuario));
         }
+
 
         private void btnEntradasPromo_Click(object sender, EventArgs e)
         {

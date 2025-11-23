@@ -561,109 +561,11 @@ GO
 ----PROCEDIMIENTO PARA PROMOCIONES
 -------------------------
 
-DROP PROCEDURE IF EXISTS SP_RegistrarPromocion;
-GO
-
-CREATE PROCEDURE SP_RegistrarPromocion
-(
-    @TipoPromo VARCHAR(20),              -- '2x1' / 'Descuento'
-    @IdEntradaTipo INT,
-    @Porcentaje DECIMAL(5,2) = NULL,     -- solo si es descuento
-    @TipoCondicion VARCHAR(30),          -- texto
-    @CantidadCondicion INT = NULL,       
-    @TipoLimite VARCHAR(20),             -- texto
-    @CantidadLimite INT = NULL, 
-    @TipoVigencia VARCHAR(20),           -- texto
-    @FechaInicio DATE = NULL,
-    @FechaFin DATE = NULL,
-    @FechaDia DATE = NULL,
-    @Resultado INT OUTPUT,
-    @Mensaje VARCHAR(500) OUTPUT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        -- 1) Insertar cabecera promoción
-        INSERT INTO Promocion(TipoPromo, IdEntradaTipo, Porcentaje, Estado)
-        VALUES(@TipoPromo, @IdEntradaTipo, @Porcentaje, 1);
-
-        DECLARE @IdPromocion INT = SCOPE_IDENTITY();
-
-        -- 2) Insertar condición
-        INSERT INTO PromocionCondicion(IdPromocion, TipoCondicion, Cantidad)
-        VALUES(@IdPromocion, @TipoCondicion, @CantidadCondicion);
-
-        -- 3) Insertar límite
-        INSERT INTO PromocionLimite(IdPromocion, TipoLimite, CantidadLimite, CantidadUsada)
-        VALUES(@IdPromocion, @TipoLimite, @CantidadLimite, 0);
-
-        -- 4) Insertar vigencia
-        INSERT INTO PromocionVigencia(IdPromocion, TipoVigencia, FechaInicio, FechaFin, FechaDia)
-        VALUES(@IdPromocion, @TipoVigencia, @FechaInicio, @FechaFin, @FechaDia);
-
-        SET @Resultado = 1;
-        SET @Mensaje = 'Promoción registrada correctamente';
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        SET @Resultado = 0;
-        SET @Mensaje = ERROR_MESSAGE();
-    END CATCH
-END
-GO
 
 
 
-DROP PROCEDURE IF EXISTS SP_ListarPromociones;
-GO
 
-CREATE PROCEDURE SP_ListarPromociones
-AS
-BEGIN
-    SELECT
-        P.IdPromocion,
-        P.TipoPromo,
-        ISNULL(ET.Descripcion, 'Todos') AS Categoria,
-        P.Porcentaje,
-        P.Estado,
-        C.TipoCondicion,
-        C.Cantidad AS CantidadCondicion,
-        L.TipoLimite,
-        L.CantidadLimite,
-        L.CantidadUsada,
-        V.TipoVigencia,
-        V.FechaInicio,
-        V.FechaFin,
-        V.FechaDia
-    FROM Promocion P
-    LEFT JOIN EntradaTipo ET ON ET.IdEntradaTipo = P.IdEntradaTipo
-    INNER JOIN PromocionCondicion C ON C.IdPromocion = P.IdPromocion
-    INNER JOIN PromocionLimite L ON L.IdPromocion = P.IdPromocion
-    INNER JOIN PromocionVigencia V ON V.IdPromocion = P.IdPromocion;
-END
-GO
 
-DROP PROCEDURE IF EXISTS SP_EliminarPromocion;
-GO
-
-CREATE PROCEDURE SP_EliminarPromocion
-(
-    @IdPromocion INT
-)
-AS
-BEGIN
-    DELETE FROM PromocionVigencia WHERE IdPromocion = @IdPromocion;
-    DELETE FROM PromocionLimite WHERE IdPromocion = @IdPromocion;
-    DELETE FROM PromocionCondicion WHERE IdPromocion = @IdPromocion;
-    DELETE FROM Promocion WHERE IdPromocion = @IdPromocion;
-END
-GO
 
 -------------------------
 ----PROCEDIMIENTO PARA MANTENEDOR
@@ -793,563 +695,237 @@ BEGIN
 END
 GO
 
+/* ==========================================
+   SP: MODULO DE PROMOCION 2X1
+   ========================================== */
+
+CREATE PROCEDURE SP_OBTENER_PROMO
+AS
+BEGIN
+    SELECT TOP 1 
+        IdPromocion,
+        Estado,
+        Categoria,
+        UsuarioModifico,
+        FechaActualizacion
+    FROM Promocion;
+END
+GO
+
+CREATE PROCEDURE SP_ACTUALIZAR_PROMO
+(
+    @Estado BIT,
+    @Categoria VARCHAR(20),
+    @UsuarioModifico INT
+)
+AS
+BEGIN
+    UPDATE Promocion
+    SET Estado = @Estado,
+        Categoria = @Categoria,
+        UsuarioModifico = @UsuarioModifico,
+        FechaActualizacion = GETDATE()
+    WHERE IdPromocion = 1;   -- porque solo habrá 1 registro
+END
+GO
 /* ==============================================
-   SP: REGISTRAR VENTA PISCINA (ENTRADAS + SNACKS)
+     SP: PARA BUSCAR CLIENTE PARTE DEL MODULO DE VENTA
+   ============================================== */
+CREATE PROCEDURE SP_BUSCARCLIENTE_POR_DNI
+@DNI VARCHAR(20)
+AS
+BEGIN
+    SELECT TOP 1 
+        IdCliente,
+        DNI,
+        NombreCompleto,
+        Telefono
+    FROM Cliente
+    WHERE DNI = @DNI;
+END
+GO
+
+
+
+/* ==============================================
+   EJECUTAR TODOS ESTOS DROP PROCEDURE, NO USAREMOS MAS ESOS PROCEDIMIENTOS
    ============================================== */
 
 IF OBJECT_ID('SP_RegistrarVentaPiscina', 'P') IS NOT NULL
     DROP PROCEDURE SP_RegistrarVentaPiscina;
 GO
 
-CREATE PROCEDURE SP_RegistrarVentaPiscina
-(
-    @IdUsuario          INT,
-    @IdCliente          INT,
-    @MetodoPago         VARCHAR(20),   -- 'EFECTIVO','QR','CORTESIA'
-    @IdCajaTurno        INT,
-    @DetalleEntradas    TVP_DetalleEntrada READONLY,
-    @DetalleProductos   TVP_DetalleProducto READONLY,
-    @NumeroVenta        VARCHAR(50) OUTPUT,
-    @PromoParcial       BIT OUTPUT,   -- 1 = alguna promo solo se aplicó parcialmente
-    @Resultado          BIT OUTPUT,
-    @Mensaje            VARCHAR(500) OUTPUT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    SET XACT_ABORT ON;
-
-    DECLARE @IdVenta INT;
-    DECLARE @MontoTotal DECIMAL(10,2) = 0;
-
-    SET @PromoParcial = 0;
-    SET @Resultado = 0;
-    SET @Mensaje = '';
-
-    BEGIN TRY
-        BEGIN TRAN;
-
-        /* 0) VALIDACIONES BÁSICAS */
-
-        IF NOT EXISTS (SELECT 1 FROM @DetalleEntradas) 
-           AND NOT EXISTS (SELECT 1 FROM @DetalleProductos)
-        BEGIN
-            SET @Mensaje = 'No hay ítems en la venta.';
-            ROLLBACK TRAN;
-            RETURN;
-        END
-
-        /* 1) VALIDAR CONFLICTOS DE PROMOCIONES */
-        DECLARE @GlobalActivas INT;
-
-        SELECT @GlobalActivas = COUNT(*)
-        FROM Promocion P
-        WHERE P.Estado = 1
-          AND P.IdEntradaTipo IS NULL;
-
-        IF @GlobalActivas > 1
-        BEGIN
-            SET @Mensaje = 'Existen múltiples promociones globales activas. Desactive una antes de continuar.';
-            ROLLBACK TRAN;
-            RETURN;
-        END
-
-        -- Conflictos por categoría (más de una promo activa por tipo de entrada)
-        IF EXISTS (
-            SELECT IdEntradaTipo
-            FROM Promocion
-            WHERE Estado = 1 AND IdEntradaTipo IS NOT NULL
-            GROUP BY IdEntradaTipo
-            HAVING COUNT(*) > 1
-        )
-        BEGIN
-            SET @Mensaje = 'Existen múltiples promociones activas para una misma categoría de entrada. Desactive una antes de continuar.';
-            ROLLBACK TRAN;
-            RETURN;
-        END
-
-
-        /* 2) OBTENER NUMERO DE VENTA */
-
-        DECLARE @ResCorr BIT, @MsgCorr VARCHAR(500), @NumVenta VARCHAR(50);
-
-        EXEC SP_ObtenerCorrelativoVenta
-             @NumeroVenta = @NumVenta OUTPUT,
-             @Resultado   = @ResCorr OUTPUT,
-             @Mensaje     = @MsgCorr OUTPUT;
-
-        IF @ResCorr = 0
-        BEGIN
-            SET @Mensaje = @MsgCorr;
-            ROLLBACK TRAN;
-            RETURN;
-        END
-
-        SET @NumeroVenta = @NumVenta;
-
-
-        /* 3) PROCESAR ENTRADAS: PROMOS, LIMITES, VIGENCIA */
-
-        -- Temp con info de promo candidata para cada línea de entrada
-        CREATE TABLE #TmpEntrada (
-            IdEntradaTipo   INT,
-            Cantidad        INT,
-            PrecioUnitario  DECIMAL(10,2),
-            IdPromocion     INT NULL,
-            TipoPromo       VARCHAR(20) NULL,
-            Porcentaje      DECIMAL(5,2) NULL,
-            TipoCondicion   VARCHAR(30) NULL,
-            CantidadCond    INT NULL,
-            TipoLimite      VARCHAR(20) NULL,
-            CantidadLimite  INT NULL,
-            CantidadUsada   INT NULL,
-            TipoVigencia    VARCHAR(20) NULL,
-            FechaInicio     DATE NULL,
-            FechaFin        DATE NULL,
-            FechaDia        DATE NULL
-        );
-
-        INSERT INTO #TmpEntrada (IdEntradaTipo, Cantidad, PrecioUnitario,
-                                 IdPromocion, TipoPromo, Porcentaje,
-                                 TipoCondicion, CantidadCond, TipoLimite,
-                                 CantidadLimite, CantidadUsada,
-                                 TipoVigencia, FechaInicio, FechaFin, FechaDia)
-        SELECT
-            de.IdEntradaTipo,
-            de.Cantidad,
-            de.PrecioUnitario,
-            p.IdPromocion,
-            p.TipoPromo,
-            p.Porcentaje,
-            pc.TipoCondicion,
-            pc.Cantidad,
-            pl.TipoLimite,
-            pl.CantidadLimite,
-            pl.CantidadUsada,
-            pv.TipoVigencia,
-            pv.FechaInicio,
-            pv.FechaFin,
-            pv.FechaDia
-        FROM @DetalleEntradas de
-        OUTER APPLY (
-            -- Promo candidata: primero global, si no hay o no aplica, por categoría
-            SELECT TOP 1 P.*
-            FROM Promocion P
-            LEFT JOIN PromocionVigencia PV ON PV.IdPromocion = P.IdPromocion
-            WHERE 
-                P.Estado = 1
-                AND (
-                        (P.IdEntradaTipo IS NULL) OR
-                        (P.IdEntradaTipo = de.IdEntradaTipo)
-                    )
-                AND (
-                        PV.TipoVigencia IS NULL
-                        OR PV.TipoVigencia = 'SIN_FECHA'
-                        OR (PV.TipoVigencia = 'SOLO_DIA' 
-                            AND PV.FechaDia = CONVERT(DATE, GETDATE()))
-                        OR (PV.TipoVigencia = 'RANGO'
-                            AND CONVERT(DATE, GETDATE()) BETWEEN PV.FechaInicio AND PV.FechaFin)
-                    )
-            ORDER BY 
-                CASE WHEN P.IdEntradaTipo IS NULL THEN 0 ELSE 1 END DESC  -- global manda
-        ) p
-        LEFT JOIN PromocionCondicion pc ON pc.IdPromocion = p.IdPromocion
-        LEFT JOIN PromocionLimite   pl ON pl.IdPromocion = p.IdPromocion
-        LEFT JOIN PromocionVigencia pv ON pv.IdPromocion = p.IdPromocion;
-
-
-        -- Tabla final para insertar detalle de entradas
-        CREATE TABLE #DetEntradaFinal (
-            IdEntradaTipo   INT,
-            Cantidad        INT,
-            PrecioUnitario  DECIMAL(10,2),
-            PrecioAplicado  DECIMAL(10,2),
-            SubTotal        DECIMAL(10,2),
-            IdPromocion     INT NULL
-        );
-
-        DECLARE 
-            @IdEntradaTipo   INT,
-            @Cant            INT,
-            @PrecioUnit      DECIMAL(10,2),
-            @IdProm          INT,
-            @TipoPromo       VARCHAR(20),
-            @Porc            DECIMAL(5,2),
-            @TipoCond        VARCHAR(30),
-            @CantCond        INT,
-            @TipoLimite      VARCHAR(20),
-            @CantLimite      INT,
-            @CantUsada       INT,
-            @TipoVig         VARCHAR(20),
-            @FIni            DATE,
-            @FFin            DATE,
-            @FDia            DATE,
-            @CantPromo       INT,
-            @CantNormal      INT,
-            @BaseAcum        INT,
-            @TotalAcum       INT,
-            @PagoPromo       DECIMAL(10,2),
-            @PrecioAplicado  DECIMAL(10,2),
-            @SubTotalFila    DECIMAL(10,2);
-
-        DECLARE cur CURSOR LOCAL FAST_FORWARD FOR
-            SELECT IdEntradaTipo, Cantidad, PrecioUnitario,
-                   IdPromocion, TipoPromo, Porcentaje,
-                   TipoCondicion, CantidadCond,
-                   TipoLimite, CantidadLimite, ISNULL(CantidadUsada,0),
-                   TipoVigencia, FechaInicio, FechaFin, FechaDia
-            FROM #TmpEntrada;
-
-        OPEN cur;
-        FETCH NEXT FROM cur INTO 
-            @IdEntradaTipo, @Cant, @PrecioUnit,
-            @IdProm, @TipoPromo, @Porc,
-            @TipoCond, @CantCond,
-            @TipoLimite, @CantLimite, @CantUsada,
-            @TipoVig, @FIni, @FFin, @FDia;
-
-        WHILE @@FETCH_STATUS = 0
-        BEGIN
-            SET @CantPromo = 0;
-            SET @CantNormal = @Cant;
-
-            -- Si no hay promo o método es CORTESIA, no procesamos nada de promo
-            IF @IdProm IS NOT NULL AND @MetodoPago <> 'CORTESIA'
-            BEGIN
-                -- 3.1 Validar condición (versión simplificada pero funcional)
-                SET @BaseAcum = 0;
-
-                IF @TipoCond = 'ACUMULA_DIA'
-                BEGIN
-                    SELECT @BaseAcum = ISNULL(SUM(dve.Cantidad),0)
-                    FROM DetalleVentaEntrada dve
-                    INNER JOIN Venta v ON v.IdVenta = dve.IdVenta
-                    WHERE 
-                        dve.IdPromocion = @IdProm
-                        AND v.IdCliente = @IdCliente
-                        AND CONVERT(DATE, v.FechaRegistro) = CONVERT(DATE, GETDATE());
-                END
-                ELSE IF @TipoCond = 'ACUMULA_VIGENCIA'
-                BEGIN
-                    SELECT @BaseAcum = ISNULL(SUM(dve.Cantidad),0)
-                    FROM DetalleVentaEntrada dve
-                    INNER JOIN Venta v ON v.IdVenta = dve.IdVenta
-                    WHERE 
-                        dve.IdPromocion = @IdProm
-                        AND v.IdCliente = @IdCliente
-                        AND (@FIni IS NULL OR CONVERT(DATE,v.FechaRegistro) >= @FIni)
-                        AND (@FFin IS NULL OR CONVERT(DATE,v.FechaRegistro) <= @FFin);
-                END
-
-                SET @TotalAcum = @BaseAcum + @Cant;
-
-                IF (@TipoCond = 'MINIMO_COMPRA' AND @Cant < @CantCond)
-                    OR (@TipoCond IN ('ACUMULA_DIA','ACUMULA_VIGENCIA') AND @TotalAcum < @CantCond)
-                BEGIN
-                    -- No cumple condición -> sin promo
-                    SET @IdProm = NULL;
-                END
-                ELSE
-                BEGIN
-                    -- 3.2 Validar límite
-                    IF @TipoLimite = 'CANTIDAD_MAXIMA' AND @CantLimite IS NOT NULL
-                    BEGIN
-                        DECLARE @Restantes INT = @CantLimite - @CantUsada;
-
-                        IF @Restantes <= 0
-                        BEGIN
-                            -- Ya no quedan promos
-                            SET @IdProm = NULL;
-                        END
-                        ELSE IF @Cant <= @Restantes
-                        BEGIN
-                            SET @CantPromo = @Cant;
-                            SET @CantNormal = 0;
-                            SET @CantUsada = @CantUsada + @CantPromo;
-                        END
-                        ELSE
-                        BEGIN
-                            -- Aplica solo a parte de la cantidad
-                            SET @CantPromo = @Restantes;
-                            SET @CantNormal = @Cant - @Restantes;
-                            SET @CantUsada = @CantUsada + @CantPromo;
-                            SET @PromoParcial = 1;
-                        END
-                    END
-                    ELSE
-                    BEGIN
-                        -- Sin límite
-                        SET @CantPromo = @Cant;
-                        SET @CantNormal = 0;
-                    END
-
-                    -- Actualizar CantidadUsada en tabla de límite
-                    IF @IdProm IS NOT NULL AND @TipoLimite = 'CANTIDAD_MAXIMA' AND @CantPromo > 0
-                    BEGIN
-                        UPDATE PromocionLimite
-                        SET CantidadUsada = CantidadUsada + @CantPromo
-                        WHERE IdPromocion = @IdProm;
-
-                        -- Desactivar promo si se llegó al límite
-                        UPDATE P
-                        SET P.Estado = 0
-                        FROM Promocion P
-                        INNER JOIN PromocionLimite PL ON PL.IdPromocion = P.IdPromocion
-                        WHERE P.IdPromocion = @IdProm
-                          AND PL.CantidadLimite IS NOT NULL
-                          AND PL.CantidadUsada >= PL.CantidadLimite;
-                    END
-                END
-            END
-
-            -- 3.3 Insertar fila(s) en #DetEntradaFinal
-
-            -- Parte con promo
-            IF @CantPromo > 0 AND @IdProm IS NOT NULL AND @MetodoPago <> 'CORTESIA'
-            BEGIN
-                IF @TipoPromo = 'Descuento'
-                BEGIN
-                    SET @PrecioAplicado = @PrecioUnit * (1 - (@Porc / 100.0));
-                    SET @SubTotalFila   = @PrecioAplicado * @CantPromo;
-                END
-                ELSE IF @TipoPromo = '2x1'
-                BEGIN
-                    DECLARE @Paga INT = CEILING(@CantPromo / 2.0);
-                    SET @PrecioAplicado = (@PrecioUnit * @Paga) / @CantPromo;
-                    SET @SubTotalFila   = @PrecioUnit * @Paga;
-                END
-                ELSE
-                BEGIN
-                    SET @PrecioAplicado = @PrecioUnit;
-                    SET @SubTotalFila   = @PrecioUnit * @CantPromo;
-                END
-
-                INSERT INTO #DetEntradaFinal (IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal, IdPromocion)
-                VALUES (@IdEntradaTipo, @CantPromo, @PrecioUnit, @PrecioAplicado, @SubTotalFila, @IdProm);
-
-                SET @MontoTotal = @MontoTotal + @SubTotalFila;
-            END
-
-            -- Parte sin promo (o toda la fila si no aplica)
-            IF @CantNormal > 0
-            BEGIN
-                SET @PrecioAplicado = @PrecioUnit;
-                SET @SubTotalFila   = @PrecioUnit * @CantNormal;
-
-                INSERT INTO #DetEntradaFinal (IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal, IdPromocion)
-                VALUES (@IdEntradaTipo, @CantNormal, @PrecioUnit, @PrecioAplicado, @SubTotalFila, NULL);
-
-                SET @MontoTotal = @MontoTotal + @SubTotalFila;
-            END
-
-            FETCH NEXT FROM cur INTO 
-                @IdEntradaTipo, @Cant, @PrecioUnit,
-                @IdProm, @TipoPromo, @Porc,
-                @TipoCond, @CantCond,
-                @TipoLimite, @CantLimite, @CantUsada,
-                @TipoVig, @FIni, @FFin, @FDia;
-        END
-
-        CLOSE cur;
-        DEALLOCATE cur;
-
-
-        /* 4) PROCESAR PRODUCTOS (SIN PROMO, SOLO CORTESIA) */
-
-        CREATE TABLE #DetProductoFinal (
-            IdProducto      INT,
-            Cantidad        INT,
-            PrecioUnitario  DECIMAL(10,2),
-            SubTotal        DECIMAL(10,2)
-        );
-
-        DECLARE 
-            @IdProd INT,
-            @CantProd INT,
-            @PrecioProd DECIMAL(10,2);
-
-        DECLARE curp CURSOR LOCAL FAST_FORWARD FOR
-            SELECT IdProducto, Cantidad, PrecioUnitario
-            FROM @DetalleProductos;
-
-        OPEN curp;
-        FETCH NEXT FROM curp INTO @IdProd, @CantProd, @PrecioProd;
-
-        WHILE @@FETCH_STATUS = 0
-        BEGIN
-            IF @MetodoPago = 'CORTESIA'
-                SET @SubTotalFila = 0;
-            ELSE
-                SET @SubTotalFila = @PrecioProd * @CantProd;
-
-            INSERT INTO #DetProductoFinal (IdProducto, Cantidad, PrecioUnitario, SubTotal)
-            VALUES (@IdProd, @CantProd, @PrecioProd, @SubTotalFila);
-
-            SET @MontoTotal = @MontoTotal + @SubTotalFila;
-
-            FETCH NEXT FROM curp INTO @IdProd, @CantProd, @PrecioProd;
-        END
-
-        CLOSE curp;
-        DEALLOCATE curp;
-
-
-        /* 5) CORTESIA: OVERRIDE TOTAL A 0 (PERO STOCK IGUAL SE DESCARGA) */
-
-        IF @MetodoPago = 'CORTESIA'
-        BEGIN
-            SET @MontoTotal = 0;
-
-            UPDATE #DetEntradaFinal
-            SET PrecioAplicado = 0, SubTotal = 0;
-
-            UPDATE #DetProductoFinal
-            SET SubTotal = 0;
-        END
-
-
-        /* 6) INSERTAR VENTA */
-
-        INSERT INTO Venta (IdUsuario, IdCliente, NumeroVenta, MontoTotal, MetodoPago, FechaRegistro, IdCajaTurno)
-        VALUES (@IdUsuario, @IdCliente, @NumeroVenta, @MontoTotal, @MetodoPago, GETDATE(), @IdCajaTurno);
-
-        SET @IdVenta = SCOPE_IDENTITY();
-
-
-        /* 7) INSERTAR DETALLE ENTRADAS */
-
-        INSERT INTO DetalleVentaEntrada
-            (IdVenta, IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal, IdPromocion)
-        SELECT
-            @IdVenta,
-            IdEntradaTipo,
-            Cantidad,
-            PrecioUnitario,
-            PrecioAplicado,
-            SubTotal,
-            IdPromocion
-        FROM #DetEntradaFinal;
-
-
-        /* 8) INSERTAR DETALLE PRODUCTOS + ACTUALIZAR STOCK */
-
-        INSERT INTO DetalleVentaProducto
-            (IdVenta, IdProducto, Cantidad, PrecioUnitario, SubTotal)
-        SELECT
-            @IdVenta,
-            IdProducto,
-            Cantidad,
-            PrecioUnitario,
-            SubTotal
-        FROM #DetProductoFinal;
-
-        -- Descontar stock
-        UPDATE P
-        SET P.Stock = P.Stock - D.Cantidad
-        FROM Producto P
-        INNER JOIN #DetProductoFinal D ON D.IdProducto = P.IdProducto;
-
-
-        /* 9) FINALIZAR */
-
-        SET @Resultado = 1;
-        SET @Mensaje = 'Venta registrada correctamente';
-
-        COMMIT TRAN;
-    END TRY
-    BEGIN CATCH
-        IF @@TRANCOUNT > 0 ROLLBACK TRAN;
-
-        SET @Resultado = 0;
-        SET @Mensaje = ERROR_MESSAGE();
-    END CATCH
-END
-GO
 
 
 IF OBJECT_ID('SP_ListarEntradaTipoActivas','P') IS NOT NULL
     DROP PROCEDURE SP_ListarEntradaTipoActivas;
 GO
 
-CREATE PROCEDURE SP_ListarEntradaTipoActivas
-AS
-BEGIN
-    SELECT 
-        IdEntradaTipo,
-        Descripcion,
-        PrecioBase,
-        Estado
-    FROM EntradaTipo
-    WHERE Estado = 1;
-END
-GO
 
 IF OBJECT_ID('SP_ListarProductosActivosVenta','P') IS NOT NULL
     DROP PROCEDURE SP_ListarProductosActivosVenta;
 GO
 
-CREATE PROCEDURE SP_ListarProductosActivosVenta
-AS
-BEGIN
-    SELECT 
-        p.IdProducto,
-        p.Nombre,
-        p.Descripcion,
-        p.PrecioVenta,
-        p.Stock,
-        c.Descripcion AS Categoria
-    FROM Producto p
-    INNER JOIN Categoria c ON c.IdCategoria = p.IdCategoria
-    WHERE p.Estado = 1;
-END
-GO
-CREATE PROCEDURE SP_PROMO_ACTIVA
-AS
-BEGIN
-    SELECT TOP 1 *
-    FROM Promocion
-    WHERE Estado = 1
-    ORDER BY IdPromocion DESC;
-END
+IF OBJECT_ID('PromocionVigencia', 'U') IS NOT NULL DROP TABLE PromocionVigencia;
+IF OBJECT_ID('PromocionLimite', 'U') IS NOT NULL DROP TABLE PromocionLimite;
+IF OBJECT_ID('PromocionCondicion', 'U') IS NOT NULL DROP TABLE PromocionCondicion;
+IF OBJECT_ID('Promocion', 'U') IS NOT NULL DROP TABLE Promocion;
 GO
 
-drop procedure SP_PROMO_ACTIVA;
-EXEC SP_PROMO_ACTIVA_COMPLETA;
+IF OBJECT_ID('SP_RegistrarPromocion', 'P') IS NOT NULL DROP PROCEDURE SP_RegistrarPromocion;
+IF OBJECT_ID('SP_ListarPromociones', 'P') IS NOT NULL DROP PROCEDURE SP_ListarPromociones;
+IF OBJECT_ID('SP_EliminarPromocion', 'P') IS NOT NULL DROP PROCEDURE SP_EliminarPromocion;
+IF OBJECT_ID('SP_PROMO_ACTIVA', 'P') IS NOT NULL DROP PROCEDURE SP_PROMO_ACTIVA;
+IF OBJECT_ID('SP_PROMO_ACTIVA_COMPLETA', 'P') IS NOT NULL DROP PROCEDURE SP_PROMO_ACTIVA_COMPLETA;
+GO
+/* ==============================================
+     SP: PARA REGISTRAR VENTAS
+   ============================================== */
 
-CREATE PROCEDURE SP_PROMO_ACTIVA_COMPLETA
+
+CREATE TYPE DetalleEntradaType AS TABLE
+(
+    IdEntradaTipo INT,
+    Cantidad INT,
+    PrecioUnitario DECIMAL(10,2),
+    PrecioAplicado DECIMAL(10,2),
+    SubTotal DECIMAL(10,2)
+);
+GO
+
+
+CREATE TYPE DetalleProductoType AS TABLE
+(
+    IdProducto INT,
+    Cantidad INT,
+    PrecioUnitario DECIMAL(10,2),
+    SubTotal DECIMAL(10,2)
+);
+GO
+
+
+CREATE PROCEDURE SP_REGISTRAR_VENTA
+(
+    @IdUsuario INT,
+    @IdCliente INT = NULL,
+    @MetodoPago VARCHAR(20),
+    @IdCajaTurno INT,
+    @MontoTotal DECIMAL(10,2),
+    
+    @DetalleEntradas dbo.DetalleEntradaType READONLY,
+    @DetalleProductos dbo.DetalleProductoType READONLY,
+
+    @NumeroVentaGenerado VARCHAR(50) OUTPUT
+)
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT TOP 1
-        p.IdPromocion,
-        p.TipoPromo,
-        ISNULL(p.IdEntradaTipo, 0)              AS IdEntradaTipo,
-        ISNULL(et.Descripcion, 'Todas')         AS Categoria,
-        ISNULL(p.Porcentaje, 0)                 AS Porcentaje,
-        p.Estado,
-        ISNULL(pc.TipoCondicion, 'SinCondicion')    AS TipoCondicion,
-        ISNULL(pc.Cantidad, 0)                      AS CantidadCondicion,
-        ISNULL(pl.TipoLimite, 'SinLimite')          AS TipoLimite,
-        ISNULL(pl.CantidadLimite, 0)                AS CantidadLimite,
-        ISNULL(pl.CantidadUsada, 0)                 AS CantidadUsada,
-        ISNULL(pv.TipoVigencia, 'SinFecha')         AS TipoVigencia,
-        pv.FechaInicio,
-        pv.FechaFin,
-        pv.FechaDia
-    FROM Promocion p
-    LEFT JOIN EntradaTipo        et ON p.IdEntradaTipo  = et.IdEntradaTipo
-    LEFT JOIN PromocionCondicion pc ON p.IdPromocion    = pc.IdPromocion
-    LEFT JOIN PromocionLimite    pl ON p.IdPromocion    = pl.IdPromocion
-    LEFT JOIN PromocionVigencia  pv ON p.IdPromocion    = pv.IdPromocion
-    WHERE p.Estado = 1
-    ORDER BY 
-        CASE 
-            WHEN p.IdEntradaTipo IS NULL OR p.IdEntradaTipo = 0 THEN 0  -- global
-            ELSE 1                                                      -- por categoría
-        END,
-        p.IdPromocion DESC;  -- la más nueva
+    DECLARE @IdVenta INT;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        ----------------------------------------------------
+        -- 1. GENERAR CORRELATIVO
+        ----------------------------------------------------
+        DECLARE @Ultimo INT, @Digitos INT, @Nuevo INT, @Prefijo VARCHAR(20);
+
+        SELECT TOP 1 
+              @Ultimo = UltimoNumero,
+              @Digitos = CantidadDigitos,
+              @Prefijo = Prefijo
+        FROM Correlativo
+        WHERE Estado = 1;
+
+        SET @Nuevo = @Ultimo + 1;
+
+        DECLARE @NumeroFormateado VARCHAR(50);
+        SET @NumeroFormateado = 
+            ISNULL(@Prefijo,'') + RIGHT(REPLICATE('0', @Digitos) + CAST(@Nuevo AS VARCHAR(20)), @Digitos);
+
+        -- Actualizar correlativo
+        UPDATE Correlativo
+        SET UltimoNumero = @Nuevo
+        WHERE Estado = 1;
+
+        SET @NumeroVentaGenerado = @NumeroFormateado;
+
+
+        ----------------------------------------------------
+        -- 2. INSERTAR VENTA
+        ----------------------------------------------------
+        INSERT INTO Venta(IdUsuario, IdCliente, NumeroVenta, MontoTotal, MetodoPago, IdCajaTurno)
+        VALUES(@IdUsuario, @IdCliente, @NumeroVentaGenerado, @MontoTotal, @MetodoPago, @IdCajaTurno);
+
+        SET @IdVenta = SCOPE_IDENTITY();
+
+
+        ----------------------------------------------------
+        -- 3. INSERTAR DETALLE DE ENTRADAS
+        ----------------------------------------------------
+        INSERT INTO DetalleVentaEntrada
+        (
+            IdVenta,
+            IdEntradaTipo,
+            Cantidad,
+            PrecioUnitario,
+            PrecioAplicado,
+            SubTotal
+        )
+        SELECT 
+            @IdVenta,
+            IdEntradaTipo,
+            Cantidad,
+            PrecioUnitario,
+            PrecioAplicado,
+            SubTotal
+        FROM @DetalleEntradas;
+
+
+        ----------------------------------------------------
+        -- 4. INSERTAR DETALLE DE PRODUCTOS + DESCONTAR STOCK
+        ----------------------------------------------------
+        INSERT INTO DetalleVentaProducto
+        (
+            IdVenta,
+            IdProducto,
+            Cantidad,
+            PrecioUnitario,
+            SubTotal
+        )
+        SELECT @IdVenta, IdProducto, Cantidad, PrecioUnitario, SubTotal
+        FROM @DetalleProductos;
+
+        -- Descontar stock
+        UPDATE p
+        SET p.Stock = p.Stock - d.Cantidad
+        FROM Producto p
+        INNER JOIN @DetalleProductos d ON p.IdProducto = d.IdProducto;
+
+
+        ----------------------------------------------------
+        -- 5. FINALIZAR
+        ----------------------------------------------------
+        COMMIT TRANSACTION;
+        RETURN 1;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        SET @NumeroVentaGenerado = '';
+        RETURN 0;
+    END CATCH
 END;
 GO
 
-
+CREATE PROCEDURE SP_CAJA_OBTENER_ACTIVA
+(
+    @IdUsuario INT
+)
+AS
+BEGIN
+    SELECT TOP 1 *
+    FROM CajaTurno
+    WHERE IdUsuario = @IdUsuario AND Estado = 1;
+END;
+GO
