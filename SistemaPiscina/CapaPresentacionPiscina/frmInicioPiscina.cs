@@ -100,8 +100,7 @@ namespace CapaPresentacionPiscina
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            OcultarSubMenus();
-            AbrirFormularioEnPanel(new frmVenta(SesionUsuario.UsuarioActual.IdUsuario));
+            AbrirFormularioEnPanel(new frmVentas());
         }
 
 

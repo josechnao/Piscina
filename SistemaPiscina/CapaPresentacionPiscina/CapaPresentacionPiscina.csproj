@@ -107,11 +107,11 @@
     <Compile Include="Menus\frmUsuarios.Designer.cs">
       <DependentUpon>frmUsuarios.cs</DependentUpon>
     </Compile>
-    <Compile Include="Menus\frmVenta.cs">
+    <Compile Include="Menus\frmVentas.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Menus\frmVenta.Designer.cs">
-      <DependentUpon>frmVenta.cs</DependentUpon>
+    <Compile Include="Menus\frmVentas.Designer.cs">
+      <DependentUpon>frmVentas.cs</DependentUpon>
     </Compile>
     <Compile Include="Modals\frmModalProducto.cs">
       <SubType>Form</SubType>
@@ -160,8 +160,8 @@
     <EmbeddedResource Include="Menus\frmUsuarios.resx">
       <DependentUpon>frmUsuarios.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Menus\frmVenta.resx">
-      <DependentUpon>frmVenta.cs</DependentUpon>
+    <EmbeddedResource Include="Menus\frmVentas.resx">
+      <DependentUpon>frmVentas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modals\frmModalProducto.resx">
       <DependentUpon>frmModalProducto.cs</DependentUpon>

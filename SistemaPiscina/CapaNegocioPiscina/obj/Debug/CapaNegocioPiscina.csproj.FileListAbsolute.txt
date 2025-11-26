@@ -20,3 +20,14 @@ C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNego
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNego.B2B02FEC.Up2Date
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.dll
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.pdb
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaNegocioPiscina.dll
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaNegocioPiscina.pdb
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaDatosPiscina.dll
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaEntidadPiscina.dll
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaDatosPiscina.pdb
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\bin\Debug\CapaEntidadPiscina.pdb
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.csproj.AssemblyReference.cache
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.csproj.CoreCompileInputs.cache
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNego.B2B02FEC.Up2Date
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.dll
+C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaNegocioPiscina\obj\Debug\CapaNegocioPiscina.pdb
