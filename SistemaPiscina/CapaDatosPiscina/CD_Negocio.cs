@@ -50,14 +50,14 @@ namespace CapaDatos
 
         public bool ActualizarDatos(Negocio obj, out string mensaje)
         {
-            bool resultado = false;
             mensaje = string.Empty;
+            bool resultado = false;
 
             try
             {
-                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                using (SqlConnection conexion = new SqlConnection(Conexion.cadena))
                 {
-                    SqlCommand cmd = new SqlCommand("SP_UPDATE_NEGOCIO", oconexion);
+                    SqlCommand cmd = new SqlCommand("SP_UPDATE_NEGOCIO", conexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@NombreNegocio", obj.NombreNegocio);
@@ -65,24 +65,29 @@ namespace CapaDatos
                     cmd.Parameters.AddWithValue("@Ciudad", obj.Ciudad);
                     cmd.Parameters.AddWithValue("@Telefono", obj.Telefono);
 
-                    if (obj.Logo != null)
-                        cmd.Parameters.Add("@Logo", SqlDbType.VarBinary).Value = obj.Logo;
-                    else
-                        cmd.Parameters.Add("@Logo", SqlDbType.VarBinary).Value = DBNull.Value;
+                    // Logo: si es null enviamos DBNull
+                    cmd.Parameters.Add("@Logo", SqlDbType.VarBinary).Value =
+                        (object)obj.Logo ?? DBNull.Value;
 
-                    oconexion.Open();
+                    // ✔️ Agregar los OUTPUT requeridos por el SP
+                    cmd.Parameters.Add("@Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
+                    cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
 
-                    int filas = cmd.ExecuteNonQuery();
-                    resultado = filas > 0;
+                    conexion.Open();
+                    cmd.ExecuteNonQuery();
+
+                    resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
+                    mensaje = cmd.Parameters["@Mensaje"].Value.ToString();
                 }
             }
             catch (Exception ex)
             {
-                mensaje = ex.Message;
                 resultado = false;
+                mensaje = ex.Message;
             }
 
             return resultado;
         }
+
     }
 }

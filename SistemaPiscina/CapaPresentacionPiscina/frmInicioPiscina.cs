@@ -1,5 +1,6 @@
 ﻿using CapaEntidadPiscina;
 using CapaPresentacionPiscina.Menus;
+using CapaPresentacionPiscina.Modals;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ namespace CapaPresentacionPiscina
     public partial class frmInicioPiscina : Form
     {
         private Form formularioActivo = null;
+        public int idCajaTurnoActual { get; set; }
 
         public int usuarioActual { get; set; }
 
@@ -113,5 +115,45 @@ namespace CapaPresentacionPiscina
         {
             AbrirFormularioEnPanel(new frmMantenedor());
         }
+
+        private void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            // Si no hay caja abierta → cerrar sesión directamente
+            if (idCajaTurnoActual == 0)
+            {
+                DialogResult r = MessageBox.Show("¿Desea cerrar sesión?", "Confirmación",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (r == DialogResult.Yes)
+                {
+                    this.Hide();
+                    new frmLoginPiscina().Show();
+                }
+
+                return;
+            }
+
+            // Si hay caja abierta → mostrar el modal de cierre de caja
+            frmCerrarCaja frm = new frmCerrarCaja(usuarioActual, idCajaTurnoActual);
+
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                // Caja cerrada correctamente
+                idCajaTurnoActual = 0; // Se limpia porque ya no existe caja abierta
+
+                MessageBox.Show("Sesión cerrada.", "Mensaje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                this.Hide();
+                new frmLoginPiscina().Show();
+            }
+            else
+            {
+                // El usuario canceló el cierre de caja
+                MessageBox.Show("Cierre de caja cancelado. La sesión continúa activa.",
+                    "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
     }
 }

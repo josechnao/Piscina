@@ -181,6 +181,13 @@ CREATE TABLE CajaTurno (
 );
 GO
 
+ALTER TABLE CajaTurno
+ADD TotalVentas DECIMAL(10,2) NULL,
+    TotalGastos DECIMAL(10,2) NULL,
+    Diferencia  DECIMAL(10,2) NULL;
+GO
+
+
 /* ===========================
    8. VENTAS
    =========================== */

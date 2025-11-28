@@ -1,5 +1,6 @@
 ﻿using CapaEntidadPiscina;
 using CapaNegocioPiscina;
+using CapaPresentacionPiscina.Modals;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,21 +44,72 @@ namespace CapaPresentacionPiscina
             }
 
             CN_Usuario oCN = new CN_Usuario();
-            Usuario oUsuario = oCN.Login(txtDocumento.Text.Trim(), txtClave.Text.Trim());
+            Usuario usuario = oCN.Login(txtDocumento.Text.Trim(), txtClave.Text.Trim());
 
-            if (oUsuario.IdUsuario != 0)
+            if (usuario.IdUsuario != 0)
             {
-                // Guardar usuario en sesión
-                SesionUsuario.UsuarioActual = oUsuario;
+                // ===========================
+                // FLUJO ESPECIAL PARA CAJERO
+                // ===========================
+                if (usuario.oRol.Descripcion.ToUpper() == "CAJERO")
+                {
+                    CN_CajaTurno cajaCN = new CN_CajaTurno();
+                    ECajaTurno caja = cajaCN.VerificarCajaAbierta(usuario.IdUsuario);
 
-                // ABRIR MENÚ PRINCIPAL PASANDO LOS DOS DATOS
-                frmInicioPiscina inicio = new frmInicioPiscina(
-                    oUsuario.NombreCompleto,
-                    oUsuario.IdUsuario
-                );
+                    // Si NO tiene caja abierta → abrir modal
+                    if (!caja.TieneCajaAbierta)
+                    {
+                        frmAbrirCaja frm = new frmAbrirCaja(usuario.IdUsuario);
 
-                inicio.Show();
-                this.Hide();
+                        if (frm.ShowDialog() == DialogResult.OK)
+                        {
+                            // Caja abierta correctamente
+                            frmInicioPiscina inicio = new frmInicioPiscina(
+                                usuario.NombreCompleto,
+                                usuario.IdUsuario
+                            );
+
+                            inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
+                            inicio.Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("La caja no se abrió. No puede ingresar al sistema.",
+                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
+                        return;
+                    }
+                    // Si YA tiene caja abierta → usarla directamente
+                    else
+                    {
+                        frmInicioPiscina inicio = new frmInicioPiscina(
+                            usuario.NombreCompleto,
+                            usuario.IdUsuario
+                        );
+
+                        inicio.idCajaTurnoActual = caja.IdCajaTurno;
+                        inicio.Show();
+                        this.Hide();
+                        return;
+                    }
+                }
+
+                // ===========================
+                // FLUJO PARA ADMINISTRADOR
+                // ===========================
+                else
+                {
+                    frmInicioPiscina inicio = new frmInicioPiscina(
+                        usuario.NombreCompleto,
+                        usuario.IdUsuario
+                    );
+
+                    inicio.idCajaTurnoActual = 0; // admin no maneja caja
+                    inicio.Show();
+                    this.Hide();
+                }
             }
             else
             {
@@ -65,6 +117,7 @@ namespace CapaPresentacionPiscina
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
     }
 }

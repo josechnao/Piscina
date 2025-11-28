@@ -52,7 +52,6 @@ C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\Cap
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmCompras.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmModalProducto.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmModalProveedor.resources
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmVenta.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmEntradaPromo.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmMantenedor.resources
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmEntradaPromo.resources
@@ -90,3 +89,6 @@ C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\D
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPres.4B6DB0DF.Up2Date
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.exe
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.pdb
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmVentas.resources
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmAbrirCaja.resources
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmCerrarCaja.resources

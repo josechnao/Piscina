@@ -4,6 +4,7 @@ GO
 EXEC SP_LOGIN '1', '1'
 
 INSERT INTO Rol (Descripcion) VALUES ('Administrador');
+INSERT INTO Rol (Descripcion) VALUES ('Cajero');
 
 INSERT INTO Usuario (Documento, NombreCompleto, Clave,IdRol)
 VALUES ('1', 'Administrador General', '1',1);
@@ -43,5 +44,8 @@ VALUES
 ('55667788', 'Jorge Ramírez', '78965412');
 
 
+INSERT INTO Negocio (IdNegocio, NombreNegocio, Direccion, Ciudad, Telefono, Logo)
+VALUES (1, 'Agua Vida', 'Barrio Mariscal', 'San Julian', '00000000', NULL);
 
 
+select * from CajaTurno;
