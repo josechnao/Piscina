@@ -92,3 +92,4 @@ C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\D
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmVentas.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmAbrirCaja.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmCerrarCaja.resources
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmGastos.resources

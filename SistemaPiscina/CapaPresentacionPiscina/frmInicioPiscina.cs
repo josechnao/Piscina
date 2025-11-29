@@ -1,4 +1,5 @@
 ﻿using CapaEntidadPiscina;
+using CapaNegocioPiscina;
 using CapaPresentacionPiscina.Menus;
 using CapaPresentacionPiscina.Modals;
 using System;
@@ -17,16 +18,32 @@ namespace CapaPresentacionPiscina
     {
         private Form formularioActivo = null;
         public int idCajaTurnoActual { get; set; }
-
+        public string rolActual { get; set; }
         public int usuarioActual { get; set; }
 
+
+        public frmInicioPiscina(string usuarioNombre, int idUsuario, string rol)
+        {
+            InitializeComponent();
+
+            this.usuarioActual = idUsuario;
+            this.rolActual = rol;             // ← YA LLEGA CORRECTO
+            this.idCajaTurnoActual = 0;
+
+            lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
+        }
 
         public frmInicioPiscina(string usuarioNombre, int idUsuario)
         {
             InitializeComponent();
-            usuarioActual = idUsuario;
+            this.usuarioActual = idUsuario;
+            this.rolActual = "";
+            this.idCajaTurnoActual = 0;
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
+
+
+
 
 
         private void AbrirFormularioEnPanel(Form formHijo)
@@ -153,6 +170,13 @@ namespace CapaPresentacionPiscina
                 MessageBox.Show("Cierre de caja cancelado. La sesión continúa activa.",
                     "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void btnGastos_Click(object sender, EventArgs e)
+        {
+                        AbrirFormularioEnPanel(
+                new frmGastos(this.rolActual, this.idCajaTurnoActual, this.usuarioActual)
+            );
         }
 
     }

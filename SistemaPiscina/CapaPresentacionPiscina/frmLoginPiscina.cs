@@ -15,6 +15,7 @@ namespace CapaPresentacionPiscina
 {
     public partial class frmLoginPiscina : Form
     {
+
         public frmLoginPiscina()
         {
             InitializeComponent();
@@ -56,20 +57,22 @@ namespace CapaPresentacionPiscina
                     CN_CajaTurno cajaCN = new CN_CajaTurno();
                     ECajaTurno caja = cajaCN.VerificarCajaAbierta(usuario.IdUsuario);
 
-                    // Si NO tiene caja abierta → abrir modal
                     if (!caja.TieneCajaAbierta)
                     {
                         frmAbrirCaja frm = new frmAbrirCaja(usuario.IdUsuario);
 
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            // Caja abierta correctamente
                             frmInicioPiscina inicio = new frmInicioPiscina(
                                 usuario.NombreCompleto,
-                                usuario.IdUsuario
+                                usuario.IdUsuario,
+                                usuario.oRol.Descripcion
                             );
-
                             inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
+
+                            inicio.rolActual = usuario.oRol.Descripcion;   // ←← AQUI
+                            inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
+
                             inicio.Show();
                             this.Hide();
                         }
@@ -81,19 +84,23 @@ namespace CapaPresentacionPiscina
 
                         return;
                     }
+
                     // Si YA tiene caja abierta → usarla directamente
                     else
                     {
                         frmInicioPiscina inicio = new frmInicioPiscina(
                             usuario.NombreCompleto,
-                            usuario.IdUsuario
+                            usuario.IdUsuario,
+                            usuario.oRol.Descripcion
                         );
-
+                        inicio.rolActual = usuario.oRol.Descripcion;  // ←← AQUI
                         inicio.idCajaTurnoActual = caja.IdCajaTurno;
+
                         inicio.Show();
                         this.Hide();
                         return;
                     }
+
                 }
 
                 // ===========================
@@ -103,13 +110,16 @@ namespace CapaPresentacionPiscina
                 {
                     frmInicioPiscina inicio = new frmInicioPiscina(
                         usuario.NombreCompleto,
-                        usuario.IdUsuario
+                        usuario.IdUsuario,
+                        usuario.oRol.Descripcion
                     );
+                    inicio.rolActual = usuario.oRol.Descripcion;   // ←← AQUI
+                    inicio.idCajaTurnoActual = 0;  // admin no maneja caja
 
-                    inicio.idCajaTurnoActual = 0; // admin no maneja caja
                     inicio.Show();
                     this.Hide();
                 }
+
             }
             else
             {

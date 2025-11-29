@@ -48,6 +48,8 @@
     <Compile Include="Compra.cs" />
     <Compile Include="DetalleCompra.cs" />
     <Compile Include="ECajaTurno.cs" />
+    <Compile Include="ECategoriaGasto.cs" />
+    <Compile Include="EGasto.cs" />
     <Compile Include="EntradaTipo.cs" />
     <Compile Include="Negocio.cs" />
     <Compile Include="Permiso.cs" />

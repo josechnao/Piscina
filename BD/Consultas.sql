@@ -1,7 +1,8 @@
 USE PiscinaDB;
 GO
 
-EXEC SP_LOGIN '1', '1'
+select * from Gasto;
+
 
 INSERT INTO Rol (Descripcion) VALUES ('Administrador');
 INSERT INTO Rol (Descripcion) VALUES ('Cajero');
@@ -48,4 +49,12 @@ INSERT INTO Negocio (IdNegocio, NombreNegocio, Direccion, Ciudad, Telefono, Logo
 VALUES (1, 'Agua Vida', 'Barrio Mariscal', 'San Julian', '00000000', NULL);
 
 
-select * from CajaTurno;
+INSERT INTO CategoriaGasto (Descripcion, Estado) VALUES
+('Servicios Básicos', 1),
+('Limpieza y Mantenimiento', 1),
+('Compra de Útiles', 1),
+('Comida del Personal', 1),
+('Reparaciones', 1),
+('Transporte', 1),
+('Emergencias', 1),
+('Otros', 1);

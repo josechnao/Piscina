@@ -1,0 +1,379 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Windows.Forms;
+using CapaEntidadPiscina;
+using CapaNegocioPiscina;
+
+namespace CapaPresentacionPiscina.Menus
+{
+    public partial class frmGastos : Form
+    {
+        // ============================================
+        //  CAMPOS
+        // ============================================
+        private int idGasto = 0;              // Para saber si guardamos o editamos
+        private int idCajaTurnoActual = 0;    // Si es cajero
+        private string rolUsuario = "";       // Admin o Cajero
+        private int usuarioActual = 0;
+
+        // ============================================
+        //  CONSTRUCTOR
+        // ============================================
+        public frmGastos(string rol, int idCajaTurno, int idUsuario)
+        {
+            InitializeComponent();
+            rolUsuario = rol;
+            idCajaTurnoActual = idCajaTurno;
+            usuarioActual = idUsuario;
+        }
+
+        // Helper para no repetir comparaciones
+        private bool EsCajero()
+        {
+            return !string.IsNullOrEmpty(rolUsuario) &&
+                   rolUsuario.Trim().ToUpper() == "CAJERO";
+        }
+
+        // ============================================
+        //  LOAD
+        // ============================================
+        private void frmGastos_Load(object sender, EventArgs e)
+        {
+            CargarCategorias();
+            CargarRolesFiltro();
+            CargarGastos();
+
+            // El cajero NO ve el panel de filtros
+            if (EsCajero())
+            {
+                pnlFiltro.Visible = false;
+            }
+            else
+            {
+                pnlFiltro.Visible = true;
+            }
+        }
+
+        // ============================================
+        //  CARGAR COMBOS
+        // ============================================
+        private void CargarCategorias()
+        {
+            List<ECategoriaGasto> lista = new CN_CategoriaGasto().Listar();
+
+            // Combo de REGISTRO
+            cboCategoria.DataSource = null;
+            cboCategoria.DataSource = lista;
+            cboCategoria.DisplayMember = "Descripcion";
+            cboCategoria.ValueMember = "IdCategoriaGasto";
+
+            // Clonamos la lista para el filtro
+            List<ECategoriaGasto> listaFiltro = new List<ECategoriaGasto>(lista);
+
+            // Agregar opción "Todos" al filtro
+            listaFiltro.Insert(0, new ECategoriaGasto
+            {
+                IdCategoriaGasto = 0,
+                Descripcion = "Todos"
+            });
+
+            cboFiltroCategoria.DataSource = null;
+            cboFiltroCategoria.DataSource = listaFiltro;
+            cboFiltroCategoria.DisplayMember = "Descripcion";
+            cboFiltroCategoria.ValueMember = "IdCategoriaGasto";
+        }
+
+        private void CargarRolesFiltro()
+        {
+            List<Rol> listaRol = new CN_Rol().Listar();
+
+            // Opción "Todos"
+            listaRol.Insert(0, new Rol { IdRol = 0, Descripcion = "Todos" });
+
+            cboFiltroRol.DataSource = null;
+            cboFiltroRol.DataSource = listaRol;
+            cboFiltroRol.DisplayMember = "Descripcion";
+            cboFiltroRol.ValueMember = "IdRol";
+        }
+
+        // ============================================
+        //  GUARDAR / EDITAR
+        // ============================================
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            string mensaje = string.Empty;
+
+            // VALIDACIONES
+            if (Convert.ToInt32(cboCategoria.SelectedValue) == 0)
+            {
+                MessageBox.Show("Debe seleccionar una categoría.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtDescripcion.Text))
+            {
+                MessageBox.Show("Debe ingresar una descripción.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!decimal.TryParse(txtMonto.Text, out decimal monto) || monto <= 0)
+            {
+                MessageBox.Show("Debe ingresar un monto válido mayor a 0.", "Aviso",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // CREAR OBJETO
+            EGasto obj = new EGasto()
+            {
+                IdGasto = idGasto,
+                IdCategoriaGasto = Convert.ToInt32(cboCategoria.SelectedValue),
+                Descripcion = txtDescripcion.Text.Trim(),
+                Monto = monto,
+                IdUsuario = usuarioActual,
+                IdCajaTurno = EsCajero() ? (int?)idCajaTurnoActual : null
+            };
+
+            if (idGasto == 0)
+            {
+                // REGISTRAR
+                int idGenerado = new CN_Gasto().Registrar(obj, out mensaje);
+
+                if (idGenerado > 0)
+                {
+                    MessageBox.Show("Gasto registrado correctamente.", "Mensaje",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Limpiar();
+                    CargarGastos();
+                }
+                else
+                {
+                    MessageBox.Show(mensaje, "Advertencia",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                // EDITAR
+                bool ok = new CN_Gasto().Editar(obj, out mensaje);
+
+                if (ok)
+                {
+                    MessageBox.Show("Gasto actualizado correctamente.", "Mensaje",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Limpiar();
+                    CargarGastos();
+                }
+                else
+                {
+                    MessageBox.Show(mensaje, "Advertencia",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+
+        private void Limpiar()
+        {
+            idGasto = 0;
+            cboCategoria.SelectedIndex = 0;
+            txtDescripcion.Text = "";
+            txtMonto.Text = "";
+            btnGuardar.Text = "Guardar";
+        }
+
+        // ============================================
+        //  CARGAR DGV (ADMIN / CAJERO)
+        // ============================================
+        private void CargarGastos()
+        {
+            dgvGastos.Rows.Clear();
+
+            List<EGasto> lista;
+
+            if (EsCajero())
+                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual);
+            else
+                lista = new CN_Gasto().ListarAdmin();   // ← Admin ve TODO
+
+            foreach (var item in lista)
+            {
+                dgvGastos.Rows.Add(
+                    item.IdGasto,
+                    "", // btn seleccionar
+                    item.CategoriaDescripcion,
+                    item.Descripcion,
+                    item.Monto.ToString("0.00"),
+                    item.UsuarioNombre,       // <--- IMPORTANTE
+                    item.RolDescripcion,      // <--- IMPORTANTE
+                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"),
+                    item.Estado ? "Activo" : "Inactivo",
+                    item.IdCategoriaGasto,
+                    item.IdUsuario,
+                    item.IdCajaTurno
+                );
+            }
+        }
+
+
+        // ============================================
+        //  DGV: ESTADO / SELECCIONAR
+        // ============================================
+        private void dgvGastos_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            string nombreColumna = dgvGastos.Columns[e.ColumnIndex].Name;
+
+            // 1) CAMBIAR ESTADO
+            if (nombreColumna == "btnEstado")
+            {
+                int idGasto = Convert.ToInt32(dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value);
+                bool estadoActual = Convert.ToBoolean(dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value);
+
+                string pregunta = estadoActual
+                    ? "¿Está seguro de INACTIVAR este gasto?"
+                    : "¿Está seguro de ACTIVAR este gasto?";
+
+                if (MessageBox.Show(pregunta, "Confirmar",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    bool nuevoEstado = !estadoActual;
+                    string mensaje = "";
+
+                    bool respuesta = new CN_Gasto().CambiarEstado(idGasto, nuevoEstado, out mensaje);
+
+                    if (respuesta)
+                    {
+                        dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value = nuevoEstado;
+                        dgvGastos.Rows[e.RowIndex].Cells["btnEstado"].Value =
+                            nuevoEstado ? "Activo" : "Inactivo";
+                    }
+                    else
+                    {
+                        MessageBox.Show(mensaje, "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+
+                return;
+            }
+            // 2) SELECCIONAR PARA EDITAR
+            if (nombreColumna == "btnSeleccionar")
+            {
+                // Si es la fila nueva (la del *) no hacemos nada
+                if (dgvGastos.Rows[e.RowIndex].IsNewRow)
+                {
+                    MessageBox.Show("Seleccione una fila válida.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // VALIDACIÓN: evitar filas vacías o nulas
+                var celdaId = dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value;
+
+                if (celdaId == null || celdaId == DBNull.Value || celdaId.ToString() == "")
+                {
+                    MessageBox.Show("Seleccione una fila válida.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                idGasto = Convert.ToInt32(celdaId);
+
+                cboCategoria.SelectedValue =
+                    Convert.ToInt32(dgvGastos.Rows[e.RowIndex].Cells["IdCategoriaGasto"].Value);
+
+                txtDescripcion.Text =
+                    dgvGastos.Rows[e.RowIndex].Cells["Descripcion"].Value.ToString();
+
+                txtMonto.Text =
+                    dgvGastos.Rows[e.RowIndex].Cells["Monto"].Value.ToString();
+
+                btnGuardar.Text = "Actualizar";
+                return;
+            }
+
+
+        }
+
+        // ============================================
+        //  BOTÓN BUSCAR
+        // ============================================
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            dgvGastos.Rows.Clear();
+
+            List<EGasto> lista;
+
+            if (EsCajero())
+                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual);
+            else
+                lista = new CN_Gasto().ListarAdmin();
+
+            // FILTRO DESCRIPCIÓN
+            string texto = txtBuscar.Text.Trim().ToLower();
+            if (texto != "")
+                lista = lista.Where(x => x.Descripcion.ToLower().Contains(texto)).ToList();
+
+            // FILTRO CATEGORÍA
+            int catSeleccionada = Convert.ToInt32(cboFiltroCategoria.SelectedValue);
+            if (catSeleccionada != 0)
+                lista = lista.Where(x => x.IdCategoriaGasto == catSeleccionada).ToList();
+
+            // FILTRO ROL
+            if (!EsCajero())
+            {
+                string rolSel = cboFiltroRol.Text;
+                if (rolSel != "Todos")
+                    lista = lista.Where(x => x.RolDescripcion == rolSel).ToList();
+            }
+
+            // FILTRO FECHAS
+            DateTime desde = dtpDesde.Value.Date;
+            DateTime hasta = dtpHasta.Value.Date.AddDays(1).AddSeconds(-1);
+
+            lista = lista.Where(x =>
+                x.FechaRegistro >= desde &&
+                x.FechaRegistro <= hasta).ToList();
+
+            // LLENADO DGV
+            foreach (var item in lista)
+            {
+                dgvGastos.Rows.Add(
+                    item.IdGasto,
+                    "",
+                    item.CategoriaDescripcion,
+                    item.Descripcion,
+                    item.Monto.ToString("0.00"),
+                    item.UsuarioNombre,
+                    item.RolDescripcion,
+                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"),
+                    item.Estado ? "Activo" : "Inactivo",
+                    item.IdCategoriaGasto,
+                    item.IdUsuario,
+                    item.IdCajaTurno
+                );
+            }
+        }
+
+
+        // ============================================
+        //  BOTÓN LIMPIAR BÚSQUEDA
+        // ============================================
+        private void btnLimpiarBusqueda_Click(object sender, EventArgs e)
+        {
+            txtBuscar.Text = "";
+            cboFiltroCategoria.SelectedIndex = 0; // "Todos"
+            cboFiltroRol.SelectedIndex = 0;       // "Todos"
+            dtpDesde.Value = DateTime.Now.Date;
+            dtpHasta.Value = DateTime.Now.Date;
+
+            CargarGastos();
+        }
+    }
+}

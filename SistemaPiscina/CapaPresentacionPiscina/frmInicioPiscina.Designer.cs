@@ -163,6 +163,7 @@
             this.btnGastos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnGastos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnGastos.UseVisualStyleBackColor = true;
+            this.btnGastos.Click += new System.EventHandler(this.btnGastos_Click);
             // 
             // btnEntradasPromo
             // 

@@ -812,3 +812,208 @@ BEGIN
     SET @Mensaje = 'Caja cerrada correctamente.';
 END;
 GO
+
+/* ==========================================
+   SP: MODULO DE GASTOS
+   ========================================== */
+
+
+CREATE PROCEDURE SP_REGISTRAR_GASTO
+(
+    @IdCategoriaGasto INT,
+    @IdUsuario INT,
+    @IdCajaTurno INT = NULL,   -- Cajero envía turno / Admin envía NULL
+    @Monto DECIMAL(10,2),
+    @Descripcion VARCHAR(250),
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        INSERT INTO Gasto
+        (IdCategoriaGasto, IdUsuario, IdCajaTurno, Monto, Descripcion, FechaRegistro, Estado)
+        VALUES
+        (@IdCategoriaGasto, @IdUsuario, @IdCajaTurno, @Monto, @Descripcion, GETDATE(), 1);
+
+        SET @Resultado = SCOPE_IDENTITY(); -- Devolver Id insertado
+    END TRY
+    BEGIN CATCH
+        SET @Resultado = 0;
+    END CATCH
+
+END;
+
+GO
+
+CREATE PROCEDURE SP_EDITAR_GASTO
+(
+    @IdGasto INT,
+    @IdCategoriaGasto INT,
+    @Monto DECIMAL(10,2),
+    @Descripcion VARCHAR(250),
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE Gasto
+        SET 
+            IdCategoriaGasto = @IdCategoriaGasto,
+            Monto = @Monto,
+            Descripcion = @Descripcion
+        WHERE IdGasto = @IdGasto;
+
+        SET @Resultado = 1;
+    END TRY
+    BEGIN CATCH
+        SET @Resultado = 0;
+    END CATCH
+
+END;
+
+GO
+
+CREATE PROCEDURE SP_CAMBIAR_ESTADO_GASTO
+(
+    @IdGasto INT,
+    @Estado BIT,
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        UPDATE Gasto
+        SET Estado = @Estado
+        WHERE IdGasto = @IdGasto;
+
+        SET @Resultado = 1;
+    END TRY
+    BEGIN CATCH
+        SET @Resultado = 0;
+    END CATCH
+
+END;
+
+GO
+
+CREATE PROCEDURE SP_LISTAR_GASTOS_ADMIN
+AS
+BEGIN
+    SELECT 
+        G.IdGasto,
+        G.IdCategoriaGasto,
+        C.Descripcion AS Categoria,
+        G.IdUsuario,
+        U.NombreCompleto AS Usuario,
+        R.Descripcion AS RolDescripcion,
+        R.IdRol,                           -- ← AGREGADO
+        G.IdCajaTurno,
+        G.Monto,
+        G.Descripcion,
+        G.FechaRegistro,
+        G.Estado
+    FROM Gasto G
+    INNER JOIN CategoriaGasto C ON G.IdCategoriaGasto = C.IdCategoriaGasto
+    INNER JOIN Usuario U ON G.IdUsuario = U.IdUsuario
+    INNER JOIN Rol R ON U.IdRol = R.IdRol      -- ← necesario para IdRol
+    ORDER BY G.FechaRegistro DESC;
+END
+GO
+
+
+GO
+
+CREATE PROCEDURE SP_LISTAR_CATEGORIA_GASTO
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdCategoriaGasto,
+        Descripcion,
+        Estado
+    FROM CategoriaGasto
+    WHERE Estado = 1
+    ORDER BY Descripcion;
+END;
+GO
+
+CREATE PROCEDURE SP_LISTAR_GASTOS_CAJERO
+(
+    @IdCajaTurno INT
+)
+AS
+BEGIN
+    SELECT 
+        G.IdGasto,
+        G.IdCategoriaGasto,
+        C.Descripcion AS Categoria,
+        G.IdUsuario,
+        U.NombreCompleto AS Usuario,
+        R.Descripcion AS RolDescripcion,
+        R.IdRol,                          -- ← AGREGADO
+        G.IdCajaTurno,
+        G.Monto,
+        G.Descripcion,
+        G.FechaRegistro,
+        G.Estado
+    FROM Gasto G
+    INNER JOIN CategoriaGasto C ON G.IdCategoriaGasto = C.IdCategoriaGasto
+    INNER JOIN Usuario U ON G.IdUsuario = U.IdUsuario
+    INNER JOIN Rol R ON U.IdRol = R.IdRol         -- ← AGREGADO
+    WHERE G.IdCajaTurno = @IdCajaTurno
+    ORDER BY G.FechaRegistro DESC;
+END
+GO
+
+
+
+CREATE PROCEDURE SP_FILTRAR_GASTOS_ADMIN
+(
+    @Descripcion NVARCHAR(200) = NULL,
+    @IdCategoriaGasto INT = 0,
+    @IdRol INT = 0,
+    @FechaDesde DATETIME = NULL,
+    @FechaHasta DATETIME = NULL
+)
+AS
+BEGIN
+    SELECT 
+        G.IdGasto,
+        G.IdCategoriaGasto,
+        C.Descripcion AS Categoria,
+        G.IdUsuario,
+        U.NombreCompleto AS Usuario,
+        R.Descripcion AS RolDescripcion,
+        R.IdRol,                        -- ← AGREGADO
+        G.IdCajaTurno,
+        G.Monto,
+        G.Descripcion,
+        G.FechaRegistro,
+        G.Estado
+    FROM Gasto G
+    INNER JOIN CategoriaGasto C ON G.IdCategoriaGasto = C.IdCategoriaGasto
+    INNER JOIN Usuario U ON G.IdUsuario = U.IdUsuario
+    INNER JOIN Rol R ON U.IdRol = R.IdRol
+    WHERE 
+        (@Descripcion IS NULL OR G.Descripcion LIKE '%' + @Descripcion + '%')
+        AND (@IdCategoriaGasto = 0 OR G.IdCategoriaGasto = @IdCategoriaGasto)
+        AND (@IdRol = 0 OR R.IdRol = @IdRol)
+        AND (@FechaDesde IS NULL OR G.FechaRegistro >= @FechaDesde)
+        AND (@FechaHasta IS NULL OR G.FechaRegistro <= @FechaHasta)
+    ORDER BY G.FechaRegistro DESC;
+END
+GO
+
+
+
+EXEC SP_LISTAR_GASTOS_CAJERO @IdCajaTurno = 3;
+EXEC SP_LISTAR_GASTOS_ADMIN;
+SELECT * FROM Gasto WHERE IdCajaTurno = 3;
+SELECT * FROM Gasto;

@@ -255,6 +255,17 @@ CREATE TABLE Gasto (
 );
 GO
 
+ALTER TABLE Gasto
+ADD Estado BIT NOT NULL DEFAULT(1);
+ALTER TABLE Gasto
+ADD IdCajaTurno INT NULL;
+
+ALTER TABLE Gasto
+ADD CONSTRAINT FK_Gasto_CajaTurno
+FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno);
+
+
+
 /* ===========================
    10. PROMOCIONES
    =========================== */
