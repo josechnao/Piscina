@@ -44,6 +44,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.flpProductos = new System.Windows.Forms.FlowLayoutPanel();
             this.gbPlantillaProducto = new System.Windows.Forms.GroupBox();
+            this.gbPlantilla = new System.Windows.Forms.GroupBox();
+            this.btnAdd = new FontAwesome.Sharp.IconButton();
+            this.nudProducto = new System.Windows.Forms.NumericUpDown();
+            this.lblStock = new System.Windows.Forms.Label();
+            this.lblPrecioProducto = new System.Windows.Forms.Label();
+            this.lblDescripcion = new System.Windows.Forms.Label();
             this.btnAgregar = new FontAwesome.Sharp.IconButton();
             this.nudCantidadProducto = new System.Windows.Forms.NumericUpDown();
             this.lblProductoStock = new System.Windows.Forms.Label();
@@ -59,13 +65,6 @@
             this.btnAdultoAdd = new FontAwesome.Sharp.IconButton();
             this.nudAdulto = new System.Windows.Forms.NumericUpDown();
             this.dgvVenta = new System.Windows.Forms.DataGridView();
-            this.IdProducto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NombreProducto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DescripcionProducto = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Cantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Subtotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtTelefono = new System.Windows.Forms.TextBox();
@@ -80,18 +79,20 @@
             this.btnCancelar = new FontAwesome.Sharp.IconButton();
             this.btnGuardar = new FontAwesome.Sharp.IconButton();
             this.gbPlantillaEntrada = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.pnlEntradas = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.pnlPrincipal = new System.Windows.Forms.Panel();
             this.pnlCliente = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.txtDocumento = new System.Windows.Forms.TextBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.iconButton1 = new FontAwesome.Sharp.IconButton();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
+            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.nudBebe)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNino)).BeginInit();
@@ -100,6 +101,8 @@
             this.panel1.SuspendLayout();
             this.flpProductos.SuspendLayout();
             this.gbPlantillaProducto.SuspendLayout();
+            this.gbPlantilla.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudProducto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCantidadProducto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudAdulto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVenta)).BeginInit();
@@ -109,8 +112,6 @@
             this.groupBox3.SuspendLayout();
             this.pnlPrincipal.SuspendLayout();
             this.pnlCliente.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // label14
@@ -135,6 +136,7 @@
             this.btnBebeAdd.Size = new System.Drawing.Size(42, 25);
             this.btnBebeAdd.TabIndex = 2;
             this.btnBebeAdd.UseVisualStyleBackColor = false;
+            this.btnBebeAdd.Click += new System.EventHandler(this.btnBebeAdd_Click);
             // 
             // nudBebe
             // 
@@ -199,6 +201,7 @@
             this.btnNinoAdd.Size = new System.Drawing.Size(42, 25);
             this.btnNinoAdd.TabIndex = 2;
             this.btnNinoAdd.UseVisualStyleBackColor = false;
+            this.btnNinoAdd.Click += new System.EventHandler(this.btnNinoAdd_Click);
             // 
             // nudNino
             // 
@@ -263,6 +266,7 @@
             this.btnAdolescenteAdd.Size = new System.Drawing.Size(42, 25);
             this.btnAdolescenteAdd.TabIndex = 2;
             this.btnAdolescenteAdd.UseVisualStyleBackColor = false;
+            this.btnAdolescenteAdd.Click += new System.EventHandler(this.btnAdolescenteAdd_Click);
             // 
             // nudAdolescente
             // 
@@ -306,7 +310,7 @@
             // 
             // gbPlantillaProducto
             // 
-            this.gbPlantillaProducto.Controls.Add(this.groupBox4);
+            this.gbPlantillaProducto.Controls.Add(this.gbPlantilla);
             this.gbPlantillaProducto.Controls.Add(this.btnAgregar);
             this.gbPlantillaProducto.Controls.Add(this.nudCantidadProducto);
             this.gbPlantillaProducto.Controls.Add(this.lblProductoStock);
@@ -320,6 +324,85 @@
             this.gbPlantillaProducto.TabStop = false;
             this.gbPlantillaProducto.Text = "\"\"";
             this.gbPlantillaProducto.Visible = false;
+            // 
+            // gbPlantilla
+            // 
+            this.gbPlantilla.Controls.Add(this.btnAdd);
+            this.gbPlantilla.Controls.Add(this.nudProducto);
+            this.gbPlantilla.Controls.Add(this.lblStock);
+            this.gbPlantilla.Controls.Add(this.lblPrecioProducto);
+            this.gbPlantilla.Controls.Add(this.lblDescripcion);
+            this.gbPlantilla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.gbPlantilla.Location = new System.Drawing.Point(8, 8);
+            this.gbPlantilla.Name = "gbPlantilla";
+            this.gbPlantilla.Size = new System.Drawing.Size(143, 116);
+            this.gbPlantilla.TabIndex = 9;
+            this.gbPlantilla.TabStop = false;
+            this.gbPlantilla.Text = "\"\"";
+            this.gbPlantilla.Visible = false;
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.BackColor = System.Drawing.Color.LightGreen;
+            this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAdd.IconChar = FontAwesome.Sharp.IconChar.Plus;
+            this.btnAdd.IconColor = System.Drawing.Color.Black;
+            this.btnAdd.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnAdd.IconSize = 20;
+            this.btnAdd.Location = new System.Drawing.Point(80, 74);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(42, 25);
+            this.btnAdd.TabIndex = 3;
+            this.btnAdd.UseVisualStyleBackColor = false;
+            // 
+            // nudProducto
+            // 
+            this.nudProducto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nudProducto.Location = new System.Drawing.Point(8, 77);
+            this.nudProducto.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nudProducto.Name = "nudProducto";
+            this.nudProducto.Size = new System.Drawing.Size(50, 22);
+            this.nudProducto.TabIndex = 6;
+            this.nudProducto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.nudProducto.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // lblStock
+            // 
+            this.lblStock.AutoSize = true;
+            this.lblStock.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStock.Location = new System.Drawing.Point(8, 56);
+            this.lblStock.Name = "lblStock";
+            this.lblStock.Size = new System.Drawing.Size(85, 13);
+            this.lblStock.TabIndex = 5;
+            this.lblStock.Text = "..........................";
+            // 
+            // lblPrecioProducto
+            // 
+            this.lblPrecioProducto.AutoSize = true;
+            this.lblPrecioProducto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrecioProducto.Location = new System.Drawing.Point(7, 39);
+            this.lblPrecioProducto.Name = "lblPrecioProducto";
+            this.lblPrecioProducto.Size = new System.Drawing.Size(85, 13);
+            this.lblPrecioProducto.TabIndex = 4;
+            this.lblPrecioProducto.Text = "PrecioProducto";
+            // 
+            // lblDescripcion
+            // 
+            this.lblDescripcion.AutoSize = true;
+            this.lblDescripcion.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescripcion.Location = new System.Drawing.Point(5, 21);
+            this.lblDescripcion.Name = "lblDescripcion";
+            this.lblDescripcion.Size = new System.Drawing.Size(117, 13);
+            this.lblDescripcion.TabIndex = 3;
+            this.lblDescripcion.Text = "Descripcion Producto";
             // 
             // btnAgregar
             // 
@@ -454,9 +537,9 @@
             this.lblPrecioAdulto.AutoSize = true;
             this.lblPrecioAdulto.Location = new System.Drawing.Point(113, 22);
             this.lblPrecioAdulto.Name = "lblPrecioAdulto";
-            this.lblPrecioAdulto.Size = new System.Drawing.Size(36, 17);
+            this.lblPrecioAdulto.Size = new System.Drawing.Size(11, 17);
             this.lblPrecioAdulto.TabIndex = 3;
-            this.lblPrecioAdulto.Text = "0000";
+            this.lblPrecioAdulto.Text = ".";
             // 
             // btnAdultoAdd
             // 
@@ -471,6 +554,7 @@
             this.btnAdultoAdd.Size = new System.Drawing.Size(42, 25);
             this.btnAdultoAdd.TabIndex = 2;
             this.btnAdultoAdd.UseVisualStyleBackColor = false;
+            this.btnAdultoAdd.Click += new System.EventHandler(this.btnAdultoAdd_Click);
             // 
             // nudAdulto
             // 
@@ -494,54 +578,19 @@
             // 
             this.dgvVenta.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvVenta.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.IdProducto,
-            this.NombreProducto,
-            this.DescripcionProducto,
-            this.Cantidad,
-            this.PrecioUnitario,
-            this.Subtotal,
-            this.btnEliminar});
+            this.colId,
+            this.colNombre,
+            this.colDescripcion,
+            this.colCantidad,
+            this.colPrecioUnitario,
+            this.colSubTotal,
+            this.colEliminar,
+            this.colTipo});
             this.dgvVenta.Location = new System.Drawing.Point(462, 56);
             this.dgvVenta.Name = "dgvVenta";
             this.dgvVenta.Size = new System.Drawing.Size(489, 507);
             this.dgvVenta.TabIndex = 9;
-            // 
-            // IdProducto
-            // 
-            this.IdProducto.HeaderText = "IdProducto";
-            this.IdProducto.Name = "IdProducto";
-            this.IdProducto.ReadOnly = true;
-            this.IdProducto.Visible = false;
-            // 
-            // NombreProducto
-            // 
-            this.NombreProducto.HeaderText = "Nombre";
-            this.NombreProducto.Name = "NombreProducto";
-            // 
-            // DescripcionProducto
-            // 
-            this.DescripcionProducto.HeaderText = "Descripcion";
-            this.DescripcionProducto.Name = "DescripcionProducto";
-            // 
-            // Cantidad
-            // 
-            this.Cantidad.HeaderText = "Cant.";
-            this.Cantidad.Name = "Cantidad";
-            // 
-            // PrecioUnitario
-            // 
-            this.PrecioUnitario.HeaderText = "P. Unitario";
-            this.PrecioUnitario.Name = "PrecioUnitario";
-            // 
-            // Subtotal
-            // 
-            this.Subtotal.HeaderText = "Subtotal";
-            this.Subtotal.Name = "Subtotal";
-            // 
-            // btnEliminar
-            // 
-            this.btnEliminar.HeaderText = "Eliminar";
-            this.btnEliminar.Name = "btnEliminar";
+            this.dgvVenta.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVenta_CellContentClick);
             // 
             // label5
             // 
@@ -557,7 +606,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(701, 21);
+            this.label4.Location = new System.Drawing.Point(662, 21);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 6;
@@ -566,7 +615,7 @@
             // txtTelefono
             // 
             this.txtTelefono.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTelefono.Location = new System.Drawing.Point(766, 17);
+            this.txtTelefono.Location = new System.Drawing.Point(727, 17);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(118, 22);
             this.txtTelefono.TabIndex = 5;
@@ -575,7 +624,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(178, 21);
+            this.label3.Location = new System.Drawing.Point(218, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 4;
@@ -704,16 +753,6 @@
             this.gbPlantillaEntrada.TabStop = false;
             this.gbPlantillaEntrada.Text = "Entrada Adulto";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(13, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Datos del Cliente";
-            // 
             // pnlEntradas
             // 
             this.pnlEntradas.BackColor = System.Drawing.Color.White;
@@ -757,13 +796,13 @@
             // pnlCliente
             // 
             this.pnlCliente.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlCliente.Controls.Add(this.label1);
             this.pnlCliente.Controls.Add(this.label4);
             this.pnlCliente.Controls.Add(this.txtTelefono);
             this.pnlCliente.Controls.Add(this.label3);
             this.pnlCliente.Controls.Add(this.label2);
             this.pnlCliente.Controls.Add(this.txtNombre);
             this.pnlCliente.Controls.Add(this.txtDocumento);
-            this.pnlCliente.Controls.Add(this.label1);
             this.pnlCliente.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCliente.Location = new System.Drawing.Point(0, 0);
             this.pnlCliente.Name = "pnlCliente";
@@ -771,92 +810,67 @@
             this.pnlCliente.Size = new System.Drawing.Size(954, 49);
             this.pnlCliente.TabIndex = 0;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(6, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(191, 25);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "DATOS DEL CLIENTE";
+            // 
             // txtDocumento
             // 
             this.txtDocumento.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumento.Location = new System.Drawing.Point(260, 17);
+            this.txtDocumento.Location = new System.Drawing.Point(300, 17);
             this.txtDocumento.Name = "txtDocumento";
             this.txtDocumento.Size = new System.Drawing.Size(118, 22);
             this.txtDocumento.TabIndex = 3;
             // 
-            // groupBox4
+            // colId
             // 
-            this.groupBox4.Controls.Add(this.iconButton1);
-            this.groupBox4.Controls.Add(this.numericUpDown1);
-            this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Controls.Add(this.label15);
-            this.groupBox4.Controls.Add(this.label16);
-            this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox4.Location = new System.Drawing.Point(8, 8);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(143, 116);
-            this.groupBox4.TabIndex = 9;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "\"\"";
-            this.groupBox4.Visible = false;
+            this.colId.HeaderText = "IdItem";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Visible = false;
             // 
-            // iconButton1
+            // colNombre
             // 
-            this.iconButton1.BackColor = System.Drawing.Color.LightGreen;
-            this.iconButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.iconButton1.IconChar = FontAwesome.Sharp.IconChar.Plus;
-            this.iconButton1.IconColor = System.Drawing.Color.Black;
-            this.iconButton1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.iconButton1.IconSize = 20;
-            this.iconButton1.Location = new System.Drawing.Point(80, 74);
-            this.iconButton1.Name = "iconButton1";
-            this.iconButton1.Size = new System.Drawing.Size(42, 25);
-            this.iconButton1.TabIndex = 3;
-            this.iconButton1.UseVisualStyleBackColor = false;
+            this.colNombre.HeaderText = "Nombre";
+            this.colNombre.Name = "colNombre";
             // 
-            // numericUpDown1
+            // colDescripcion
             // 
-            this.numericUpDown1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numericUpDown1.Location = new System.Drawing.Point(8, 77);
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(50, 22);
-            this.numericUpDown1.TabIndex = 6;
-            this.numericUpDown1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            this.colDescripcion.HeaderText = "Descripcion";
+            this.colDescripcion.Name = "colDescripcion";
             // 
-            // label10
+            // colCantidad
             // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(8, 56);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(85, 13);
-            this.label10.TabIndex = 5;
-            this.label10.Text = "..........................";
+            this.colCantidad.HeaderText = "Cant.";
+            this.colCantidad.Name = "colCantidad";
             // 
-            // label15
+            // colPrecioUnitario
             // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(7, 39);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(85, 13);
-            this.label15.TabIndex = 4;
-            this.label15.Text = "PrecioProducto";
+            this.colPrecioUnitario.HeaderText = "P. Unitario";
+            this.colPrecioUnitario.Name = "colPrecioUnitario";
             // 
-            // label16
+            // colSubTotal
             // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(5, 21);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(117, 13);
-            this.label16.TabIndex = 3;
-            this.label16.Text = "Descripcion Producto";
+            this.colSubTotal.HeaderText = "Subtotal";
+            this.colSubTotal.Name = "colSubTotal";
+            // 
+            // colEliminar
+            // 
+            this.colEliminar.HeaderText = "Eliminar";
+            this.colEliminar.Name = "colEliminar";
+            // 
+            // colTipo
+            // 
+            this.colTipo.HeaderText = "Tipo";
+            this.colTipo.Name = "colTipo";
+            this.colTipo.ReadOnly = true;
+            this.colTipo.Visible = false;
             // 
             // frmVentas
             // 
@@ -875,6 +889,7 @@
             this.Name = "frmVentas";
             this.Text = "frmVentas";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.frmVentas_Load);
             ((System.ComponentModel.ISupportInitialize)(this.nudBebe)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -887,6 +902,9 @@
             this.flpProductos.ResumeLayout(false);
             this.gbPlantillaProducto.ResumeLayout(false);
             this.gbPlantillaProducto.PerformLayout();
+            this.gbPlantilla.ResumeLayout(false);
+            this.gbPlantilla.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nudProducto)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudCantidadProducto)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudAdulto)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvVenta)).EndInit();
@@ -901,9 +919,6 @@
             this.pnlPrincipal.ResumeLayout(false);
             this.pnlCliente.ResumeLayout(false);
             this.pnlCliente.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -926,12 +941,12 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.FlowLayoutPanel flpProductos;
         private System.Windows.Forms.GroupBox gbPlantillaProducto;
-        private System.Windows.Forms.GroupBox groupBox4;
-        private FontAwesome.Sharp.IconButton iconButton1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.GroupBox gbPlantilla;
+        private FontAwesome.Sharp.IconButton btnAdd;
+        private System.Windows.Forms.NumericUpDown nudProducto;
+        private System.Windows.Forms.Label lblStock;
+        private System.Windows.Forms.Label lblPrecioProducto;
+        private System.Windows.Forms.Label lblDescripcion;
         private FontAwesome.Sharp.IconButton btnAgregar;
         private System.Windows.Forms.NumericUpDown nudCantidadProducto;
         private System.Windows.Forms.Label lblProductoStock;
@@ -947,13 +962,6 @@
         private FontAwesome.Sharp.IconButton btnAdultoAdd;
         private System.Windows.Forms.NumericUpDown nudAdulto;
         private System.Windows.Forms.DataGridView dgvVenta;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IdProducto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn NombreProducto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DescripcionProducto;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Cantidad;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PrecioUnitario;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Subtotal;
-        private System.Windows.Forms.DataGridViewButtonColumn btnEliminar;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtTelefono;
@@ -968,11 +976,19 @@
         private FontAwesome.Sharp.IconButton btnCancelar;
         private FontAwesome.Sharp.IconButton btnGuardar;
         private System.Windows.Forms.GroupBox gbPlantillaEntrada;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel pnlEntradas;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Panel pnlPrincipal;
         private System.Windows.Forms.Panel pnlCliente;
         private System.Windows.Forms.TextBox txtDocumento;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colId;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colNombre;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDescripcion;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCantidad;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrecioUnitario;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSubTotal;
+        private System.Windows.Forms.DataGridViewButtonColumn colEliminar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTipo;
     }
 }

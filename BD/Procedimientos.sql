@@ -544,6 +544,8 @@ BEGIN
 END
 GO
 
+
+
 CREATE PROCEDURE SP_ActualizarPreciosEntrada
 (
     @IdEntradaTipo INT,
@@ -1011,9 +1013,206 @@ BEGIN
 END
 GO
 
+/* ==========================================
+   SP: MODULO DE VENTAS
+   ========================================== */
+
+CREATE PROCEDURE SP_LISTAR_ENTRADASTIPO_ACTIVAS
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdEntradaTipo,
+        Descripcion,
+        PrecioBase,
+        Estado
+    FROM EntradaTipo
+    WHERE Estado = 1;
+END
+GO
 
 
-EXEC SP_LISTAR_GASTOS_CAJERO @IdCajaTurno = 3;
-EXEC SP_LISTAR_GASTOS_ADMIN;
-SELECT * FROM Gasto WHERE IdCajaTurno = 3;
-SELECT * FROM Gasto;
+CREATE PROCEDURE SP_LISTAR_PRODUCTOS_ACTIVOS
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        P.IdProducto,
+        P.Codigo,
+        P.Nombre,
+        P.Descripcion,
+        P.IdCategoria,
+        C.Descripcion AS Categoria,
+        P.PrecioCompra,
+        P.PrecioVenta,
+        P.Stock,
+        P.Estado
+    FROM Producto P
+    INNER JOIN Categoria C ON P.IdCategoria = C.IdCategoria
+    WHERE P.Estado = 1;
+END
+GO
+
+
+CREATE PROCEDURE SP_LISTAR_PRODUCTOS_POR_CATEGORIA
+(
+    @IdCategoria INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        P.IdProducto,
+        P.Codigo,
+        P.Nombre,
+        P.Descripcion,
+        P.IdCategoria,
+        C.Descripcion AS Categoria,
+        P.PrecioVenta,
+        P.Stock,
+        P.Estado
+    FROM Producto P
+    INNER JOIN Categoria C ON P.IdCategoria = C.IdCategoria
+    WHERE 
+        P.Estado = 1
+        AND P.IdCategoria = @IdCategoria;
+END
+GO
+
+
+CREATE PROCEDURE SP_OBTENER_PROMO_ACTIVA
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT TOP 1
+        IdPromocion,
+        Estado,
+        Categoria,
+        UsuarioModifico,
+        FechaActualizacion
+    FROM Promocion
+    WHERE Estado = 1; -- Solo la promo activa
+END
+GO
+
+CREATE TYPE TVP_DetalleVentaEntrada AS TABLE
+(
+    IdEntradaTipo INT,
+    Cantidad INT,
+    PrecioUnitario DECIMAL(10,2),
+    PrecioAplicado DECIMAL(10,2),
+    SubTotal DECIMAL(10,2)
+)
+GO
+
+CREATE TYPE TVP_DetalleVentaProducto AS TABLE
+(
+    IdProducto INT,
+    Cantidad INT,
+    PrecioUnitario DECIMAL(10,2),
+    SubTotal DECIMAL(10,2)
+)
+GO
+
+CREATE PROCEDURE SP_REGISTRAR_VENTA_COMPLETA
+(
+    @IdUsuario INT,
+    @IdCliente INT = NULL,
+    @MetodoPago VARCHAR(20),
+    @IdCajaTurno INT,
+    @DetalleEntradas TVP_DetalleVentaEntrada READONLY,
+    @DetalleProductos TVP_DetalleVentaProducto READONLY,
+    @Resultado INT OUTPUT,
+    @Mensaje VARCHAR(500) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DECLARE 
+            @UltimoNumero INT,
+            @CantidadDigitos INT,
+            @Prefijo VARCHAR(10),
+            @NuevoNumero INT,
+            @NumeroVenta VARCHAR(50);
+
+        -- Obtener correlativo activo
+        SELECT 
+            @UltimoNumero = UltimoNumero,
+            @CantidadDigitos = CantidadDigitos,
+            @Prefijo = Prefijo
+        FROM Correlativo
+        WHERE Estado = 1;
+
+        -- Incrementar número
+        SET @NuevoNumero = @UltimoNumero + 1;
+
+        -- Generar código final: V00001, V00002, ...
+        SET @NumeroVenta = @Prefijo +
+            RIGHT(REPLICATE('0', @CantidadDigitos) + CAST(@NuevoNumero AS VARCHAR(10)), @CantidadDigitos);
+
+        -- Insertar cabecera de venta
+        INSERT INTO Venta(IdUsuario, IdCliente, NumeroVenta, MetodoPago, MontoTotal, FechaRegistro, IdCajaTurno)
+        VALUES
+        (
+            @IdUsuario,
+            @IdCliente,
+            @NumeroVenta,
+            @MetodoPago,
+            (
+                -- SUMA TOTAL (entradas + snacks)
+                (SELECT ISNULL(SUM(SubTotal),0) FROM @DetalleEntradas) +
+                (SELECT ISNULL(SUM(SubTotal),0) FROM @DetalleProductos)
+            ),
+            GETDATE(),
+            @IdCajaTurno
+        );
+
+        DECLARE @IdVentaGenerada INT = SCOPE_IDENTITY();
+
+        -- Insertar detalle de ENTRADAS
+        INSERT INTO DetalleVentaEntrada(IdVenta, IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal)
+        SELECT @IdVentaGenerada, IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal
+        FROM @DetalleEntradas;
+
+        -- Insertar detalle de SNACKS
+        INSERT INTO DetalleVentaProducto(IdVenta, IdProducto, Cantidad, PrecioUnitario, SubTotal)
+        SELECT @IdVentaGenerada, IdProducto, Cantidad, PrecioUnitario, SubTotal
+        FROM @DetalleProductos;
+
+        -- Actualizar STOCK por cada producto vendido
+        UPDATE P
+        SET P.Stock = P.Stock - D.Cantidad
+        FROM Producto P
+        INNER JOIN @DetalleProductos D ON P.IdProducto = D.IdProducto;
+
+        -- Actualizar correlativo
+        UPDATE Correlativo
+        SET UltimoNumero = @NuevoNumero
+        WHERE Estado = 1;
+
+        -- Éxito
+        SET @Resultado = @IdVentaGenerada;
+        SET @Mensaje = @NumeroVenta; -- devolvemos el numero de venta
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+
+        SET @Resultado = 0;
+        SET @Mensaje = ERROR_MESSAGE();
+    END CATCH
+END
+GO
+
+EXEC SP_OBTENER_PROMO;
+SELECT * FROM Producto WHERE Estado = 1;

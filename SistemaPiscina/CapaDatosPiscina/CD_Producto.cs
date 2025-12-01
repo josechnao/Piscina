@@ -192,7 +192,7 @@ namespace CapaDatosPiscina
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ListarProductosActivosVenta", oconexion);
+                    SqlCommand cmd = new SqlCommand("SP_LISTAR_PRODUCTOS_ACTIVOS", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();

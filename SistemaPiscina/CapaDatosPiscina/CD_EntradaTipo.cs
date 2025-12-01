@@ -91,7 +91,7 @@ namespace CapaDatosPiscina
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("SP_ListarEntradaTipoActivas", oconexion);
+                    SqlCommand cmd = new SqlCommand("SP_LISTAR_ENTRADASTIPO_ACTIVAS", oconexion);
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     oconexion.Open();
@@ -118,6 +118,7 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+
 
     }
 }

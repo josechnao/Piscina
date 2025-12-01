@@ -1,7 +1,9 @@
 USE PiscinaDB;
 GO
 
-select * from Gasto;
+select * from Promocion;
+SELECT * FROM Producto WHERE Estado = 1;
+exec SP_LISTAR_PRODUCTOS_ACTIVOS;
 
 
 INSERT INTO Rol (Descripcion) VALUES ('Administrador');
