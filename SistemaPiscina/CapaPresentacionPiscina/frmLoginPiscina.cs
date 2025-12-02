@@ -47,8 +47,14 @@ namespace CapaPresentacionPiscina
             CN_Usuario oCN = new CN_Usuario();
             Usuario usuario = oCN.Login(txtDocumento.Text.Trim(), txtClave.Text.Trim());
 
+            // ===========================
+            // VALIDACIÓN CORRECTA
+            // ===========================
             if (usuario.IdUsuario != 0)
             {
+                // 🔥🔥🔥 ESTA LÍNEA FALTABA 🔥🔥🔥
+                SesionUsuario.UsuarioActual = usuario;
+
                 // ===========================
                 // FLUJO ESPECIAL PARA CAJERO
                 // ===========================
@@ -68,9 +74,8 @@ namespace CapaPresentacionPiscina
                                 usuario.IdUsuario,
                                 usuario.oRol.Descripcion
                             );
-                            inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
 
-                            inicio.rolActual = usuario.oRol.Descripcion;   // ←← AQUI
+                            inicio.rolActual = usuario.oRol.Descripcion;
                             inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
 
                             inicio.Show();
@@ -84,8 +89,6 @@ namespace CapaPresentacionPiscina
 
                         return;
                     }
-
-                    // Si YA tiene caja abierta → usarla directamente
                     else
                     {
                         frmInicioPiscina inicio = new frmInicioPiscina(
@@ -93,14 +96,14 @@ namespace CapaPresentacionPiscina
                             usuario.IdUsuario,
                             usuario.oRol.Descripcion
                         );
-                        inicio.rolActual = usuario.oRol.Descripcion;  // ←← AQUI
+
+                        inicio.rolActual = usuario.oRol.Descripcion;
                         inicio.idCajaTurnoActual = caja.IdCajaTurno;
 
                         inicio.Show();
                         this.Hide();
                         return;
                     }
-
                 }
 
                 // ===========================
@@ -113,13 +116,13 @@ namespace CapaPresentacionPiscina
                         usuario.IdUsuario,
                         usuario.oRol.Descripcion
                     );
-                    inicio.rolActual = usuario.oRol.Descripcion;   // ←← AQUI
-                    inicio.idCajaTurnoActual = 0;  // admin no maneja caja
+
+                    inicio.rolActual = usuario.oRol.Descripcion;
+                    inicio.idCajaTurnoActual = 0;
 
                     inicio.Show();
                     this.Hide();
                 }
-
             }
             else
             {
@@ -127,6 +130,7 @@ namespace CapaPresentacionPiscina
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
 
 
     }

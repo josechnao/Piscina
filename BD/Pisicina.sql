@@ -102,6 +102,7 @@ CREATE TABLE Categoria (
 );
 GO
 
+
 CREATE TABLE Producto (
     IdProducto INT IDENTITY(1,1) PRIMARY KEY,
     Descripcion VARCHAR(150) NOT NULL,
@@ -115,6 +116,7 @@ CREATE TABLE Producto (
     CONSTRAINT FK_Producto_Categoria FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
 );
 GO
+
 
 /* ===========================
    6. PROVEEDORES Y COMPRAS

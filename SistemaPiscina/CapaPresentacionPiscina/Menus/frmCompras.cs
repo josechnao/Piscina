@@ -27,18 +27,26 @@ namespace CapaPresentacionPiscina.Menus
         }
 
         private void frmCompras_Load(object sender, EventArgs e)
-{
-    cboTipoDocumento.Items.Clear();
+        {
+            if (SesionUsuario.UsuarioActual == null)
+            {
+                MessageBox.Show("El usuario actual es NULL");
+            }
+            else
+            {
+                MessageBox.Show("Usuario cargado: " + SesionUsuario.UsuarioActual.IdUsuario);
+            }
+            cboTipoDocumento.Items.Clear();
 
-    cboTipoDocumento.Items.Add("FACTURA");
-    cboTipoDocumento.Items.Add("RECIBO");
-    cboTipoDocumento.Items.Add("BOLETA");
-    cboTipoDocumento.Items.Add("SIN DOCUMENTO");
+            cboTipoDocumento.Items.Add("FACTURA");
+            cboTipoDocumento.Items.Add("RECIBO");
+            cboTipoDocumento.Items.Add("BOLETA");
+            cboTipoDocumento.Items.Add("SIN DOCUMENTO");
 
-    cboTipoDocumento.SelectedIndex = 0;  // Primera opción seleccionada
+            cboTipoDocumento.SelectedIndex = 0;  // Primera opción seleccionada
 
-    CargarCorrelativo();  // <-- Ya lo tienes listo
-}
+            CargarCorrelativo();  // <-- Ya lo tienes listo
+        }
         private void btnBuscarProveedor_Click(object sender, EventArgs e)
         {
             // Si ya hay productos agregados NO permitir cambiar de proveedor

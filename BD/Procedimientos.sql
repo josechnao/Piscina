@@ -317,6 +317,16 @@ BEGIN
 END;
 GO
 
+
+CREATE PROCEDURE SP_LISTAR_CATEGORIAS_ACTIVAS
+AS
+BEGIN
+    SELECT IdCategoria, Descripcion
+    FROM Categoria
+    WHERE Estado = 1
+END
+
+
 -------------------------
 ----PROCEDIMIENTO PARA PRODUCTOS
 -------------------------
@@ -1036,25 +1046,20 @@ GO
 CREATE PROCEDURE SP_LISTAR_PRODUCTOS_ACTIVOS
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    SELECT
+    SELECT  
         P.IdProducto,
-        P.Codigo,
         P.Nombre,
         P.Descripcion,
-        P.IdCategoria,
-        C.Descripcion AS Categoria,
-        P.PrecioCompra,
         P.PrecioVenta,
         P.Stock,
-        P.Estado
+        P.IdCategoria,              -- 🔥 AGREGAR ESTO
+        C.Descripcion AS Categoria  -- Texto
     FROM Producto P
     INNER JOIN Categoria C ON P.IdCategoria = C.IdCategoria
     WHERE P.Estado = 1;
 END
 GO
-
+SELECT * FROM Producto;
 
 CREATE PROCEDURE SP_LISTAR_PRODUCTOS_POR_CATEGORIA
 (

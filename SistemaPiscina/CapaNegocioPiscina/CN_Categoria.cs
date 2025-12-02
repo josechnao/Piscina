@@ -12,6 +12,10 @@ namespace CapaNegocioPiscina
         {
             return objCapaDatos.Listar();
         }
+        public List<Categoria> ListarActivas()
+        {
+            return objCapaDatos.ListarActivas();   // ESTE ERA EL ERROR
+        }
 
         public int Registrar(Categoria obj, out string Mensaje)
         {
@@ -44,5 +48,7 @@ namespace CapaNegocioPiscina
         {
             return objCapaDatos.CambiarEstado(idCategoria, nuevoEstado, out Mensaje);
         }
+        
+
     }
 }

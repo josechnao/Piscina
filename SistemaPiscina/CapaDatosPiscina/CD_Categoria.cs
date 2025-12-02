@@ -148,5 +148,40 @@ namespace CapaDatosPiscina
 
             return resultado;
         }
+
+        // 🔥 Método especial para el módulo ventas
+        public List<Categoria> ListarActivas()
+        {
+            List<Categoria> lista = new List<Categoria>();
+
+            try
+            {
+                using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_LISTAR_CATEGORIAS_ACTIVAS", oconexion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oconexion.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new Categoria()
+                            {
+                                IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                                Descripcion = dr["Descripcion"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Categoria>();
+            }
+
+            return lista;
+        }
     }
 }

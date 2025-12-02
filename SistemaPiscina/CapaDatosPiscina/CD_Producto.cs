@@ -190,40 +190,43 @@ namespace CapaDatosPiscina
 
             using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
             {
-                try
+                SqlCommand cmd = new SqlCommand("SP_LISTAR_PRODUCTOS_ACTIVOS", oconexion);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                oconexion.Open();
+
+                using (SqlDataReader dr = cmd.ExecuteReader())
                 {
-                    SqlCommand cmd = new SqlCommand("SP_LISTAR_PRODUCTOS_ACTIVOS", oconexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    oconexion.Open();
-
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    while (dr.Read())
                     {
-                        while (dr.Read())
+                        lista.Add(new Producto()
                         {
-                            lista.Add(new Producto()
+                            IdProducto = Convert.ToInt32(dr["IdProducto"]),
+                            Nombre = dr["Nombre"].ToString(),
+                            Descripcion = dr["Descripcion"].ToString(),
+                            PrecioVenta = Convert.ToDecimal(dr["PrecioVenta"]),
+                            Stock = Convert.ToInt32(dr["Stock"]),
+
+                            // 🔥🔥🔥 ESTO FALTABA 🔥🔥🔥
+                            IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+
+                            oCategoria = new Categoria()
                             {
-                                IdProducto = Convert.ToInt32(dr["IdProducto"]),
-                                Nombre = dr["Nombre"].ToString(),
-                                Descripcion = dr["Descripcion"].ToString(),
-                                PrecioVenta = Convert.ToDecimal(dr["PrecioVenta"]),
-                                Stock = Convert.ToInt32(dr["Stock"]),
-                                oCategoria = new Categoria()
-                                {
-                                    Descripcion = dr["Categoria"].ToString()
-                                }
-                            });
-                        }
+                                IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                                Descripcion = dr["Categoria"].ToString()
+                            }
+                        });
                     }
-                }
-                catch
-                {
-                    lista = new List<Producto>();
                 }
             }
 
             return lista;
         }
+
+
+
+
+
 
     }
 }
