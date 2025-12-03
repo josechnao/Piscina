@@ -154,7 +154,7 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
-                                IdRol = Convert.ToInt32(dr["IdRol"]),
+                                // IdRol eliminado
 
                                 IdCajaTurno = dr["IdCajaTurno"] != DBNull.Value
                                             ? Convert.ToInt32(dr["IdCajaTurno"])
@@ -176,6 +176,7 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+
 
 
         // ======================================================
@@ -208,7 +209,7 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
-                                IdRol = Convert.ToInt32(dr["IdRol"]),
+                                // IdRol eliminado
 
                                 IdCajaTurno = Convert.ToInt32(dr["IdCajaTurno"]),
 
@@ -228,6 +229,7 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+
 
 
         // ======================================================
@@ -264,7 +266,6 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
-                                IdRol = Convert.ToInt32(dr["IdRol"]),
 
                                 IdCajaTurno = dr["IdCajaTurno"] != DBNull.Value
                                             ? Convert.ToInt32(dr["IdCajaTurno"])
@@ -321,7 +322,6 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
-                                IdRol = Convert.ToInt32(dr["IdRol"]),
 
                                 IdCajaTurno = Convert.ToInt32(dr["IdCajaTurno"]),
 

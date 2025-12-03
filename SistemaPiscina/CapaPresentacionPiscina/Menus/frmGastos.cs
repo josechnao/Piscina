@@ -185,9 +185,9 @@ namespace CapaPresentacionPiscina.Menus
             btnGuardar.Text = "Guardar";
         }
 
-        // ============================================
+        // =============================
         //  CARGAR DGV (ADMIN / CAJERO)
-        // ============================================
+        // =============================
         private void CargarGastos()
         {
             dgvGastos.Rows.Clear();
@@ -195,28 +195,37 @@ namespace CapaPresentacionPiscina.Menus
             List<EGasto> lista;
 
             if (EsCajero())
+            {
+                // Cajero: solo su caja actual
                 lista = new CN_Gasto().ListarCajero(idCajaTurnoActual);
+            }
             else
-                lista = new CN_Gasto().ListarAdmin();   // ← Admin ve TODO
+            {
+                // Admin: ve TODOS los gastos (no filtra por caja)
+                lista = new CN_Gasto().ListarAdmin();
+            }
 
             foreach (var item in lista)
             {
                 dgvGastos.Rows.Add(
-                    item.IdGasto,
-                    "", // btn seleccionar
-                    item.CategoriaDescripcion,
-                    item.Descripcion,
-                    item.Monto.ToString("0.00"),
-                    item.UsuarioNombre,       // <--- IMPORTANTE
-                    item.RolDescripcion,      // <--- IMPORTANTE
-                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"),
-                    item.Estado ? "Activo" : "Inactivo",
-                    item.IdCategoriaGasto,
-                    item.IdUsuario,
-                    item.IdCajaTurno
+                    item.IdGasto,                 // 0 - IdGastos (oculta)
+                    "",                           // 1 - btnSeleccionar
+                    item.CategoriaDescripcion,    // 2 - Categoria
+                    item.Descripcion,             // 3 - Descripcion
+                    item.Monto.ToString("0.00"),  // 4 - Monto
+                    item.UsuarioNombre,           // 5 - UsuarioNombre
+                    item.RolDescripcion,          // 6 - RolDescripcion
+                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"), // 7
+                    item.Estado ? "Activo" : "Inactivo",             // 8
+                    item.IdCategoriaGasto,        // 9 - IdCategoriaGasto (oculta)
+                    item.IdUsuario,               // 10 - IdUsuario (oculta)
+                    item.IdCajaTurno              // 11 - IdCajaTurno (oculta)
                 );
             }
         }
+
+
+
 
 
         // ============================================
@@ -232,8 +241,13 @@ namespace CapaPresentacionPiscina.Menus
             // 1) CAMBIAR ESTADO
             if (nombreColumna == "btnEstado")
             {
-                int idGasto = Convert.ToInt32(dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value);
-                bool estadoActual = Convert.ToBoolean(dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value);
+                int idGasto = Convert.ToInt32(
+                    dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value
+                );
+
+                bool estadoActual = Convert.ToBoolean(
+                    dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value
+                );
 
                 string pregunta = estadoActual
                     ? "¿Está seguro de INACTIVAR este gasto?"
@@ -262,10 +276,11 @@ namespace CapaPresentacionPiscina.Menus
 
                 return;
             }
+
             // 2) SELECCIONAR PARA EDITAR
             if (nombreColumna == "btnSeleccionar")
             {
-                // Si es la fila nueva (la del *) no hacemos nada
+                // Evitar la fila nueva (*)
                 if (dgvGastos.Rows[e.RowIndex].IsNewRow)
                 {
                     MessageBox.Show("Seleccione una fila válida.", "Aviso",
@@ -273,7 +288,7 @@ namespace CapaPresentacionPiscina.Menus
                     return;
                 }
 
-                // VALIDACIÓN: evitar filas vacías o nulas
+                // Validar que IdGasto exista
                 var celdaId = dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value;
 
                 if (celdaId == null || celdaId == DBNull.Value || celdaId.ToString() == "")
@@ -297,6 +312,7 @@ namespace CapaPresentacionPiscina.Menus
                 btnGuardar.Text = "Actualizar";
                 return;
             }
+
 
 
         }

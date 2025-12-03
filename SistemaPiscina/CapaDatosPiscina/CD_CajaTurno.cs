@@ -101,6 +101,7 @@ namespace CapaDatosPiscina
                             obj.IdCajaTurno = Convert.ToInt32(dr["IdCajaTurno"]);
                             obj.IdUsuario = Convert.ToInt32(dr["IdUsuario"]);
                             obj.MontoInicial = Convert.ToDecimal(dr["MontoInicial"]);
+                            obj.FechaApertura = Convert.ToDateTime(dr["FechaApertura"]);
 
                             obj.MontoFinal = dr["MontoFinal"] != DBNull.Value
                                 ? (decimal?)Convert.ToDecimal(dr["MontoFinal"])
@@ -168,6 +169,65 @@ namespace CapaDatosPiscina
 
             return mensaje;
         }
+
+        public ECajaTurno ObtenerCajaPorId(int idCajaTurno)
+        {
+            ECajaTurno obj = new ECajaTurno();
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(Conexion.cadena))
+                {
+                    SqlCommand cmd = new SqlCommand("SP_OBTENER_CAJA_POR_ID", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IdCajaTurno", idCajaTurno);
+
+                    conn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            obj.IdCajaTurno = Convert.ToInt32(dr["IdCajaTurno"]);
+                            obj.IdUsuario = Convert.ToInt32(dr["IdUsuario"]);
+                            obj.MontoInicial = Convert.ToDecimal(dr["MontoInicial"]);
+
+                            obj.MontoFinal = dr["MontoFinal"] != DBNull.Value
+                                ? (decimal?)Convert.ToDecimal(dr["MontoFinal"])
+                                : null;
+
+                            obj.TotalVentas = dr["TotalVentas"] != DBNull.Value
+                                ? (decimal?)Convert.ToDecimal(dr["TotalVentas"])
+                                : null;
+
+                            obj.TotalGastos = dr["TotalGastos"] != DBNull.Value
+                                ? (decimal?)Convert.ToDecimal(dr["TotalGastos"])
+                                : null;
+
+                            obj.Diferencia = dr["Diferencia"] != DBNull.Value
+                                ? (decimal?)Convert.ToDecimal(dr["Diferencia"])
+                                : null;
+
+                            obj.FechaApertura = Convert.ToDateTime(dr["FechaApertura"]);
+                            obj.FechaCierre = dr["FechaCierre"] != DBNull.Value
+                                ? (DateTime?)Convert.ToDateTime(dr["FechaCierre"])
+                                : null;
+
+                            obj.Observacion = dr["Observacion"].ToString();
+                            obj.Estado = Convert.ToBoolean(dr["Estado"]);
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                obj = new ECajaTurno();
+            }
+
+            return obj;
+        }
+
     }
 }
 

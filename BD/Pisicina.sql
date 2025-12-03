@@ -171,23 +171,27 @@ GO
    =========================== */
 
 CREATE TABLE CajaTurno (
-    IdCajaTurno INT IDENTITY(1,1) PRIMARY KEY,
-    IdUsuario INT NOT NULL,
-    MontoInicial DECIMAL(10,2) NOT NULL DEFAULT 0,
-    MontoFinal DECIMAL(10,2) NULL,
-    FechaApertura DATETIME NOT NULL DEFAULT GETDATE(),
-    FechaCierre DATETIME NULL,
-    Observacion VARCHAR(250) NULL,
-    Estado BIT NOT NULL DEFAULT 1,
-    CONSTRAINT FK_CajaTurno_Usuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+    IdCajaTurno     INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario       INT NOT NULL,
+
+    MontoInicial    DECIMAL(18,2) NOT NULL DEFAULT 0,
+    MontoFinal      DECIMAL(18,2) NULL,
+
+    FechaApertura   DATETIME NOT NULL DEFAULT GETDATE(),
+    FechaCierre     DATETIME NULL,
+
+    Observacion     VARCHAR(250) NULL,
+    Estado          BIT NOT NULL DEFAULT 1,
+
+    TotalVentas     DECIMAL(18,2) NULL,
+    TotalGastos     DECIMAL(18,2) NULL,
+    Diferencia      DECIMAL(18,2) NULL,
+
+    CONSTRAINT FK_CajaTurno_Usuario 
+        FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
 );
 GO
 
-ALTER TABLE CajaTurno
-ADD TotalVentas DECIMAL(10,2) NULL,
-    TotalGastos DECIMAL(10,2) NULL,
-    Diferencia  DECIMAL(10,2) NULL;
-GO
 
 
 /* ===========================
@@ -195,45 +199,47 @@ GO
    =========================== */
 
 CREATE TABLE Venta (
-    IdVenta INT IDENTITY(1,1) PRIMARY KEY,
-    IdUsuario INT NOT NULL,
-    IdCliente INT NULL,
-    NumeroVenta VARCHAR(50) NOT NULL,
-    MontoTotal DECIMAL(10,2) NOT NULL,
-    MetodoPago VARCHAR(20) NOT NULL,
-    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
-    IdCajaTurno INT NOT NULL,
-    CONSTRAINT FK_Venta_Usuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
-    CONSTRAINT FK_Venta_Cliente FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente),
-    CONSTRAINT FK_Venta_CajaTurno FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno)
+    IdVenta        INT IDENTITY(1,1) PRIMARY KEY,
+    IdUsuario      INT NOT NULL,
+    IdCliente      INT NULL,
+    NumeroVenta    VARCHAR(50) NOT NULL,
+    MontoTotal     DECIMAL(18,2) NOT NULL,
+    MetodoPago     VARCHAR(20) NOT NULL,
+    FechaRegistro  DATETIME NOT NULL DEFAULT GETDATE(),
+
+    IdCajaTurno    INT NULL,
+
+    CONSTRAINT FK_Venta_Usuario 
+        FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
+
+    CONSTRAINT FK_Venta_Cliente 
+        FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente),
+
+    CONSTRAINT FK_Venta_CajaTurno 
+        FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno)
 );
-ALTER TABLE Venta
-ALTER COLUMN IdCajaTurno INT NULL;
-
-ALTER TABLE Venta
-ADD CONSTRAINT FK_Venta_CajaTurno
-FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno);
-
-select * from Venta;
-select * from DetalleVentaProducto;
-select * from DetalleVentaEntrada;
 GO
 
+
+
 CREATE TABLE DetalleVentaEntrada (
-    IdDetalleEntrada INT IDENTITY(1,1) PRIMARY KEY,
-    IdVenta INT NOT NULL,
-    IdEntradaTipo INT NOT NULL,
-    Cantidad INT NOT NULL,
-    PrecioUnitario DECIMAL(10,2) NOT NULL,
-    PrecioAplicado DECIMAL(10,2) NOT NULL,
-    SubTotal DECIMAL(10,2) NOT NULL,
-    CONSTRAINT FK_DetalleVentaEntrada_Venta FOREIGN KEY (IdVenta) REFERENCES Venta(IdVenta),
-    CONSTRAINT FK_DetalleVentaEntrada_EntradaTipo FOREIGN KEY (IdEntradaTipo) REFERENCES EntradaTipo(IdEntradaTipo)
+    IdDetalleEntrada   INT IDENTITY(1,1) PRIMARY KEY,
+    IdVenta            INT NOT NULL,
+    IdEntradaTipo      INT NOT NULL,
+    Cantidad           INT NOT NULL,
+
+    PrecioUnitario     DECIMAL(18,2) NOT NULL,
+    PrecioAplicado     DECIMAL(18,2) NOT NULL,
+    SubTotal           DECIMAL(18,2) NOT NULL,
+
+    EsPromo            BIT NOT NULL DEFAULT 0,
+
+    CONSTRAINT FK_DetalleVentaEntrada_Venta 
+        FOREIGN KEY (IdVenta) REFERENCES Venta(IdVenta),
+
+    CONSTRAINT FK_DetalleVentaEntrada_EntradaTipo 
+        FOREIGN KEY (IdEntradaTipo) REFERENCES EntradaTipo(IdEntradaTipo)
 );
-
-ALTER TABLE DetalleVentaEntrada
-ADD EsPromo BIT NOT NULL DEFAULT 0;
-
 GO
 
 CREATE TABLE DetalleVentaProducto (
@@ -260,25 +266,29 @@ CREATE TABLE CategoriaGasto (
 GO
 
 CREATE TABLE Gasto (
-    IdGasto INT IDENTITY(1,1) PRIMARY KEY,
+    IdGasto          INT IDENTITY(1,1) PRIMARY KEY,
     IdCategoriaGasto INT NOT NULL,
-    Descripcion VARCHAR(200) NOT NULL,
-    Monto DECIMAL(10,2) NOT NULL,
-    FechaRegistro DATETIME NOT NULL DEFAULT GETDATE(),
-    IdUsuario INT NOT NULL,
-    CONSTRAINT FK_Gasto_CategoriaGasto FOREIGN KEY (IdCategoriaGasto) REFERENCES CategoriaGasto(IdCategoriaGasto),
-    CONSTRAINT FK_Gasto_Usuario FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
+    Descripcion      VARCHAR(200) NOT NULL,
+    Monto            DECIMAL(18,2) NOT NULL,
+
+    FechaRegistro    DATETIME NOT NULL DEFAULT GETDATE(),
+    IdUsuario        INT NOT NULL,
+
+    Estado           BIT NOT NULL DEFAULT 1,
+    IdCajaTurno      INT NULL, 
+
+    CONSTRAINT FK_Gasto_CategoriaGasto 
+        FOREIGN KEY (IdCategoriaGasto) REFERENCES CategoriaGasto(IdCategoriaGasto),
+
+    CONSTRAINT FK_Gasto_Usuario 
+        FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
+
+    CONSTRAINT FK_Gasto_CajaTurno 
+        FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno)
 );
 GO
+select * from Gasto;
 
-ALTER TABLE Gasto
-ADD Estado BIT NOT NULL DEFAULT(1);
-ALTER TABLE Gasto
-ADD IdCajaTurno INT NULL;
-
-ALTER TABLE Gasto
-ADD CONSTRAINT FK_Gasto_CajaTurno
-FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno);
 
 
 

@@ -1,38 +1,38 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\",
+  "WorkspaceRootPath": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\frmloginpiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\frmloginpiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\frminiciopiscina.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\menus\\frmventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{894F3084-B873-44BD-A2F0-70571B3C4088}|CapaNegocioPiscina\\CapaNegocioPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capanegociopiscina\\cn_cajaturno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{894F3084-B873-44BD-A2F0-70571B3C4088}|CapaNegocioPiscina\\CapaNegocioPiscina.csproj|solutionrelative:capanegociopiscina\\cn_cajaturno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\menus\\frmventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\menus\\frmventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\capapresentacionpiscina\\menus\\frmventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\menus\\frmventas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\capadatospiscina\\cd_producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|solutionrelative:capadatospiscina\\cd_producto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{894F3084-B873-44BD-A2F0-70571B3C4088}|CapaNegocioPiscina\\CapaNegocioPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capanegociopiscina\\cn_venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{894F3084-B873-44BD-A2F0-70571B3C4088}|CapaNegocioPiscina\\CapaNegocioPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capanegociopiscina\\cn_venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{894F3084-B873-44BD-A2F0-70571B3C4088}|CapaNegocioPiscina\\CapaNegocioPiscina.csproj|solutionrelative:capanegociopiscina\\cn_venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|c:\\users\\hp\\desktop\\piscina\\sistemapiscina\\capadatospiscina\\cd_venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|solutionrelative:capadatospiscina\\cd_venta.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\modals\\frmcerrarcaja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\modals\\frmcerrarcaja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\capadatospiscina\\cd_categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|solutionrelative:capadatospiscina\\cd_categoria.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capadatospiscina\\cd_cajaturno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB9BF476-A54C-4546-97A3-A0AA416725A8}|CapaDatosPiscina\\CapaDatosPiscina.csproj|solutionrelative:capadatospiscina\\cd_cajaturno.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|c:\\users\\pc\\desktop\\piscina\\sistemapiscina\\capapresentacionpiscina\\modals\\frmabrircaja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{0DAA4192-C81F-48FB-8567-0E4967928191}|CapaPresentacionPiscina\\CapaPresentacionPiscina.csproj|solutionrelative:capapresentacionpiscina\\modals\\frmabrircaja.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,103 +46,107 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "frmInicioPiscina.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "RelativeToolTip": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "ViewState": "AgIAAIcAAAAAAAAAAAA8wKUAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "CN_CajaTurno.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_CajaTurno.cs",
+              "RelativeDocumentMoniker": "CapaNegocioPiscina\\CN_CajaTurno.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_CajaTurno.cs",
+              "RelativeToolTip": "CapaNegocioPiscina\\CN_CajaTurno.cs",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAqwDUAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-03T05:55:17.776Z",
+              "WhenOpened": "2025-12-03T18:39:37.13Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "frmInicioPiscina.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs [Dise\u00F1o]",
-              "RelativeToolTip": "CapaPresentacionPiscina\\frmInicioPiscina.cs [Dise\u00F1o]",
+              "Title": "frmLoginPiscina.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmLoginPiscina.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\frmLoginPiscina.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmLoginPiscina.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\frmLoginPiscina.cs",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAlwGQAAAA7AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-03T05:55:15.438Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "frmVentas.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs",
-              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Menus\\frmVentas.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs",
-              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmVentas.cs",
-              "ViewState": "AgIAAAsDAAAAAAAAAAAqwCADAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-30T02:58:38.823Z",
+              "WhenOpened": "2025-12-03T21:59:51.928Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "frmVentas.cs [Dise\u00F1o]",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs",
+              "Title": "frmVentas.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs",
               "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Menus\\frmVentas.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs [Dise\u00F1o]",
-              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmVentas.cs [Dise\u00F1o]",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Menus\\frmVentas.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Menus\\frmVentas.cs",
+              "ViewState": "AgIAABADAAAAAAAAAAAgwDIDAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-30T02:19:01.861Z",
-              "EditorCaption": " [Dise\u00F1o]"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "CN_Venta.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_Venta.cs",
-              "RelativeDocumentMoniker": "CapaNegocioPiscina\\CN_Venta.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_Venta.cs",
-              "RelativeToolTip": "CapaNegocioPiscina\\CN_Venta.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAmwCMAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-03T04:30:04.395Z",
+              "WhenOpened": "2025-12-03T21:51:19.091Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "CD_Venta.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Venta.cs",
-              "RelativeDocumentMoniker": "CapaDatosPiscina\\CD_Venta.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Venta.cs",
-              "RelativeToolTip": "CapaDatosPiscina\\CD_Venta.cs",
-              "ViewState": "AgIAAAUAAAAAAAAAAAAIwDEAAABbAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "CN_Venta.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_Venta.cs",
+              "RelativeDocumentMoniker": "CapaNegocioPiscina\\CN_Venta.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaNegocioPiscina\\CN_Venta.cs",
+              "RelativeToolTip": "CapaNegocioPiscina\\CN_Venta.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAowDEAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-03T04:29:45.764Z",
+              "WhenOpened": "2025-12-03T21:48:46.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "frmInicioPiscina.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\frmInicioPiscina.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\frmInicioPiscina.cs",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAgwMoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-03T18:42:14.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "frmCerrarCaja.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmCerrarCaja.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Modals\\frmCerrarCaja.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmCerrarCaja.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Modals\\frmCerrarCaja.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAowFQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-03T18:41:56.446Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
-              "Title": "CD_Categoria.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Categoria.cs",
-              "RelativeDocumentMoniker": "CapaDatosPiscina\\CD_Categoria.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Categoria.cs",
-              "RelativeToolTip": "CapaDatosPiscina\\CD_Categoria.cs",
-              "ViewState": "AgIAAJUAAAAAAAAAAAAIwKoAAAAdAAAAAAAAAA==",
+              "Title": "frmAbrirCaja.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmAbrirCaja.cs",
+              "RelativeDocumentMoniker": "CapaPresentacionPiscina\\Modals\\frmAbrirCaja.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaPresentacionPiscina\\Modals\\frmAbrirCaja.cs",
+              "RelativeToolTip": "CapaPresentacionPiscina\\Modals\\frmAbrirCaja.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAA1wCcAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-02T02:14:10.887Z"
+              "WhenOpened": "2025-12-03T18:41:55.384Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "CD_Producto.cs",
-              "DocumentMoniker": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Producto.cs",
-              "RelativeDocumentMoniker": "CapaDatosPiscina\\CD_Producto.cs",
-              "ToolTip": "C:\\Users\\HP\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_Producto.cs",
-              "RelativeToolTip": "CapaDatosPiscina\\CD_Producto.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAawDEAAAARAAAAAAAAAA==",
+              "DocumentIndex": 6,
+              "Title": "CD_CajaTurno.cs",
+              "DocumentMoniker": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_CajaTurno.cs",
+              "RelativeDocumentMoniker": "CapaDatosPiscina\\CD_CajaTurno.cs",
+              "ToolTip": "C:\\Users\\pc\\Desktop\\Piscina\\SistemaPiscina\\CapaDatosPiscina\\CD_CajaTurno.cs",
+              "RelativeToolTip": "CapaDatosPiscina\\CD_CajaTurno.cs",
+              "ViewState": "AgIAAL4AAAAAAAAAAAAowNEAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-02T02:13:17.569Z",
+              "WhenOpened": "2025-12-03T18:39:20.986Z",
               "EditorCaption": ""
             }
           ]

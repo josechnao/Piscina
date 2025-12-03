@@ -118,7 +118,7 @@ namespace CapaPresentacionPiscina
                     );
 
                     inicio.rolActual = usuario.oRol.Descripcion;
-                    inicio.idCajaTurnoActual = 0;
+                    inicio.idCajaTurnoActual = null;
 
                     inicio.Show();
                     this.Hide();

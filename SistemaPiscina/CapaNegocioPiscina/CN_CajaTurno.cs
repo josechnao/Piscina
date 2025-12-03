@@ -37,7 +37,7 @@ namespace CapaNegocioPiscina
         public ECajaTurno ObtenerCajaActiva(int idUsuario)
         {
             return objCD.ObtenerCajaActiva(idUsuario);
-        }
+        }   
 
         // ============================================
         // 4. Cerrar Caja (al cerrar sesión)
@@ -49,5 +49,11 @@ namespace CapaNegocioPiscina
 
             return objCD.CerrarCaja(idCajaTurno, montoFinal, observacion);
         }
+
+        public ECajaTurno ObtenerCajaPorId(int idCajaTurno)
+        {
+            return objCD.ObtenerCajaPorId(idCajaTurno);
+        }
+
     }
 }
