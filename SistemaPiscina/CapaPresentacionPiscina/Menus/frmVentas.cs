@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using CapaEntidadPiscina;
+﻿using CapaEntidadPiscina;
 using CapaNegocioPiscina;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
+using System.Xml;
 
 
 namespace CapaPresentacionPiscina.Menus
@@ -17,10 +20,18 @@ namespace CapaPresentacionPiscina.Menus
         private EPromocion promoActiva;
         private List<Producto> listaProductosOriginal = new List<Producto>();
 
+        // 🔹 NUEVOS CAMPOS
+        // ===== NUEVOS CAMPOS =====
+        private int _idUsuario;
+        private int? _idCajaTurnoActual;   // ← ahora nullable
 
-        public frmVentas()
+        // Constructor que usa el formulario en tiempo de ejecución
+        public frmVentas(int idUsuario, int? idCajaTurnoActual)
         {
             InitializeComponent();
+
+            _idUsuario = idUsuario;
+            _idCajaTurnoActual = idCajaTurnoActual;   // puede ser null
         }
 
         private void frmVentas_Load(object sender, EventArgs e)
@@ -98,23 +109,20 @@ namespace CapaPresentacionPiscina.Menus
         private void AgregarEntradaAlDGV(int idEntrada, string nombre, decimal precioUnitario, int cantidad)
         {
             int cantidadCobrada = cantidad;
-
-            // ==============================
-            // 1. Aplicar PROMO si corresponde
-            // ==============================
             bool aplicaPromo = false;
 
+            // ============================================
+            // 1. VERIFICAR SI APLICA PROMOCIÓN
+            // ============================================
             if (promoActiva != null && promoActiva.Estado)
             {
                 bool promoParaTodas = promoActiva.Categoria.ToUpper() == "TODAS";
+                bool promoParaCategoria = promoActiva.Categoria == nombre;
 
-                bool promoParaCategoriaEspecifica = promoActiva.Categoria == nombre;
-
-                if (promoParaTodas || promoParaCategoriaEspecifica)
+                if (promoParaTodas || promoParaCategoria)
                 {
                     aplicaPromo = true;
 
-                    // Lógica 2x1
                     cantidadCobrada = (cantidad / 2) + (cantidad % 2);
 
                     MessageBox.Show(
@@ -127,12 +135,11 @@ namespace CapaPresentacionPiscina.Menus
                 }
             }
 
-
             decimal subtotal = cantidadCobrada * precioUnitario;
 
-            // ==============================
-            // 2. Buscar si ya existe esta entrada
-            // ==============================
+            // ============================================
+            // 2. SI YA EXISTE EN LA TABLA → ACTUALIZAR
+            // ============================================
             foreach (DataGridViewRow row in dgvVenta.Rows)
             {
                 if (!row.IsNewRow &&
@@ -142,7 +149,7 @@ namespace CapaPresentacionPiscina.Menus
                     int cantActual = Convert.ToInt32(row.Cells["colCantidad"].Value);
                     int nuevaCant = cantActual + cantidad;
 
-                    // 🟢 volver a calcular con promo si corresponde
+                    // Recalcular promo
                     int nuevaCantCobrada = nuevaCant;
 
                     if (aplicaPromo)
@@ -151,23 +158,27 @@ namespace CapaPresentacionPiscina.Menus
                     row.Cells["colCantidad"].Value = nuevaCant;
                     row.Cells["colSubTotal"].Value = nuevaCantCobrada * precioUnitario;
 
+                    // Actualizar colEsPromo
+                    row.Cells["colEsPromo"].Value = aplicaPromo ? 1 : 0;
+
                     CalcularTotal();
                     return;
                 }
             }
 
-            // ==============================
-            // 3. Crear nueva fila
-            // ==============================
+            // ============================================
+            // 3. SI NO EXISTE → CREAR NUEVA FILA
+            // ============================================
             dgvVenta.Rows.Add(
-                idEntrada,
-                nombre,
-                "Entrada",
-                cantidad,
-                precioUnitario,
-                subtotal,
-                "X",
-                "Entrada"
+                idEntrada,          // colId
+                nombre,             // colNombre
+                "Entrada",          // colDescripcion (o tipo)
+                cantidad,           // colCantidad (cantidad ingresada)
+                precioUnitario,     // colPrecioUnitario
+                subtotal,           // colSubTotal
+                "X",                // colEliminar
+                "Entrada",          // colTipo
+                aplicaPromo ? 1 : 0 // colEsPromo (oculta)
             );
 
             CalcularTotal();
@@ -642,7 +653,7 @@ namespace CapaPresentacionPiscina.Menus
 
             // 3. REINICIAR CAMPOS DEL CLIENTE
             txtDocumento.Text = "";
-            txtNombre.Text = "";
+            txtNombreCliente.Text = "";
             txtTelefono.Text = "";
 
             // 4. REINICIAR TOTAL Y METODO DE PAGO
@@ -658,6 +669,177 @@ namespace CapaPresentacionPiscina.Menus
 
             MessageBox.Show("Venta cancelada.",
                             "Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+        private string ConstruirXmlDetalle()
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlElement root = doc.CreateElement("Detalles");
+            doc.AppendChild(root);
+
+            foreach (DataGridViewRow row in dgvVenta.Rows)
+            {
+                if (row.IsNewRow) continue;
+                if (row.Cells["colSubTotal"].Value == null) continue;
+
+                string tipo = row.Cells["colTipo"].Value.ToString();
+                int id = Convert.ToInt32(row.Cells["colId"].Value);
+                int cantidad = Convert.ToInt32(row.Cells["colCantidad"].Value);
+                decimal precioUnitario = Convert.ToDecimal(row.Cells["colPrecioUnitario"].Value);
+                decimal subTotal = Convert.ToDecimal(row.Cells["colSubTotal"].Value);
+
+                // Para formato decimal tipo 10.50 y no 10,50
+                var ci = CultureInfo.InvariantCulture;
+
+                if (tipo == "Entrada")
+                {
+                    bool esPromo = false;
+                    if (row.Cells["colEsPromo"].Value != null)
+                        esPromo = Convert.ToBoolean(row.Cells["colEsPromo"].Value);
+
+                    // PrecioAplicado = subtotal / cantidad cobradas reales
+                    // pero en tu DGV el subtotal ya es lo cobrado.
+                    decimal precioAplicado = (cantidad > 0)
+                        ? subTotal / cantidad
+                        : precioUnitario;
+
+                    XmlElement nod = doc.CreateElement("Entrada");
+                    nod.SetAttribute("IdEntradaTipo", id.ToString());
+                    nod.SetAttribute("Cantidad", cantidad.ToString());
+                    nod.SetAttribute("PrecioUnitario", precioUnitario.ToString("0.00", ci));
+                    nod.SetAttribute("PrecioAplicado", precioAplicado.ToString("0.00", ci));
+                    nod.SetAttribute("SubTotal", subTotal.ToString("0.00", ci));
+                    nod.SetAttribute("EsPromo", esPromo ? "1" : "0");
+
+                    root.AppendChild(nod);
+                }
+                else if (tipo == "Producto")
+                {
+                    XmlElement nod = doc.CreateElement("Producto");
+                    nod.SetAttribute("IdProducto", id.ToString());
+                    nod.SetAttribute("Cantidad", cantidad.ToString());
+                    nod.SetAttribute("PrecioUnitario", precioUnitario.ToString("0.00", ci));
+                    nod.SetAttribute("SubTotal", subTotal.ToString("0.00", ci));
+
+                    root.AppendChild(nod);
+                }
+            }
+
+            return doc.OuterXml;
+        }
+
+        private void btnGuardar_Click(object sender, EventArgs e)
+        {
+            // 1. Validaciones base
+            if (dgvVenta.Rows.Cast<DataGridViewRow>().All(r => r.IsNewRow))
+            {
+                MessageBox.Show("Debe agregar al menos una entrada o producto.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtDocumento.Text))
+            {
+                MessageBox.Show("Ingrese el DNI del cliente.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtDocumento.Focus();
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtNombreCliente.Text))
+            {
+                MessageBox.Show("Ingrese el nombre del cliente.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNombreCliente.Focus();
+                return;
+            }
+
+            decimal total;
+            if (!decimal.TryParse(txtTotal.Text, out total))
+            {
+                MessageBox.Show("El total a cobrar no es válido.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string metodoPago = cbMetodoPago.Text; // EFECTIVO / QR / CORTESIA
+
+            // 2. Construir XML
+            string xmlDetalle = ConstruirXmlDetalle();
+
+            if (string.IsNullOrWhiteSpace(xmlDetalle))
+            {
+                MessageBox.Show("No se pudo construir el detalle de la venta.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 3. Llamar a la capa de negocio
+            CN_Venta cnVenta = new CN_Venta();
+
+            string numeroVenta;
+            string mensaje;
+
+            int idVentaGenerada = cnVenta.RegistrarVenta(
+                _idUsuario,                    // ya lo tienes en el form
+                _idCajaTurnoActual ?? 0,  // ← si es null, envía 0
+                txtDocumento.Text.Trim(),
+                txtNombreCliente.Text.Trim(),
+                txtTelefono.Text.Trim(),
+                metodoPago,
+                total,
+                xmlDetalle,
+                out numeroVenta,
+                out mensaje
+            );
+
+            if (idVentaGenerada != 0)
+            {
+                MessageBox.Show(
+                    $"Venta registrada correctamente.\nNúmero: {numeroVenta}",
+                    "Venta registrada",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+
+               
+                // 🔹 LIMPIAMOS TODO DESPUÉS DE GUARDAR
+                LimpiarFormulario();
+
+            }
+            else
+            {
+                MessageBox.Show(
+                    "No se pudo registrar la venta.\n" + mensaje,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+        private void LimpiarFormulario()
+        {
+            // Limpia textbox del cliente
+            txtDocumento.Text = "";
+            txtNombreCliente.Text = "";
+            txtTelefono.Text = "";
+
+            // Reinicia contadores de entradas
+            nudAdulto.Value = 1;
+            nudAdolescente.Value = 1;
+            nudNino.Value = 1;
+            nudBebe.Value = 1;
+
+            // Limpia DGV
+            dgvVenta.Rows.Clear();
+
+            // Reinicia total
+            txtTotal.Text = "0,00";
+
+            // Opcional: limpiar método de pago
+            cbMetodoPago.SelectedIndex = 0;
+
+            // Enfoque inicial
+            txtDocumento.Focus();
         }
 
     }

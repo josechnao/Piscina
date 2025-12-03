@@ -1,13 +1,18 @@
 USE PiscinaDB;
 GO
 
-select * from Promocion;
+select * from Correlativo;
 SELECT * FROM Producto WHERE Estado = 1;
 exec SP_LISTAR_PRODUCTOS_ACTIVOS;
 
 
 INSERT INTO Rol (Descripcion) VALUES ('Administrador');
 INSERT INTO Rol (Descripcion) VALUES ('Cajero');
+
+INSERT INTO Correlativo (UltimoNumero, CantidadDigitos, Gestion, Prefijo, Estado)
+VALUES (0, 6, YEAR(GETDATE()), 'TCK-', 1);
+
+
 
 INSERT INTO Usuario (Documento, NombreCompleto, Clave,IdRol)
 VALUES ('1', 'Administrador General', '1',1);

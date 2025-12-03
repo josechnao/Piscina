@@ -17,7 +17,7 @@ namespace CapaPresentacionPiscina
     public partial class frmInicioPiscina : Form
     {
         private Form formularioActivo = null;
-        public int idCajaTurnoActual { get; set; }
+        public int? idCajaTurnoActual { get; set; }   // ← ahora puede ser null
         public string rolActual { get; set; }
         public int usuarioActual { get; set; }
 
@@ -28,7 +28,7 @@ namespace CapaPresentacionPiscina
 
             this.usuarioActual = idUsuario;
             this.rolActual = rol;             // ← YA LLEGA CORRECTO
-            this.idCajaTurnoActual = 0;
+            this.idCajaTurnoActual = null;    
 
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
@@ -38,12 +38,9 @@ namespace CapaPresentacionPiscina
             InitializeComponent();
             this.usuarioActual = idUsuario;
             this.rolActual = "";
-            this.idCajaTurnoActual = 0;
+            this.idCajaTurnoActual = null;    // ← ANTES 0
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
-
-
-
 
 
         private void AbrirFormularioEnPanel(Form formHijo)
@@ -119,8 +116,11 @@ namespace CapaPresentacionPiscina
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            AbrirFormularioEnPanel(new frmVentas());
+            var frm = new frmVentas(usuarioActual, idCajaTurnoActual);
+            AbrirFormularioEnPanel(frm);
         }
+
+
 
 
         private void btnEntradasPromo_Click(object sender, EventArgs e)
@@ -135,8 +135,8 @@ namespace CapaPresentacionPiscina
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            // Si no hay caja abierta → cerrar sesión directamente
-            if (idCajaTurnoActual == 0)
+            // === SI ES ADMINISTRADOR → Cierra sesión directamente ===
+            if (rolActual.ToUpper() == "ADMINISTRADOR" || rolActual.ToUpper() == "ADMIN")
             {
                 DialogResult r = MessageBox.Show("¿Desea cerrar sesión?", "Confirmación",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -150,13 +150,30 @@ namespace CapaPresentacionPiscina
                 return;
             }
 
-            // Si hay caja abierta → mostrar el modal de cierre de caja
-            frmCerrarCaja frm = new frmCerrarCaja(usuarioActual, idCajaTurnoActual);
+            // === SI NO ES ADMIN → Lógica de CAJERO ===
+
+            // 1️⃣ Cajero SIN caja abierta
+            if (!idCajaTurnoActual.HasValue)
+            {
+                DialogResult r = MessageBox.Show("¿Desea cerrar sesión?", "Confirmación",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                if (r == DialogResult.Yes)
+                {
+                    this.Hide();
+                    new frmLoginPiscina().Show();
+                }
+
+                return;
+            }
+
+            // 2️⃣ Cajero CON caja abierta → debe cerrarla obligatoriamente
+            frmCerrarCaja frm = new frmCerrarCaja(usuarioActual, idCajaTurnoActual.Value);
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 // Caja cerrada correctamente
-                idCajaTurnoActual = 0; // Se limpia porque ya no existe caja abierta
+                idCajaTurnoActual = null;
 
                 MessageBox.Show("Sesión cerrada.", "Mensaje",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -166,18 +183,20 @@ namespace CapaPresentacionPiscina
             }
             else
             {
-                // El usuario canceló el cierre de caja
                 MessageBox.Show("Cierre de caja cancelado. La sesión continúa activa.",
                     "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
+
+
         private void btnGastos_Click(object sender, EventArgs e)
         {
-                        AbrirFormularioEnPanel(
-                new frmGastos(this.rolActual, this.idCajaTurnoActual, this.usuarioActual)
+            AbrirFormularioEnPanel(
+                new frmGastos(this.rolActual, this.idCajaTurnoActual ?? 0, this.usuarioActual)
             );
         }
+
 
     }
 }

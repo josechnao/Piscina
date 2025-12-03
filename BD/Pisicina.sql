@@ -207,6 +207,16 @@ CREATE TABLE Venta (
     CONSTRAINT FK_Venta_Cliente FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente),
     CONSTRAINT FK_Venta_CajaTurno FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno)
 );
+ALTER TABLE Venta
+ALTER COLUMN IdCajaTurno INT NULL;
+
+ALTER TABLE Venta
+ADD CONSTRAINT FK_Venta_CajaTurno
+FOREIGN KEY (IdCajaTurno) REFERENCES CajaTurno(IdCajaTurno);
+
+select * from Venta;
+select * from DetalleVentaProducto;
+select * from DetalleVentaEntrada;
 GO
 
 CREATE TABLE DetalleVentaEntrada (
@@ -220,6 +230,10 @@ CREATE TABLE DetalleVentaEntrada (
     CONSTRAINT FK_DetalleVentaEntrada_Venta FOREIGN KEY (IdVenta) REFERENCES Venta(IdVenta),
     CONSTRAINT FK_DetalleVentaEntrada_EntradaTipo FOREIGN KEY (IdEntradaTipo) REFERENCES EntradaTipo(IdEntradaTipo)
 );
+
+ALTER TABLE DetalleVentaEntrada
+ADD EsPromo BIT NOT NULL DEFAULT 0;
+
 GO
 
 CREATE TABLE DetalleVentaProducto (

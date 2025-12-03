@@ -1219,5 +1219,201 @@ BEGIN
 END
 GO
 
-EXEC SP_OBTENER_PROMO;
+EXEC SP_REGISTRAR_VENTA;
 SELECT * FROM Producto WHERE Estado = 1;
+
+
+ALTER PROCEDURE SP_REGISTRAR_VENTA
+(
+    @IdUsuario          INT,
+    @IdCajaTurno        INT = NULL,
+    @DNI                VARCHAR(20),
+    @NombreCompleto     VARCHAR(150),
+    @Telefono           VARCHAR(20),
+    @MetodoPago         VARCHAR(20),
+    @MontoTotal         DECIMAL(10,2),
+    @Detalle            XML,              -- XML con entradas y productos
+
+    @Resultado          BIT OUTPUT,
+    @Mensaje            VARCHAR(500) OUTPUT,
+    @IdVentaGenerado    INT OUTPUT,
+    @NumeroVentaGenerado VARCHAR(50) OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SET @Resultado = 0;
+    SET @Mensaje = '';
+    SET @IdVentaGenerado = 0;
+    SET @NumeroVentaGenerado = '';
+
+    BEGIN TRY
+        BEGIN TRAN;
+
+        ----------------------------------------------------------------
+        -- 1) CLIENTE: buscar por DNI, si no existe se crea, si existe se actualiza
+        ----------------------------------------------------------------
+        DECLARE @IdCliente INT;
+
+        SELECT @IdCliente = IdCliente
+        FROM Cliente
+        WHERE DNI = @DNI;
+
+        IF @IdCliente IS NULL
+        BEGIN
+            INSERT INTO Cliente (DNI, NombreCompleto, Telefono)
+            VALUES (@DNI, @NombreCompleto, @Telefono);
+
+            SET @IdCliente = SCOPE_IDENTITY();
+        END
+        ELSE
+        BEGIN
+            UPDATE Cliente
+            SET NombreCompleto = @NombreCompleto,
+                Telefono       = @Telefono
+            WHERE IdCliente = @IdCliente;
+        END
+
+        ----------------------------------------------------------------
+        -- 2) CORRELATIVO: obtener y armar NumeroVenta (TCK-000123, etc.)
+        ----------------------------------------------------------------
+        DECLARE @IdCorrelativo INT,
+                @UltimoNumero INT,
+                @CantidadDigitos INT,
+                @Prefijo VARCHAR(10);
+
+        SELECT TOP 1
+            @IdCorrelativo   = IdCorrelativo,
+            @UltimoNumero    = UltimoNumero,
+            @CantidadDigitos = CantidadDigitos,
+            @Prefijo         = Prefijo
+        FROM Correlativo
+        WHERE Estado = 1
+        ORDER BY IdCorrelativo;
+
+        IF @IdCorrelativo IS NULL
+        BEGIN
+            SET @Mensaje = 'No se encontró configuración de correlativo.';
+            ROLLBACK TRAN;
+            RETURN;
+        END
+
+        DECLARE @NuevoNumero INT = @UltimoNumero + 1;
+        DECLARE @NumeroVenta VARCHAR(50);
+
+        -- Ej: si CantidadDigitos = 6 => 000123
+        SET @NumeroVenta = @Prefijo +
+                           RIGHT(REPLICATE('0', @CantidadDigitos) + CAST(@NuevoNumero AS VARCHAR(20)),
+                                 @CantidadDigitos);
+
+        ----------------------------------------------------------------
+        -- 3) VENTA
+        ----------------------------------------------------------------
+
+        -- Si es admin, permitirá registrar venta sin caja abierta
+        IF @IdCajaTurno = 0
+            SET @IdCajaTurno = NULL;
+
+        INSERT INTO Venta
+        (
+            IdUsuario,
+            IdCliente,
+            NumeroVenta,
+            MontoTotal,
+            MetodoPago,
+            IdCajaTurno
+            -- FechaRegistro usa default GETDATE()
+        )
+        VALUES
+        (
+            @IdUsuario,
+            @IdCliente,
+            @NumeroVenta,
+            @MontoTotal,
+            @MetodoPago,
+            @IdCajaTurno
+        );
+
+        DECLARE @IdVenta INT = SCOPE_IDENTITY();
+
+        ----------------------------------------------------------------
+        -- 4) DETALLE ENTRADAS
+        --   <Entrada IdEntradaTipo="" Cantidad="" PrecioUnitario="" PrecioAplicado="" SubTotal="" EsPromo="0|1" />
+        ----------------------------------------------------------------
+        INSERT INTO DetalleVentaEntrada
+        (
+            IdVenta,
+            IdEntradaTipo,
+            Cantidad,
+            PrecioUnitario,
+            PrecioAplicado,
+            SubTotal,
+            EsPromo
+        )
+        SELECT
+            @IdVenta,
+            X.N.value('@IdEntradaTipo','int'),
+            X.N.value('@Cantidad','int'),
+            X.N.value('@PrecioUnitario','decimal(10,2)'),
+            X.N.value('@PrecioAplicado','decimal(10,2)'),
+            X.N.value('@SubTotal','decimal(10,2)'),
+            X.N.value('@EsPromo','bit')
+        FROM @Detalle.nodes('/Detalles/Entrada') AS X(N);
+
+        ----------------------------------------------------------------
+        -- 5) DETALLE PRODUCTOS
+        --   <Producto IdProducto="" Cantidad="" PrecioUnitario="" SubTotal="" />
+        ----------------------------------------------------------------
+        INSERT INTO DetalleVentaProducto
+        (
+            IdVenta,
+            IdProducto,
+            Cantidad,
+            PrecioUnitario,
+            SubTotal
+        )
+        SELECT
+            @IdVenta,
+            X.N.value('@IdProducto','int'),
+            X.N.value('@Cantidad','int'),
+            X.N.value('@PrecioUnitario','decimal(10,2)'),
+            X.N.value('@SubTotal','decimal(10,2)')
+        FROM @Detalle.nodes('/Detalles/Producto') AS X(N);
+
+        ----------------------------------------------------------------
+        -- 6) ACTUALIZAR STOCK PRODUCTOS
+        ----------------------------------------------------------------
+        UPDATE P
+        SET P.Stock = P.Stock - D.Cantidad
+        FROM Producto P
+        INNER JOIN DetalleVentaProducto D
+            ON P.IdProducto = D.IdProducto
+        WHERE D.IdVenta = @IdVenta;
+
+        ----------------------------------------------------------------
+        -- 7) ACTUALIZAR CORRELATIVO
+        ----------------------------------------------------------------
+        UPDATE Correlativo
+        SET UltimoNumero = @NuevoNumero
+        WHERE IdCorrelativo = @IdCorrelativo;
+
+        ----------------------------------------------------------------
+        -- FIN OK
+        ----------------------------------------------------------------
+        COMMIT TRAN;
+
+        SET @Resultado = 1;
+        SET @IdVentaGenerado = @IdVenta;
+        SET @NumeroVentaGenerado = @NumeroVenta;
+        SET @Mensaje = 'Venta registrada correctamente.';
+    END TRY
+    BEGIN CATCH
+        IF @@TRANCOUNT > 0
+            ROLLBACK TRAN;
+
+        SET @Resultado = 0;
+        SET @Mensaje = ERROR_MESSAGE();
+    END CATCH
+END
+GO

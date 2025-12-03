@@ -42,6 +42,7 @@
             this.btnAdolescenteAdd = new FontAwesome.Sharp.IconButton();
             this.nudAdolescente = new System.Windows.Forms.NumericUpDown();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnLimpiar = new FontAwesome.Sharp.IconButton();
             this.flpProductos = new System.Windows.Forms.FlowLayoutPanel();
             this.gbPlantillaProducto = new System.Windows.Forms.GroupBox();
             this.gbPlantilla = new System.Windows.Forms.GroupBox();
@@ -65,20 +66,12 @@
             this.btnAdultoAdd = new FontAwesome.Sharp.IconButton();
             this.nudAdulto = new System.Windows.Forms.NumericUpDown();
             this.dgvVenta = new System.Windows.Forms.DataGridView();
-            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSubTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtTelefono = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtNombre = new System.Windows.Forms.TextBox();
+            this.txtNombreCliente = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.txtTotal = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -93,7 +86,15 @@
             this.pnlCliente = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDocumento = new System.Windows.Forms.TextBox();
-            this.btnLimpiar = new FontAwesome.Sharp.IconButton();
+            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEsPromo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.nudBebe)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNino)).BeginInit();
@@ -300,6 +301,26 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(453, 325);
             this.panel1.TabIndex = 8;
+            // 
+            // btnLimpiar
+            // 
+            this.btnLimpiar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(152)))), ((int)(((byte)(0)))));
+            this.btnLimpiar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLimpiar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimpiar.ForeColor = System.Drawing.Color.White;
+            this.btnLimpiar.IconChar = FontAwesome.Sharp.IconChar.Broom;
+            this.btnLimpiar.IconColor = System.Drawing.Color.Black;
+            this.btnLimpiar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnLimpiar.IconSize = 26;
+            this.btnLimpiar.Location = new System.Drawing.Point(414, 11);
+            this.btnLimpiar.Name = "btnLimpiar";
+            this.btnLimpiar.Size = new System.Drawing.Size(31, 23);
+            this.btnLimpiar.TabIndex = 21;
+            this.btnLimpiar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnLimpiar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnLimpiar.UseVisualStyleBackColor = false;
+            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
             // 
             // flpProductos
             // 
@@ -588,56 +609,13 @@
             this.colPrecioUnitario,
             this.colSubTotal,
             this.colEliminar,
-            this.colTipo});
+            this.colTipo,
+            this.colEsPromo});
             this.dgvVenta.Location = new System.Drawing.Point(462, 56);
             this.dgvVenta.Name = "dgvVenta";
             this.dgvVenta.Size = new System.Drawing.Size(489, 507);
             this.dgvVenta.TabIndex = 9;
             this.dgvVenta.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVenta_CellContentClick);
-            // 
-            // colId
-            // 
-            this.colId.HeaderText = "IdItem";
-            this.colId.Name = "colId";
-            this.colId.ReadOnly = true;
-            this.colId.Visible = false;
-            // 
-            // colNombre
-            // 
-            this.colNombre.HeaderText = "Nombre";
-            this.colNombre.Name = "colNombre";
-            // 
-            // colDescripcion
-            // 
-            this.colDescripcion.HeaderText = "Descripcion";
-            this.colDescripcion.Name = "colDescripcion";
-            // 
-            // colCantidad
-            // 
-            this.colCantidad.HeaderText = "Cant.";
-            this.colCantidad.Name = "colCantidad";
-            // 
-            // colPrecioUnitario
-            // 
-            this.colPrecioUnitario.HeaderText = "P. Unitario";
-            this.colPrecioUnitario.Name = "colPrecioUnitario";
-            // 
-            // colSubTotal
-            // 
-            this.colSubTotal.HeaderText = "Subtotal";
-            this.colSubTotal.Name = "colSubTotal";
-            // 
-            // colEliminar
-            // 
-            this.colEliminar.HeaderText = "Eliminar";
-            this.colEliminar.Name = "colEliminar";
-            // 
-            // colTipo
-            // 
-            this.colTipo.HeaderText = "Tipo";
-            this.colTipo.Name = "colTipo";
-            this.colTipo.ReadOnly = true;
-            this.colTipo.Visible = false;
             // 
             // label5
             // 
@@ -687,13 +665,13 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Nombre :";
             // 
-            // txtNombre
+            // txtNombreCliente
             // 
-            this.txtNombre.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombre.Location = new System.Drawing.Point(502, 17);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(118, 22);
-            this.txtNombre.TabIndex = 1;
+            this.txtNombreCliente.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNombreCliente.Location = new System.Drawing.Point(502, 17);
+            this.txtNombreCliente.Name = "txtNombreCliente";
+            this.txtNombreCliente.Size = new System.Drawing.Size(118, 22);
+            this.txtNombreCliente.TabIndex = 1;
             // 
             // panel2
             // 
@@ -787,6 +765,7 @@
             this.btnGuardar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnGuardar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnGuardar.UseVisualStyleBackColor = false;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
             // 
             // gbPlantillaEntrada
             // 
@@ -850,7 +829,7 @@
             this.pnlCliente.Controls.Add(this.txtTelefono);
             this.pnlCliente.Controls.Add(this.label3);
             this.pnlCliente.Controls.Add(this.label2);
-            this.pnlCliente.Controls.Add(this.txtNombre);
+            this.pnlCliente.Controls.Add(this.txtNombreCliente);
             this.pnlCliente.Controls.Add(this.txtDocumento);
             this.pnlCliente.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlCliente.Location = new System.Drawing.Point(0, 0);
@@ -877,25 +856,56 @@
             this.txtDocumento.Size = new System.Drawing.Size(118, 22);
             this.txtDocumento.TabIndex = 3;
             // 
-            // btnLimpiar
+            // colId
             // 
-            this.btnLimpiar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(152)))), ((int)(((byte)(0)))));
-            this.btnLimpiar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLimpiar.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpiar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpiar.IconChar = FontAwesome.Sharp.IconChar.Broom;
-            this.btnLimpiar.IconColor = System.Drawing.Color.Black;
-            this.btnLimpiar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnLimpiar.IconSize = 26;
-            this.btnLimpiar.Location = new System.Drawing.Point(414, 11);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(31, 23);
-            this.btnLimpiar.TabIndex = 21;
-            this.btnLimpiar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnLimpiar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnLimpiar.UseVisualStyleBackColor = false;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
+            this.colId.HeaderText = "IdItem";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Visible = false;
+            // 
+            // colNombre
+            // 
+            this.colNombre.HeaderText = "Nombre";
+            this.colNombre.Name = "colNombre";
+            // 
+            // colDescripcion
+            // 
+            this.colDescripcion.HeaderText = "Descripcion";
+            this.colDescripcion.Name = "colDescripcion";
+            // 
+            // colCantidad
+            // 
+            this.colCantidad.HeaderText = "Cant.";
+            this.colCantidad.Name = "colCantidad";
+            // 
+            // colPrecioUnitario
+            // 
+            this.colPrecioUnitario.HeaderText = "P. Unitario";
+            this.colPrecioUnitario.Name = "colPrecioUnitario";
+            // 
+            // colSubTotal
+            // 
+            this.colSubTotal.HeaderText = "Subtotal";
+            this.colSubTotal.Name = "colSubTotal";
+            // 
+            // colEliminar
+            // 
+            this.colEliminar.HeaderText = "Eliminar";
+            this.colEliminar.Name = "colEliminar";
+            // 
+            // colTipo
+            // 
+            this.colTipo.HeaderText = "Tipo";
+            this.colTipo.Name = "colTipo";
+            this.colTipo.ReadOnly = true;
+            this.colTipo.Visible = false;
+            // 
+            // colEsPromo
+            // 
+            this.colEsPromo.HeaderText = "colEsPromo";
+            this.colEsPromo.Name = "colEsPromo";
+            this.colEsPromo.ReadOnly = true;
+            this.colEsPromo.Visible = false;
             // 
             // frmVentas
             // 
@@ -992,7 +1002,7 @@
         private System.Windows.Forms.TextBox txtTelefono;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtNombre;
+        private System.Windows.Forms.TextBox txtNombreCliente;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox txtTotal;
         private System.Windows.Forms.Label label8;
@@ -1007,6 +1017,7 @@
         private System.Windows.Forms.Panel pnlCliente;
         private System.Windows.Forms.TextBox txtDocumento;
         private System.Windows.Forms.Label label1;
+        private FontAwesome.Sharp.IconButton btnLimpiar;
         private System.Windows.Forms.DataGridViewTextBoxColumn colId;
         private System.Windows.Forms.DataGridViewTextBoxColumn colNombre;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDescripcion;
@@ -1015,6 +1026,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colSubTotal;
         private System.Windows.Forms.DataGridViewButtonColumn colEliminar;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTipo;
-        private FontAwesome.Sharp.IconButton btnLimpiar;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colEsPromo;
     }
 }
