@@ -73,10 +73,12 @@ namespace CapaPresentacionPiscina
                                 usuario.NombreCompleto,
                                 usuario.IdUsuario,
                                 usuario.oRol.Descripcion
+
                             );
 
                             inicio.rolActual = usuario.oRol.Descripcion;
                             inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
+
 
                             inicio.Show();
                             this.Hide();
@@ -95,10 +97,12 @@ namespace CapaPresentacionPiscina
                             usuario.NombreCompleto,
                             usuario.IdUsuario,
                             usuario.oRol.Descripcion
+
                         );
 
                         inicio.rolActual = usuario.oRol.Descripcion;
                         inicio.idCajaTurnoActual = caja.IdCajaTurno;
+
 
                         inicio.Show();
                         this.Hide();
@@ -115,10 +119,12 @@ namespace CapaPresentacionPiscina
                         usuario.NombreCompleto,
                         usuario.IdUsuario,
                         usuario.oRol.Descripcion
+
                     );
 
                     inicio.rolActual = usuario.oRol.Descripcion;
                     inicio.idCajaTurnoActual = null;
+
 
                     inicio.Show();
                     this.Hide();

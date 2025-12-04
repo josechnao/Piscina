@@ -14,7 +14,6 @@ INSERT INTO Correlativo (UltimoNumero, CantidadDigitos, Gestion, Prefijo, Estado
 VALUES (0, 6, YEAR(GETDATE()), 'TCK-', 1);
 
 
-
 ----------------------------------------------------------------
 ----1) INSERTAMOS USUARIOS
 ----------------------------------------------------------------
@@ -67,31 +66,44 @@ select * from CategoriaGasto;
 INSERT INTO Negocio (IdNegocio, NombreNegocio, Direccion, Ciudad, Telefono, Logo)
 VALUES (1, 'Agua Vida', 'Barrio Mariscal', 'San Julian', '00000000', NULL);
 
+----------------------------------------------------------------
+----1) INSERTAMOS PERMISOS
+----------------------------------------------------------------
+
+INSERT INTO Permiso (NombreMenu, NombreFormulario)
+VALUES
+('Ventas', 'frmVentas'),
+('Gastos', 'frmGastos'),
+('Reportes', 'frmReportes'),
+('Compras', 'frmCompras'),
+('Usuarios', 'frmUsuarios'),
+('Productos', 'frmProductos'),
+('Proveedores', 'frmProveedores'),
+('Mantenedor', 'frmMantenedor');
+
+INSERT INTO Permiso (NombreMenu, NombreFormulario)
+VALUES ('EntradasPromo', 'frmEntradaPromo');
 
 
-INSERT INTO Proveedor (Nombre, Documento, Telefono, Correo, Estado)
-VALUES ('Coca Cola Bolivia', '12345678', '70010010', 'contacto@cocacola.com', 1);
+DECLARE @idCajero INT = (SELECT IdRol FROM Rol WHERE Descripcion = 'Cajero');
 
-INSERT INTO Proveedor (Nombre, Documento, Telefono, Correo, Estado)
-VALUES ('Embotelladora La Plazuela', '87654321', '72030303', 'ventas@laplazuela.com', 1);
-
-INSERT INTO Proveedor (Nombre, Documento, Telefono, Correo, Estado)
-VALUES ('Distribuidora Santa Fe', '99887766', '76050505', 'contacto@santafe.com', 1);
-
-INSERT INTO Producto (Codigo, Nombre, Descripcion, IdCategoria, Estado)
-VALUES ('P001', 'Coca Cola 600ml', 'Bebida gaseosa', 1, 1);
+INSERT INTO RolPermiso (IdRol, IdPermiso)
+SELECT @idCajero, IdPermiso
+FROM Permiso
+WHERE NombreMenu IN ('Ventas', 'Gastos');
 
 
+DECLARE @idAdmin INT = (SELECT IdRol FROM Rol WHERE Descripcion = 'Administrador');
 
-INSERT INTO Cliente (DNI, NombreCompleto, Telefono)
-VALUES 
-('123', 'Carlos Mendoza', '70012345'),
-('98765432', 'María López', '76543210'),
-('55667788', 'Jorge Ramírez', '78965412');
-
-select * from Venta;
+INSERT INTO RolPermiso (IdRol, IdPermiso)
+SELECT @idAdmin, IdPermiso FROM Permiso;
 
 
+
+DECLARE @idAdmin INT = (SELECT IdRol FROM Rol WHERE Descripcion = 'Administrador');
+
+INSERT INTO RolPermiso (IdRol, IdPermiso)
+SELECT @idAdmin, IdPermiso FROM Permiso;
 
 
 

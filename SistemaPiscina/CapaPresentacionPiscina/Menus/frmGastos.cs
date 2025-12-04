@@ -14,20 +14,21 @@ namespace CapaPresentacionPiscina.Menus
         //  CAMPOS
         // ============================================
         private int idGasto = 0;              // Para saber si guardamos o editamos
-        private int idCajaTurnoActual = 0;    // Si es cajero
+        private int? idCajaTurnoActual = null;
         private string rolUsuario = "";       // Admin o Cajero
         private int usuarioActual = 0;
 
         // ============================================
         //  CONSTRUCTOR
         // ============================================
-        public frmGastos(string rol, int idCajaTurno, int idUsuario)
+        public frmGastos(string rol, int? idCajaTurno, int idUsuario)
         {
             InitializeComponent();
             rolUsuario = rol;
             idCajaTurnoActual = idCajaTurno;
             usuarioActual = idUsuario;
         }
+
 
         // Helper para no repetir comparaciones
         private bool EsCajero()
@@ -106,6 +107,7 @@ namespace CapaPresentacionPiscina.Menus
             string mensaje = string.Empty;
 
             // VALIDACIONES
+
             if (Convert.ToInt32(cboCategoria.SelectedValue) == 0)
             {
                 MessageBox.Show("Debe seleccionar una categoría.", "Aviso",
@@ -196,14 +198,21 @@ namespace CapaPresentacionPiscina.Menus
 
             if (EsCajero())
             {
-                // Cajero: solo su caja actual
-                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual);
+                if (!idCajaTurnoActual.HasValue)
+                {
+                    MessageBox.Show("No hay una caja abierta para este cajero.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual.Value);
             }
             else
             {
-                // Admin: ve TODOS los gastos (no filtra por caja)
+                // Admin: ve TODOS los gastos
                 lista = new CN_Gasto().ListarAdmin();
             }
+
 
             foreach (var item in lista)
             {
@@ -327,9 +336,22 @@ namespace CapaPresentacionPiscina.Menus
             List<EGasto> lista;
 
             if (EsCajero())
-                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual);
+            {
+                if (!idCajaTurnoActual.HasValue)
+                {
+                    MessageBox.Show("No hay una caja abierta para este cajero.", "Aviso",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                lista = new CN_Gasto().ListarCajero(idCajaTurnoActual.Value);
+            }
             else
+            {
+                // Admin: ve TODOS los gastos
                 lista = new CN_Gasto().ListarAdmin();
+            }
+
 
             // FILTRO DESCRIPCIÓN
             string texto = txtBuscar.Text.Trim().ToLower();

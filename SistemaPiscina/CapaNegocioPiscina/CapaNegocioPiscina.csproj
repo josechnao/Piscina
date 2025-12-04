@@ -50,6 +50,7 @@
     <Compile Include="CN_EntradaTipo.cs" />
     <Compile Include="CN_Gasto.cs" />
     <Compile Include="CN_Negocio.cs" />
+    <Compile Include="CN_Permiso.cs" />
     <Compile Include="CN_Producto.cs" />
     <Compile Include="CN_Promocion.cs" />
     <Compile Include="CN_Proveedor.cs" />

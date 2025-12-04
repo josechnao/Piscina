@@ -5,54 +5,52 @@ namespace CapaNegocioPiscina
 {
     public class CN_CajaTurno
     {
-        private CD_CajaTurno objCD = new CD_CajaTurno();
+        private CD_CajaTurno objDatos = new CD_CajaTurno();
 
-        // ============================================
-        // 1. Verificar si existe una caja abierta
-        // ============================================
+        // 1. Verificar
         public ECajaTurno VerificarCajaAbierta(int idUsuario)
         {
-            return objCD.VerificarCajaAbierta(idUsuario);
+            return objDatos.VerificarCajaAbierta(idUsuario);
         }
 
-        // ============================================
-        // 2. Abrir Caja (al iniciar sesión)
-        // ============================================
+        // 2. Abrir
         public int AbrirCaja(int idUsuario, decimal montoInicial, out string mensaje)
         {
-            mensaje = string.Empty;
-
             if (montoInicial < 0)
             {
                 mensaje = "El monto inicial no puede ser negativo.";
                 return 0;
             }
 
-            return objCD.AbrirCaja(idUsuario, montoInicial, out mensaje);
+            return objDatos.AbrirCaja(idUsuario, montoInicial, out mensaje);
         }
 
-        // ============================================
-        // 3. Obtener Caja Activa (para cierre)
-        // ============================================
-        public ECajaTurno ObtenerCajaActiva(int idUsuario)
-        {
-            return objCD.ObtenerCajaActiva(idUsuario);
-        }   
+        // 3. Resumen de ventas/gastos
+        public (decimal MontoInicial, decimal TotalVentas, decimal TotalGastos)
+        ObtenerResumen(int idCajaTurno)
+            {
+                return objDatos.ObtenerResumen(idCajaTurno);
+            }
 
-        // ============================================
-        // 4. Cerrar Caja (al cerrar sesión)
-        // ============================================
-        public string CerrarCaja(int idCajaTurno, decimal montoFinal, string observacion)
-        {
-            if (montoFinal < 0)
-                return "El monto final no puede ser negativo.";
 
-            return objCD.CerrarCaja(idCajaTurno, montoFinal, observacion);
-        }
-
-        public ECajaTurno ObtenerCajaPorId(int idCajaTurno)
+        // 4. Cerrar caja
+        public bool CerrarCaja(ECajaTurno obj, out string mensaje)
         {
-            return objCD.ObtenerCajaPorId(idCajaTurno);
+            mensaje = string.Empty;
+
+            if (obj.MontoFinal == null)
+            {
+                mensaje = "Debe ingresar el monto final.";
+                return false;
+            }
+
+            if (!string.IsNullOrEmpty(obj.Observacion) && obj.Observacion.Length > 250)
+            {
+                mensaje = "La observación no puede exceder 250 caracteres.";
+                return false;
+            }
+
+            return objDatos.CerrarCaja(obj, out mensaje);
         }
 
     }

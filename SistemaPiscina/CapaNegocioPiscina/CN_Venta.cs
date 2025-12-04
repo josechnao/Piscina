@@ -8,7 +8,7 @@ namespace CapaNegocioPiscina
 
         public int RegistrarVenta(
             int idUsuario,
-            int idCajaTurno,
+            int? idCajaTurno,          // ← ahora nullable
             string dni,
             string nombreCompleto,
             string telefono,
@@ -19,10 +19,11 @@ namespace CapaNegocioPiscina
             out string mensaje
         )
         {
-            // Validaciones básicas
+            // Inicialización de respuestas
             mensaje = string.Empty;
             numeroVenta = string.Empty;
 
+            // Validaciones
             if (string.IsNullOrWhiteSpace(dni))
             {
                 mensaje = "El DNI del cliente es obligatorio.";
@@ -41,9 +42,10 @@ namespace CapaNegocioPiscina
                 return 0;
             }
 
+            // Enviar a la capa de datos
             return objDatos.RegistrarVenta(
                 idUsuario,
-                idCajaTurno,
+                idCajaTurno,   // ← puede ser null y está bien
                 dni,
                 nombreCompleto,
                 telefono,

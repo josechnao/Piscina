@@ -53,6 +53,7 @@
     <Compile Include="CD_EntradaTipo.cs" />
     <Compile Include="CD_Gasto.cs" />
     <Compile Include="CD_Negocio.cs" />
+    <Compile Include="CD_Permiso.cs" />
     <Compile Include="CD_Producto.cs" />
     <Compile Include="CD_Promocion.cs" />
     <Compile Include="CD_Proveedor.cs" />

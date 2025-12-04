@@ -1,12 +1,5 @@
 ﻿using CapaNegocioPiscina;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CapaPresentacionPiscina.Modals
@@ -14,7 +7,9 @@ namespace CapaPresentacionPiscina.Modals
     public partial class frmAbrirCaja : Form
     {
         private int _idUsuario;
-        public int IdCajaTurnoGenerada { get; set; }
+
+        public int IdCajaTurnoGenerada { get; private set; } = 0;
+
         public frmAbrirCaja(int idUsuario)
         {
             InitializeComponent();
@@ -23,39 +18,46 @@ namespace CapaPresentacionPiscina.Modals
 
         private void frmAbrirCaja_Load(object sender, EventArgs e)
         {
-
+            txtMontoInicial.Select();
         }
 
         private void btnAbrirCaja_Click(object sender, EventArgs e)
         {
-            // Validación de monto
+            // Validar monto
             if (!decimal.TryParse(txtMontoInicial.Text.Trim(), out decimal montoInicial))
             {
-                MessageBox.Show("Ingrese un monto válido.", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese un monto válido.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (montoInicial < 0)
             {
-                MessageBox.Show("El monto inicial no puede ser negativo.", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("El monto inicial no puede ser negativo.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Procesar apertura
-            CN_CajaTurno objCN = new CN_CajaTurno();
+            // Llamar a la capa de negocio
+            CN_CajaTurno cajaCN = new CN_CajaTurno();
+            string mensaje = "";
 
-            string mensaje = string.Empty;
-            int idCaja = objCN.AbrirCaja(_idUsuario, montoInicial, out mensaje);
+            int idGenerado = cajaCN.AbrirCaja(_idUsuario, montoInicial, out mensaje);
 
-            if (idCaja > 0)
+            if (idGenerado > 0)
             {
-                IdCajaTurnoGenerada = idCaja;
+                IdCajaTurnoGenerada = idGenerado;
+
+                MessageBox.Show("Caja abierta correctamente.", "Mensaje",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                MessageBox.Show(mensaje, "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo abrir la caja.\n" + mensaje, "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

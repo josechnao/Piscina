@@ -24,15 +24,18 @@ namespace CapaPresentacionPiscina.Menus
         // ===== NUEVOS CAMPOS =====
         private int _idUsuario;
         private int? _idCajaTurnoActual;   // ← ahora nullable
+        private string _rolUsuario;
 
         // Constructor que usa el formulario en tiempo de ejecución
-        public frmVentas(int idUsuario, int? idCajaTurnoActual)
+        public frmVentas(int idUsuario, int? idCajaTurnoActual, string rolUsuario)
         {
             InitializeComponent();
 
             _idUsuario = idUsuario;
             _idCajaTurnoActual = idCajaTurnoActual;   // puede ser null
+            _rolUsuario = rolUsuario;                 // ← NUEVO CAMPO
         }
+
 
         private void frmVentas_Load(object sender, EventArgs e)
         {
@@ -781,9 +784,16 @@ namespace CapaPresentacionPiscina.Menus
             string numeroVenta;
             string mensaje;
 
+            if (_idCajaTurnoActual == null && _rolUsuario.ToUpper() == "CAJERO")
+            {
+                MessageBox.Show("No puedes registrar ventas sin haber abierto una caja.",
+                    "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             int idVentaGenerada = cnVenta.RegistrarVenta(
                 _idUsuario,                    // ya lo tienes en el form
-                _idCajaTurnoActual ?? 0,  // ← si es null, envía 0
+                _idCajaTurnoActual.HasValue ? _idCajaTurnoActual.Value : (int?)null, // ← si es null, envía 0
                 txtDocumento.Text.Trim(),
                 txtNombreCliente.Text.Trim(),
                 txtTelefono.Text.Trim(),

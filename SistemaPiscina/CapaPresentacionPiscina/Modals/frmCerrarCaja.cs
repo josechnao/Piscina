@@ -10,6 +10,11 @@ namespace CapaPresentacionPiscina.Modals
         private int _idUsuario;
         private int _idCajaTurno;
 
+        private decimal montoInicial = 0;
+        private decimal totalVentas = 0;
+        private decimal totalGastos = 0;
+        private decimal totalSistema = 0;
+
         public frmCerrarCaja(int idUsuario, int idCajaTurno)
         {
             InitializeComponent();
@@ -19,80 +24,78 @@ namespace CapaPresentacionPiscina.Modals
 
         private void frmCerrarCaja_Load(object sender, EventArgs e)
         {
-            CN_CajaTurno cn = new CN_CajaTurno();
+            CN_CajaTurno cajaCN = new CN_CajaTurno();
 
-            // 🔥 Ahora obtenemos la caja EXACTA por ID
-            ECajaTurno caja = cn.ObtenerCajaPorId(_idCajaTurno);
+            // Traemos MontoInicial, Ventas y Gastos del turno
+            var resumen = cajaCN.ObtenerResumen(_idCajaTurno);
 
-            if (caja == null || caja.IdCajaTurno == 0)
-            {
-                MessageBox.Show("No se encontró la caja activa.", "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            montoInicial = resumen.MontoInicial;
+            totalVentas = resumen.TotalVentas;
+            totalGastos = resumen.TotalGastos;
 
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
-                return;
-            }
-
-            // Datos necesarios
-            decimal montoInicial = caja.MontoInicial;
-            decimal totalVentas = caja.TotalVentas ?? 0;
-            decimal totalGastos = caja.TotalGastos ?? 0;
-
-            // 🔥 Total sistema (lo que debería haber)
-            decimal totalSistema = montoInicial + totalVentas - totalGastos;
+            // 💰 Fórmula correcta:
+            // TotalSistema = MontoInicial + Ventas - Gastos
+            totalSistema = montoInicial + totalVentas - totalGastos;
 
             txtTotalSistema.Text = totalSistema.ToString("0.00");
-            txtDiferencia.Text = "0.00"; // comienza en cero
+
+            txtTotalSistema.ReadOnly = true;
+            txtDiferencia.ReadOnly = true;
+
+            txtMontoFinal.Focus();
         }
 
         private void txtMontoFinal_TextChanged(object sender, EventArgs e)
         {
-            if (!decimal.TryParse(txtMontoFinal.Text.Trim(), out decimal montoFinal))
+            if (decimal.TryParse(txtMontoFinal.Text.Trim(), out decimal contado))
+            {
+                decimal diferencia = contado - totalSistema;
+                txtDiferencia.Text = diferencia.ToString("0.00");
+            }
+            else
             {
                 txtDiferencia.Text = "0.00";
-                return;
             }
-
-            decimal totalSistema = decimal.Parse(txtTotalSistema.Text);
-            decimal diferencia = montoFinal - totalSistema;
-
-            txtDiferencia.Text = diferencia.ToString("0.00");
         }
 
         private void btnCerrarCaja_Click(object sender, EventArgs e)
         {
             if (!decimal.TryParse(txtMontoFinal.Text.Trim(), out decimal montoFinal))
             {
-                MessageBox.Show("Ingrese un monto final válido.", "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese un monto final válido.",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if (montoFinal < 0)
+            decimal diferencia = montoFinal - totalSistema;
+
+            ECajaTurno obj = new ECajaTurno()
             {
-                MessageBox.Show("El monto final no puede ser negativo.", "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                IdCajaTurno = _idCajaTurno,
+                MontoFinal = montoFinal,
+                TotalVentas = totalVentas,
+                TotalGastos = totalGastos,
+                Diferencia = diferencia,
+                Observacion = txtObservacion.Text.Trim()
+            };
 
-            string observacion = txtObservacion.Text.Trim();
+            CN_CajaTurno cajaCN = new CN_CajaTurno();
+            string mensaje;
 
-            CN_CajaTurno cn = new CN_CajaTurno();
-            string mensaje = cn.CerrarCaja(_idCajaTurno, montoFinal, observacion);
+            bool ok = cajaCN.CerrarCaja(obj, out mensaje);
 
-            if (mensaje == "Caja cerrada correctamente.")
+            if (ok)
             {
-                MessageBox.Show("Caja cerrada exitosamente.", "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Caja cerrada correctamente.",
+                    "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             else
             {
-                MessageBox.Show(mensaje, "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No se pudo cerrar la caja.\n" + mensaje,
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

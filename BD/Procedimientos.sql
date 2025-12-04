@@ -785,7 +785,6 @@ BEGIN
     ORDER BY g.FechaRegistro DESC;
 END;
 GO
-exec SP_LISTAR_GASTOS_ADMIN;
 
 CREATE PROCEDURE SP_FILTRAR_GASTOS_CAJERO
 (
@@ -865,69 +864,6 @@ GO
 
 CREATE PROCEDURE SP_VERIFICAR_CAJA_ABIERTA
 (
-    @IdUsuario       INT,
-    @IdCajaTurno     INT OUTPUT,
-    @EstadoCaja      BIT OUTPUT,      -- 1 = abierta, 0 = cerrada/no existe
-    @Mensaje         VARCHAR(100) OUTPUT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT TOP 1
-        @IdCajaTurno = IdCajaTurno,
-        @EstadoCaja = Estado
-    FROM CajaTurno
-    WHERE IdUsuario = @IdUsuario
-      AND Estado = 1 -- abierta
-    ORDER BY FechaApertura DESC;
-
-    IF (@IdCajaTurno IS NULL)
-    BEGIN
-        SET @IdCajaTurno = 0;
-        SET @EstadoCaja = 0;
-        SET @Mensaje = 'No existe una caja abierta.';
-    END
-    ELSE
-    BEGIN
-        SET @Mensaje = 'Caja abierta encontrada.';
-    END
-END;
-GO
-
-
-CREATE PROCEDURE SP_ABRIR_CAJA
-(
-    @IdUsuario       INT,
-    @MontoInicial    DECIMAL(10,2),
-    @IdCajaTurno     INT OUTPUT,
-    @Mensaje         VARCHAR(100) OUTPUT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    -- 1. Verificar si ya tiene caja abierta
-    IF EXISTS (SELECT 1 FROM CajaTurno 
-               WHERE IdUsuario = @IdUsuario AND Estado = 1)
-    BEGIN
-        SET @IdCajaTurno = 0;
-        SET @Mensaje = 'El usuario ya tiene una caja abierta.';
-        RETURN;
-    END
-
-    -- 2. Insertar nueva caja
-    INSERT INTO CajaTurno (IdUsuario, MontoInicial, Estado)
-    VALUES (@IdUsuario, @MontoInicial, 1);
-
-    SET @IdCajaTurno = SCOPE_IDENTITY();
-    SET @Mensaje = 'Caja abierta correctamente.';
-END;
-GO
-
-
-CREATE PROCEDURE SP_OBTENER_CAJA_ACTIVA
-(
     @IdUsuario INT
 )
 AS
@@ -936,24 +872,35 @@ BEGIN
 
     SELECT TOP 1
         IdCajaTurno,
-        IdUsuario,
         MontoInicial,
-        MontoFinal,
-        TotalVentas,
-        TotalGastos,
-        Diferencia,
         FechaApertura,
-        FechaCierre,
-        Observacion,
         Estado
     FROM CajaTurno
     WHERE IdUsuario = @IdUsuario
-      AND Estado = 1      -- solo caja activa
-    ORDER BY FechaApertura DESC;
+      AND Estado = 1
+    ORDER BY IdCajaTurno DESC;
 END;
 GO
 
-CREATE PROCEDURE SP_OBTENER_CAJA_POR_ID
+CREATE PROCEDURE SP_ABRIR_CAJA
+(
+    @IdUsuario INT,
+    @MontoInicial DECIMAL(18,2),
+    @Resultado INT OUTPUT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO CajaTurno(IdUsuario, MontoInicial)
+    VALUES (@IdUsuario, @MontoInicial);
+
+    SET @Resultado = SCOPE_IDENTITY();
+END;
+GO
+
+
+CREATE PROCEDURE SP_RESUMEN_CAJA_TURNO
 (
     @IdCajaTurno INT
 )
@@ -962,100 +909,54 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        IdCajaTurno,
-        IdUsuario,s
-        MontoInicial,
-        MontoFinal,
-        TotalVentas,
-        TotalGastos,
-        Diferencia,
-        FechaApertura,
-        FechaCierre,
-        Observacion,
-        Estado
-    FROM CajaTurno
-    WHERE IdCajaTurno = @IdCajaTurno;
+        -- Monto de apertura de la caja
+        (SELECT MontoInicial 
+         FROM CajaTurno 
+         WHERE IdCajaTurno = @IdCajaTurno) AS MontoInicial,
+
+        -- Ventas del turno
+        (SELECT ISNULL(SUM(MontoTotal), 0) 
+         FROM Venta 
+         WHERE IdCajaTurno = @IdCajaTurno) AS TotalVentas,
+
+        -- Gastos del turno
+        (SELECT ISNULL(SUM(Monto), 0) 
+         FROM Gasto 
+         WHERE IdCajaTurno = @IdCajaTurno) AS TotalGastos;
 END;
 GO
 
-exec SP_CERRAR_CAJA;
-ALTER PROCEDURE SP_CERRAR_CAJA
+
+CREATE PROCEDURE SP_CERRAR_CAJA
 (
     @IdCajaTurno INT,
-    @MontoFinal  DECIMAL(10,2),
-    @Observacion VARCHAR(250) = NULL,
-    @Mensaje     VARCHAR(100) OUTPUT
+    @MontoFinal DECIMAL(18,2),
+    @TotalVentas DECIMAL(18,2),
+    @TotalGastos DECIMAL(18,2),
+    @Diferencia DECIMAL(18,2),
+    @Observacion VARCHAR(250),
+    @Resultado BIT OUTPUT
 )
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @IdUsuario     INT;
-    DECLARE @FechaApertura DATETIME;
-    DECLARE @MontoInicial  DECIMAL(10,2);
-
-    DECLARE @TotalVentas   DECIMAL(10,2) = 0;
-    DECLARE @TotalGastos   DECIMAL(10,2) = 0;
-    DECLARE @Diferencia    DECIMAL(10,2);
-
-    -- 1. Obtener datos base
-    SELECT 
-        @IdUsuario     = IdUsuario,
-        @FechaApertura = FechaApertura,
-        @MontoInicial  = MontoInicial
-    FROM CajaTurno
-    WHERE IdCajaTurno = @IdCajaTurno;
-
-    IF (@IdUsuario IS NULL)
-    BEGIN
-        SET @Mensaje = 'Caja no encontrada.';
-        RETURN;
-    END
-
-    --------------------------------------------------------------------
-    -- 2. Calcular TOTAL DE VENTAS del turno
-    --------------------------------------------------------------------
-    SELECT @TotalVentas = ISNULL(SUM(MontoTotal), 0)
-    FROM Venta
-    WHERE IdCajaTurno = @IdCajaTurno;
-
-    --------------------------------------------------------------------
-    -- 3. Calcular TOTAL DE GASTOS del turno
-    --     (cuando tengas lista la tabla "Gasto")
-    --------------------------------------------------------------------
-    SELECT @TotalGastos = ISNULL(SUM(Monto), 0)
-    FROM Gasto
-    WHERE IdCajaTurno = @IdCajaTurno;
-
-    --------------------------------------------------------------------
-    -- 4. Calcular diferencia
-    --------------------------------------------------------------------
-    DECLARE @Teorico DECIMAL(10,2);
-    SET @Teorico = @MontoInicial + @TotalVentas - @TotalGastos;
-
-    SET @Diferencia = @MontoFinal - @Teorico;
-
-    --------------------------------------------------------------------
-    -- 5. Actualizar caja
-    --------------------------------------------------------------------
-    UPDATE CajaTurno
-    SET 
-        MontoFinal  = @MontoFinal,
+    UPDATE CajaTurno SET
+        FechaCierre = GETDATE(),
+        Estado = 0,
+        MontoFinal = @MontoFinal,
         TotalVentas = @TotalVentas,
         TotalGastos = @TotalGastos,
-        Diferencia  = @Diferencia,
-        Observacion = @Observacion,
-        FechaCierre = GETDATE(),
-        Estado = 0
+        Diferencia = @Diferencia,
+        Observacion = @Observacion
     WHERE IdCajaTurno = @IdCajaTurno;
 
-    SET @Mensaje = 'Caja cerrada correctamente.';
+    SET @Resultado = 1;
 END;
 GO
 
 
 
- 
 /* ==========================================
    SP: MODULO DE VENTAS
    ========================================== */
@@ -1251,8 +1152,6 @@ BEGIN
 END
 GO
 
-EXEC SP_REGISTRAR_VENTA;
-SELECT * FROM Producto WHERE Estado = 1;
 
 CREATE PROCEDURE SP_REGISTRAR_VENTA
 (
@@ -1448,3 +1347,19 @@ BEGIN
     END CATCH
 END
 GO
+
+
+
+CREATE PROCEDURE SP_LISTAR_PERMISOS_POR_ROL
+(
+    @IdRol INT
+)
+AS
+BEGIN
+    SELECT P.NombreMenu, P.NombreFormulario
+    FROM RolPermiso RP
+    INNER JOIN Permiso P ON RP.IdPermiso = P.IdPermiso
+    WHERE RP.IdRol = @IdRol;
+END;
+GO
+

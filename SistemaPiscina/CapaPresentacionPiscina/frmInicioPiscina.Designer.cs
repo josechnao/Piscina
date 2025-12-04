@@ -503,6 +503,7 @@
             this.Name = "frmInicioPiscina";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmInicioPiscina";
+            this.Load += new System.EventHandler(this.frmInicioPiscina_Load);
             this.panelMenu.ResumeLayout(false);
             this.panelMenuBotones.ResumeLayout(false);
             this.pnlSubMenuProductos.ResumeLayout(false);

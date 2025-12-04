@@ -21,14 +21,19 @@ namespace CapaPresentacionPiscina
         public string rolActual { get; set; }
         public int usuarioActual { get; set; }
 
+        private int idRolActual;
 
         public frmInicioPiscina(string usuarioNombre, int idUsuario, string rol)
         {
             InitializeComponent();
 
             this.usuarioActual = idUsuario;
-            this.rolActual = rol;             // ← YA LLEGA CORRECTO
-            this.idCajaTurnoActual = null;    
+            this.rolActual = rol;
+            this.idCajaTurnoActual = null;
+
+            // IMPORTANTE: asignar IdRol desde el usuario logueado
+            this.idRolActual = SesionUsuario.UsuarioActual.oRol.IdRol;
+
 
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
@@ -39,6 +44,8 @@ namespace CapaPresentacionPiscina
             this.usuarioActual = idUsuario;
             this.rolActual = "";
             this.idCajaTurnoActual = null;    // ← ANTES 0
+            this.idRolActual = SesionUsuario.UsuarioActual.oRol.IdRol;
+
             lblUsuarioActual.Text = "Usuario: " + usuarioNombre;
         }
 
@@ -58,6 +65,66 @@ namespace CapaPresentacionPiscina
             panelContenedor.Tag = formHijo;
 
             formHijo.Show();
+        }
+        private void frmInicioPiscina_Load(object sender, EventArgs e)
+        {
+            CN_Permiso cnPermiso = new CN_Permiso();
+            var permisos = cnPermiso.Listar(idRolActual);
+
+            // 1. Ocultar todos los botones primero
+            btnVentas.Visible = false;
+            btnGastos.Visible = false;
+            btnProveedores.Visible = false;
+            btnProductos.Visible = false;
+            btnUsuarios.Visible = false;
+            btnReportes.Visible = false;
+            btnCompras.Visible = false;
+            btnMantenedor.Visible = false;
+            btnEntradasPromo.Visible = false; 
+
+            // 2. Mostrar solo los permitidos
+            foreach (var permiso in permisos)
+            {
+                switch (permiso.NombreMenu)
+                {
+                    case "Ventas":
+                        btnVentas.Visible = true;
+                        break;
+
+                    case "Gastos":
+                        btnGastos.Visible = true;
+                        break;
+
+                    case "Compras":
+                        btnCompras.Visible = true;
+                        break;
+
+                    case "Usuarios":
+                        btnUsuarios.Visible = true;
+                        break;
+
+                    case "Reportes":
+                        btnReportes.Visible = true;
+                        break;
+
+                    case "Productos":
+                        btnProductos.Visible = true;
+                        break;
+
+                    case "Proveedores":
+                        btnProveedores.Visible = true;
+                        break;
+
+                    case "Mantenedor":
+                        btnMantenedor.Visible = true;
+                        break;
+
+                    case "EntradasPromo":
+                        btnEntradasPromo.Visible = true;
+                        break;
+
+                }
+            }
         }
 
         private void btnUsuarios_Click(object sender, EventArgs e)
@@ -116,7 +183,7 @@ namespace CapaPresentacionPiscina
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
-            var frm = new frmVentas(usuarioActual, idCajaTurnoActual);
+            var frm = new frmVentas(usuarioActual, idCajaTurnoActual, rolActual);
             AbrirFormularioEnPanel(frm);
         }
 
@@ -193,10 +260,10 @@ namespace CapaPresentacionPiscina
         private void btnGastos_Click(object sender, EventArgs e)
         {
             AbrirFormularioEnPanel(
-                new frmGastos(this.rolActual, this.idCajaTurnoActual ?? 0, this.usuarioActual)
+                new frmGastos(this.rolActual, this.idCajaTurnoActual, this.usuarioActual)
             );
         }
 
-
+        
     }
 }

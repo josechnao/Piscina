@@ -8,7 +8,7 @@ namespace CapaDatosPiscina
     {
         public int RegistrarVenta(
             int idUsuario,
-            int idCajaTurno,
+            int? idCajaTurno,      // ← ahora nullable
             string dni,
             string nombreCompleto,
             string telefono,
@@ -31,7 +31,11 @@ namespace CapaDatosPiscina
                     cmd.CommandType = CommandType.StoredProcedure;
 
                     cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-                    cmd.Parameters.AddWithValue("@IdCajaTurno", idCajaTurno);
+
+                    // 🔥 ENVÍO CORRECTO DE CAJA TURNO (NULL SI ES ADMIN)
+                    cmd.Parameters.AddWithValue("@IdCajaTurno",
+                        (object)idCajaTurno ?? DBNull.Value);
+
                     cmd.Parameters.AddWithValue("@DNI", dni);
                     cmd.Parameters.AddWithValue("@NombreCompleto", nombreCompleto);
                     cmd.Parameters.AddWithValue("@Telefono", (object)telefono ?? DBNull.Value);
@@ -39,6 +43,7 @@ namespace CapaDatosPiscina
                     cmd.Parameters.AddWithValue("@MontoTotal", montoTotal);
                     cmd.Parameters.AddWithValue("@Detalle", xmlDetalle);
 
+                    // Parámetros OUTPUT del SP
                     cmd.Parameters.Add("@Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
                     cmd.Parameters.Add("@IdVentaGenerado", SqlDbType.Int).Direction = ParameterDirection.Output;
