@@ -11,14 +11,12 @@ namespace CapaEntidadPiscina
         public int IdUsuario { get; set; }
         public string UsuarioNombre { get; set; }
 
-        public int? IdCajaTurno { get; set; }       // Puede ser NULL en admin
+        public int IdRol { get; set; }            // ← AGREGADO
+        public string RolDescripcion { get; set; }
 
+        public int? IdCajaTurno { get; set; }
         public decimal Monto { get; set; }
         public string Descripcion { get; set; }
-
-        public string RolDescripcion { get; set; }  // Nombre del rol para mostrar
-        public int IdRol { get; set; }              // ← NECESARIO (FALTABA)
-
         public DateTime FechaRegistro { get; set; }
         public bool Estado { get; set; }
     }

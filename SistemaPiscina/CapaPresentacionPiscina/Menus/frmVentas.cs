@@ -1,10 +1,13 @@
 ﻿using CapaEntidadPiscina;
 using CapaNegocioPiscina;
+using CapaPresentacionPiscina.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -253,42 +256,52 @@ namespace CapaPresentacionPiscina.Menus
 
         private void dgvVenta_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == dgvVenta.Columns["colEliminar"].Index && e.RowIndex >= 0)
+            if (e.RowIndex < 0) return; // clic en header
+
+            // si no es el botón eliminar → salir
+            if (e.ColumnIndex != dgvVenta.Columns["colEliminar"].Index)
+                return;
+
+            var fila = dgvVenta.Rows[e.RowIndex];
+
+            // validación anti-null
+            if (fila.Cells["colNombre"].Value == null ||
+                string.IsNullOrWhiteSpace(fila.Cells["colNombre"].Value.ToString()))
             {
-                string tipo = dgvVenta.Rows[e.RowIndex].Cells["colTipo"].Value.ToString();
-                int id = Convert.ToInt32(dgvVenta.Rows[e.RowIndex].Cells["colId"].Value);
-                int cantidadDG = Convert.ToInt32(dgvVenta.Rows[e.RowIndex].Cells["colCantidad"].Value);
+                MessageBox.Show("Debe seleccionar una fila con datos para eliminar.",
+                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                // SOLO PRODUCTO devuelve stock
-                if (tipo == "Producto")
+            // obtener datos REALES de la fila
+            string tipo = fila.Cells["colTipo"].Value?.ToString() ?? "";
+            int id = Convert.ToInt32(fila.Cells["colId"].Value ?? 0);
+            int cantidadDG = Convert.ToInt32(fila.Cells["colCantidad"].Value ?? 0);
+
+            // SI ES PRODUCTO → devolver stock
+            if (tipo == "Producto")
+            {
+                foreach (Control ctrl in flpProductos.Controls)
                 {
-                    foreach (Control ctrl in flpProductos.Controls)
+                    if (ctrl is GroupBox gb && gb.Tag is Producto p && p.IdProducto == id)
                     {
-                        if (ctrl is GroupBox gb && gb.Tag is Producto p && p.IdProducto == id)
-                        {
-                            Label lblStock = gb.Controls["lblStock"] as Label;
-                            NumericUpDown nud = gb.Controls["nudProducto"] as NumericUpDown;
-                            FontAwesome.Sharp.IconButton btnAdd = gb.Controls["btnAdd"] as FontAwesome.Sharp.IconButton;
+                        Label lblStock = gb.Controls["lblStock"] as Label;
+                        NumericUpDown nud = gb.Controls["nudProductos"] as NumericUpDown;
 
-                            p.Stock += cantidadDG;
-                            lblStock.Text = p.Stock.ToString();
-
-                            nud.Enabled = true;
-                            btnAdd.Enabled = true;
-
-                            gb.BackColor = (p.Stock <= 5)
-                                ? Color.FromArgb(255, 230, 230)
-                                : Color.White;
-
-                            break;
-                        }
+                        p.Stock += cantidadDG;
+                        lblStock.Text = p.Stock.ToString();
+                        nud.Enabled = true;
                     }
                 }
-
-                dgvVenta.Rows.RemoveAt(e.RowIndex);
-                CalcularTotal();
             }
+
+            // eliminar la fila
+            dgvVenta.Rows.RemoveAt(e.RowIndex);
+
+            // recalcular total
+            CalcularTotal();
         }
+
 
 
         private void CargarProductos()
@@ -345,7 +358,7 @@ namespace CapaPresentacionPiscina.Menus
                     Label lblStock = new Label
                     {
                         Name = "lblStock",
-                        Text = p.Stock.ToString(),
+                        Text = "Stock: " + p.Stock.ToString(),
                         AutoSize = false,
                         Size = gbPlantilla.Controls["lblStock"].Size,
                         Location = gbPlantilla.Controls["lblStock"].Location,
@@ -812,11 +825,33 @@ namespace CapaPresentacionPiscina.Menus
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
-               
-                // 🔹 LIMPIAMOS TODO DESPUÉS DE GUARDAR
-                LimpiarFormulario();
+                // 1. Generamos el HTML del ticket
+                string htmlTicket = GenerarHtmlTicket(numeroVenta, total, metodoPago);
 
+                if (!string.IsNullOrEmpty(htmlTicket))
+                {
+                    // 📌 1. Crear carpeta TicketsVenta en el escritorio
+                    string escritorio = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                    string carpetaTickets = Path.Combine(escritorio, "TicketsVenta");
+
+                    if (!Directory.Exists(carpetaTickets))
+                        Directory.CreateDirectory(carpetaTickets);
+
+                    // 📌 2. Definir nombre del PDF
+                    string nombrePdf = $"Ticket_{numeroVenta}.pdf";
+                    string rutaPdf = Path.Combine(carpetaTickets, nombrePdf);
+
+                    // 📌 3. Generar PDF
+                    PdfGenerator.GenerarPdf(htmlTicket, rutaPdf);
+
+                    // 📌 4. Abrir PDF generado
+                    System.Diagnostics.Process.Start(rutaPdf);
+                }
+
+                // 🔹 LIMPIA TODO DESPUÉS DE GUARDAR
+                LimpiarFormulario();
             }
+
             else
             {
                 MessageBox.Show(
@@ -851,6 +886,82 @@ namespace CapaPresentacionPiscina.Menus
             // Enfoque inicial
             txtDocumento.Focus();
         }
+
+
+        private string GenerarHtmlTicket(string numeroTicket, decimal total, string metodoPago)
+        {
+            // 1. Ruta de la plantilla
+            string rutaPlantilla = Path.Combine(
+                Application.StartupPath,
+                "Plantillas",
+                "Tickets",
+                "ticket.html"
+            );
+
+            if (!File.Exists(rutaPlantilla))
+            {
+                MessageBox.Show("No se encontró la plantilla de ticket.", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return string.Empty;
+            }
+
+            // 2. Leer plantilla
+            string html = File.ReadAllText(rutaPlantilla, Encoding.UTF8);
+
+            // 3. Datos generales
+            string nombreNegocio = "Aguavida";
+            string fechaHora = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+            string cajero = SesionUsuario.UsuarioActual != null
+                ? SesionUsuario.UsuarioActual.NombreCompleto
+                : "----";
+
+            html = html.Replace("{{NombreNegocio}}", nombreNegocio);
+            html = html.Replace("{{FechaHora}}", fechaHora);
+            html = html.Replace("{{Cajero}}", cajero);
+            html = html.Replace("{{NumeroTicket}}", numeroTicket);
+            html = html.Replace("{{MetodoPago}}", metodoPago);
+            html = html.Replace("{{Total}}", total.ToString("0.00"));
+
+            // 4. Construir detalle
+            StringBuilder detalle = new StringBuilder();
+
+            foreach (DataGridViewRow fila in dgvVenta.Rows)
+            {
+                if (fila.IsNewRow) continue;
+
+                string cant = fila.Cells["colCantidad"].Value.ToString();
+                string nombre = fila.Cells["colNombre"].Value.ToString();
+                string desc = fila.Cells["colDescripcion"].Value?.ToString() ?? "";
+                string punit = Convert.ToDecimal(fila.Cells["colPrecioUnitario"].Value).ToString("0.00");
+                string subt = Convert.ToDecimal(fila.Cells["colSubTotal"].Value).ToString("0.00");
+
+                detalle.Append($@"
+                <table class='item-row'>
+                    <tr>
+                        <td>{cant}</td>
+                        <td>{nombre}</td>
+                        <td class='right'>{punit}</td>
+                        <td class='right'>{subt}</td>
+                    </tr>");
+
+                                if (!string.IsNullOrWhiteSpace(desc))
+                                {
+                                    detalle.Append($@"
+                    <tr>
+                        <td></td>
+                        <td colspan='3' class='item-desc'>{desc}</td>
+                    </tr>");
+                }
+
+                detalle.Append("</table>");
+            }
+
+            // 🔥 CAMBIO IMPORTANTE: Reemplaza el placeholder correcto
+            html = html.Replace("{{DETALLE}}", detalle.ToString());
+
+            return html;
+        }
+
 
     }
 }

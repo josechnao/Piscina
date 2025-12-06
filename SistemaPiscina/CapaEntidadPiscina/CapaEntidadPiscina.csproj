@@ -53,6 +53,9 @@
     <Compile Include="ECategoriaGasto.cs" />
     <Compile Include="EGasto.cs" />
     <Compile Include="EntradaTipo.cs" />
+    <Compile Include="EVentaDetalleEncabezado.cs" />
+    <Compile Include="EVentaDetalleItem.cs" />
+    <Compile Include="EVentaReporte.cs" />
     <Compile Include="Negocio.cs" />
     <Compile Include="Permiso.cs" />
     <Compile Include="Producto.cs" />
@@ -63,6 +66,7 @@
     <Compile Include="SesionUsuario.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Venta.cs" />
+    <Compile Include="VentaDetalleCompleto.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

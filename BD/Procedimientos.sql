@@ -820,14 +820,7 @@ BEGIN
 END;
 GO
 
-
-CREATE PROCEDURE SP_FILTRAR_GASTOS_ADMIN
-(
-    @Descripcion VARCHAR(200) = NULL,
-    @IdCategoriaGasto INT = 0,
-    @FechaDesde DATETIME = NULL,
-    @FechaHasta DATETIME = NULL
-)
+ALTER PROCEDURE SP_LISTAR_GASTOS_ADMIN
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -838,6 +831,7 @@ BEGIN
         cg.Descripcion AS Categoria,
         g.IdUsuario,
         u.NombreCompleto AS Usuario,
+        u.IdRol,                       -- ← AGREGADO
         r.Descripcion AS RolDescripcion,
         g.IdCajaTurno,
         g.Monto,
@@ -848,14 +842,11 @@ BEGIN
     INNER JOIN CategoriaGasto cg ON g.IdCategoriaGasto = cg.IdCategoriaGasto
     INNER JOIN Usuario u ON g.IdUsuario = u.IdUsuario
     INNER JOIN Rol r ON u.IdRol = r.IdRol
-    WHERE 
-        (@Descripcion IS NULL OR g.Descripcion LIKE '%' + @Descripcion + '%')
-        AND (@IdCategoriaGasto = 0 OR g.IdCategoriaGasto = @IdCategoriaGasto)
-        AND (@FechaDesde IS NULL OR g.FechaRegistro >= @FechaDesde)
-        AND (@FechaHasta IS NULL OR g.FechaRegistro <= @FechaHasta)
     ORDER BY g.FechaRegistro DESC;
 END;
 GO
+
+EXEC SP_LISTAR_GASTOS_ADMIN
 
 
 /* ==========================================
@@ -1363,3 +1354,108 @@ BEGIN
 END;
 GO
 
+-------------------------
+----PROCEDIMIENTO PARA REPORTE VENTA
+-------------------------
+
+CREATE PROCEDURE SP_REPORTE_VENTAS_GENERAL
+(
+    @FechaDesde DATE,
+    @FechaHasta DATE,
+    @MetodoPago VARCHAR(20) = NULL  -- NULL = todos
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        v.IdVenta,
+        v.NumeroVenta,
+        v.FechaRegistro,
+        u.NombreCompleto AS Cajero,
+        v.MetodoPago,
+        v.MontoTotal
+    FROM Venta v
+    INNER JOIN Usuario u ON v.IdUsuario = u.IdUsuario
+    WHERE 
+        CONVERT(DATE, v.FechaRegistro) >= @FechaDesde
+        AND CONVERT(DATE, v.FechaRegistro) <= @FechaHasta
+        AND (@MetodoPago IS NULL OR v.MetodoPago = @MetodoPago)
+    ORDER BY v.FechaRegistro DESC;
+END;
+GO
+
+
+ALTER PROCEDURE SP_REPORTE_VENTA_DETALLE
+(
+    @IdVenta INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* ============================================================
+       1) ENCABEZADO — Venta, Cliente y Usuario
+       ============================================================ */
+    SELECT 
+        v.IdVenta,
+        v.NumeroVenta,
+        v.FechaRegistro,
+        v.MetodoPago,
+        v.MontoTotal,
+
+        c.NombreCompleto AS ClienteNombre,
+        c.DNI AS ClienteDNI,
+        c.Telefono AS ClienteTelefono,
+
+        u.NombreCompleto AS Cajero
+    FROM Venta v
+    INNER JOIN Cliente c ON v.IdCliente = c.IdCliente
+    INNER JOIN Usuario u ON v.IdUsuario = u.IdUsuario
+    WHERE v.IdVenta = @IdVenta;
+
+
+    /* ============================================================
+       2) DETALLE (Entradas + Productos unificados)
+       ============================================================ */
+
+    SELECT *
+    FROM
+    (
+        /* ----------------------
+           Detalle de ENTRADAS
+           ---------------------- */
+        SELECT
+            'Entrada' AS TipoItem,              -- Tipo genérico
+            'Entrada' AS NombreItem,            -- Nombre fijo para columna "Producto/Entrada"
+            et.Descripcion AS DescripcionItem,  -- Adulto / Adolescente / Niño / Bebé
+            de.PrecioUnitario,
+            de.Cantidad,
+            de.SubTotal,
+            v.MetodoPago
+        FROM DetalleVentaEntrada de
+        INNER JOIN EntradaTipo et ON de.IdEntradaTipo = et.IdEntradaTipo
+        INNER JOIN Venta v ON de.IdVenta = v.IdVenta
+        WHERE de.IdVenta = @IdVenta
+
+        UNION ALL
+
+        /* ----------------------
+           Detalle de PRODUCTOS
+           ---------------------- */
+        SELECT
+            'Producto' AS TipoItem,
+            p.Nombre AS NombreItem,             -- Nombre comercial del producto
+            p.Descripcion AS DescripcionItem,
+            dp.PrecioUnitario,
+            dp.Cantidad,
+            dp.SubTotal,
+            v.MetodoPago
+        FROM DetalleVentaProducto dp
+        INNER JOIN Producto p ON dp.IdProducto = p.IdProducto
+        INNER JOIN Venta v ON dp.IdVenta = v.IdVenta
+        WHERE dp.IdVenta = @IdVenta
+    ) AS DetalleFinal
+    ORDER BY NombreItem;
+END;
+GO

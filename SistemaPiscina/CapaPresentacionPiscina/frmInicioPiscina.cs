@@ -159,30 +159,31 @@ namespace CapaPresentacionPiscina
         private void OcultarSubMenus()
         {
             pnlSubMenuProductos.Visible = false;
-            // En el futuro agregas más submenús aquí
+            pnlSubMenuReportes.Visible = false;  // 
         }
 
 
         private void btnRegistrarProducto_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmProductos());
-            
-            
-
         }
 
         private void btnCategoria_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmCategoria());
         }
 
         private void btnCompras_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmCompras());
         }
 
         private void btnVentas_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             var frm = new frmVentas(usuarioActual, idCajaTurnoActual, rolActual);
             AbrirFormularioEnPanel(frm);
         }
@@ -192,11 +193,13 @@ namespace CapaPresentacionPiscina
 
         private void btnEntradasPromo_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmEntradaPromo());
         }
 
         private void btnMantenedor_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmMantenedor());
         }
 
@@ -259,11 +262,22 @@ namespace CapaPresentacionPiscina
 
         private void btnGastos_Click(object sender, EventArgs e)
         {
+            OcultarSubMenus();
             AbrirFormularioEnPanel(
                 new frmGastos(this.rolActual, this.idCajaTurnoActual, this.usuarioActual)
             );
         }
 
-        
+        private void btnReportes_Click(object sender, EventArgs e)
+        {
+            OcultarSubMenus();
+            MostrarSubMenu(pnlSubMenuReportes);
+        }
+
+        private void btnReporteVentas_Click(object sender, EventArgs e)
+        {
+
+            AbrirFormularioEnPanel(new frmReporteVentas());
+        }
     }
 }

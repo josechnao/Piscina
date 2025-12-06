@@ -28,14 +28,6 @@ namespace CapaPresentacionPiscina.Menus
 
         private void frmCompras_Load(object sender, EventArgs e)
         {
-            if (SesionUsuario.UsuarioActual == null)
-            {
-                MessageBox.Show("El usuario actual es NULL");
-            }
-            else
-            {
-                MessageBox.Show("Usuario cargado: " + SesionUsuario.UsuarioActual.IdUsuario);
-            }
             cboTipoDocumento.Items.Clear();
 
             cboTipoDocumento.Items.Add("FACTURA");

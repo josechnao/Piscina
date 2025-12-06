@@ -335,6 +335,7 @@ namespace CapaPresentacionPiscina.Menus
 
             List<EGasto> lista;
 
+            // Cargar datos base
             if (EsCajero())
             {
                 if (!idCajaTurnoActual.HasValue)
@@ -348,38 +349,41 @@ namespace CapaPresentacionPiscina.Menus
             }
             else
             {
-                // Admin: ve TODOS los gastos
                 lista = new CN_Gasto().ListarAdmin();
             }
 
-
-            // FILTRO DESCRIPCIÓN
+            // 1) FILTRO DESCRIPCIÓN
             string texto = txtBuscar.Text.Trim().ToLower();
-            if (texto != "")
+            if (!string.IsNullOrEmpty(texto))
                 lista = lista.Where(x => x.Descripcion.ToLower().Contains(texto)).ToList();
 
-            // FILTRO CATEGORÍA
-            int catSeleccionada = Convert.ToInt32(cboFiltroCategoria.SelectedValue);
-            if (catSeleccionada != 0)
-                lista = lista.Where(x => x.IdCategoriaGasto == catSeleccionada).ToList();
+            // 2) FILTRO CATEGORÍA
+            int cat = Convert.ToInt32(cboFiltroCategoria.SelectedValue);
+            if (cat != 0)
+                lista = lista.Where(x => x.IdCategoriaGasto == cat).ToList();
 
-            // FILTRO ROL
+            // 3) FILTRO ROL POR ID
             if (!EsCajero())
             {
-                string rolSel = cboFiltroRol.Text;
-                if (rolSel != "Todos")
-                    lista = lista.Where(x => x.RolDescripcion == rolSel).ToList();
+                int idRolSeleccionado = Convert.ToInt32(cboFiltroRol.SelectedValue);
+
+                if (idRolSeleccionado != 0) // 0 = "Todos"
+                {
+                    lista = lista.Where(x => x.IdRol == idRolSeleccionado).ToList();
+                }
             }
 
-            // FILTRO FECHAS
+            // 4) FILTRO FECHAS
             DateTime desde = dtpDesde.Value.Date;
             DateTime hasta = dtpHasta.Value.Date.AddDays(1).AddSeconds(-1);
 
             lista = lista.Where(x =>
                 x.FechaRegistro >= desde &&
-                x.FechaRegistro <= hasta).ToList();
+                x.FechaRegistro <= hasta
+            ).ToList();
 
-            // LLENADO DGV
+
+            // CARGAR DGV
             foreach (var item in lista)
             {
                 dgvGastos.Rows.Add(
@@ -398,6 +402,8 @@ namespace CapaPresentacionPiscina.Menus
                 );
             }
         }
+
+
 
 
         // ============================================

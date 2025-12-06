@@ -154,7 +154,9 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
-                                // IdRol eliminado
+
+                                // ⬇⬇⬇ IMPORTANTE: cargar el IdRol
+                                IdRol = Convert.ToInt32(dr["IdRol"]),
 
                                 IdCajaTurno = dr["IdCajaTurno"] != DBNull.Value
                                             ? Convert.ToInt32(dr["IdCajaTurno"])
@@ -176,6 +178,7 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+
 
 
 
@@ -238,6 +241,10 @@ namespace CapaDatosPiscina
         public List<EGasto> FiltrarAdmin(string descripcion, int idCategoria, DateTime? fechaDesde, DateTime? fechaHasta)
         {
             List<EGasto> lista = new List<EGasto>();
+            foreach (var g in lista)
+{
+    Console.WriteLine($"{g.IdGasto} | {g.IdCategoriaGasto} | {g.RolDescripcion} | {g.Descripcion}");
+}
 
             try
             {
@@ -246,10 +253,22 @@ namespace CapaDatosPiscina
                     SqlCommand cmd = new SqlCommand("SP_FILTRAR_GASTOS_ADMIN", con);
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@Descripcion", (object)descripcion ?? DBNull.Value);
+                    // Descripción: si está vacía -> enviar NULL
+                    if (string.IsNullOrWhiteSpace(descripcion))
+                        cmd.Parameters.AddWithValue("@Descripcion", DBNull.Value);
+                    else
+                        cmd.Parameters.AddWithValue("@Descripcion", descripcion);
+
+                    // Categoría: si es "Todos" enviamos 0
                     cmd.Parameters.AddWithValue("@IdCategoriaGasto", idCategoria);
-                    cmd.Parameters.AddWithValue("@FechaDesde", (object)fechaDesde ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@FechaHasta", (object)fechaHasta ?? DBNull.Value);
+
+                    // Fechas: si vienen invalidas -> NULL
+                    cmd.Parameters.AddWithValue("@FechaDesde",
+                        fechaDesde.HasValue ? (object)fechaDesde.Value : DBNull.Value);
+
+                    cmd.Parameters.AddWithValue("@FechaHasta",
+                        fechaHasta.HasValue ? (object)fechaHasta.Value : DBNull.Value);
+
 
                     con.Open();
 
@@ -289,6 +308,7 @@ namespace CapaDatosPiscina
         }
 
 
+
         // ======================================================
         // 7. FILTRAR – CAJERO
         // ======================================================
@@ -322,14 +342,19 @@ namespace CapaDatosPiscina
                                 IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
                                 UsuarioNombre = dr["Usuario"].ToString(),
                                 RolDescripcion = dr["RolDescripcion"].ToString(),
+                                IdRol = Convert.ToInt32(dr["IdRol"]),   // ← AGREGADO
 
-                                IdCajaTurno = Convert.ToInt32(dr["IdCajaTurno"]),
+                                IdCajaTurno = dr["IdCajaTurno"] != DBNull.Value
+                                ? Convert.ToInt32(dr["IdCajaTurno"])
+                                : (int?)null,
 
                                 Monto = Convert.ToDecimal(dr["Monto"]),
                                 Descripcion = dr["Descripcion"].ToString(),
                                 FechaRegistro = Convert.ToDateTime(dr["FechaRegistro"]),
                                 Estado = Convert.ToBoolean(dr["Estado"])
                             });
+
+
                         }
                     }
                 }

@@ -66,6 +66,15 @@
             this.btnAdultoAdd = new FontAwesome.Sharp.IconButton();
             this.nudAdulto = new System.Windows.Forms.NumericUpDown();
             this.dgvVenta = new System.Windows.Forms.DataGridView();
+            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEsPromo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.txtTelefono = new System.Windows.Forms.TextBox();
@@ -86,15 +95,6 @@
             this.pnlCliente = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDocumento = new System.Windows.Forms.TextBox();
-            this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colNombre = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCantidad = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPrecioUnitario = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSubTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEliminar = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.colTipo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEsPromo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.nudBebe)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNino)).BeginInit();
@@ -600,6 +600,7 @@
             // 
             // dgvVenta
             // 
+            this.dgvVenta.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvVenta.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvVenta.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colId,
@@ -616,6 +617,57 @@
             this.dgvVenta.Size = new System.Drawing.Size(489, 507);
             this.dgvVenta.TabIndex = 9;
             this.dgvVenta.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvVenta_CellContentClick);
+            // 
+            // colId
+            // 
+            this.colId.HeaderText = "IdItem";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Visible = false;
+            // 
+            // colNombre
+            // 
+            this.colNombre.HeaderText = "Nombre";
+            this.colNombre.Name = "colNombre";
+            // 
+            // colDescripcion
+            // 
+            this.colDescripcion.HeaderText = "Descripcion";
+            this.colDescripcion.Name = "colDescripcion";
+            // 
+            // colCantidad
+            // 
+            this.colCantidad.HeaderText = "Cant.";
+            this.colCantidad.Name = "colCantidad";
+            // 
+            // colPrecioUnitario
+            // 
+            this.colPrecioUnitario.HeaderText = "P. Unitario";
+            this.colPrecioUnitario.Name = "colPrecioUnitario";
+            // 
+            // colSubTotal
+            // 
+            this.colSubTotal.HeaderText = "Subtotal";
+            this.colSubTotal.Name = "colSubTotal";
+            // 
+            // colEliminar
+            // 
+            this.colEliminar.HeaderText = "Eliminar";
+            this.colEliminar.Name = "colEliminar";
+            // 
+            // colTipo
+            // 
+            this.colTipo.HeaderText = "Tipo";
+            this.colTipo.Name = "colTipo";
+            this.colTipo.ReadOnly = true;
+            this.colTipo.Visible = false;
+            // 
+            // colEsPromo
+            // 
+            this.colEsPromo.HeaderText = "colEsPromo";
+            this.colEsPromo.Name = "colEsPromo";
+            this.colEsPromo.ReadOnly = true;
+            this.colEsPromo.Visible = false;
             // 
             // label5
             // 
@@ -855,57 +907,6 @@
             this.txtDocumento.Name = "txtDocumento";
             this.txtDocumento.Size = new System.Drawing.Size(118, 22);
             this.txtDocumento.TabIndex = 3;
-            // 
-            // colId
-            // 
-            this.colId.HeaderText = "IdItem";
-            this.colId.Name = "colId";
-            this.colId.ReadOnly = true;
-            this.colId.Visible = false;
-            // 
-            // colNombre
-            // 
-            this.colNombre.HeaderText = "Nombre";
-            this.colNombre.Name = "colNombre";
-            // 
-            // colDescripcion
-            // 
-            this.colDescripcion.HeaderText = "Descripcion";
-            this.colDescripcion.Name = "colDescripcion";
-            // 
-            // colCantidad
-            // 
-            this.colCantidad.HeaderText = "Cant.";
-            this.colCantidad.Name = "colCantidad";
-            // 
-            // colPrecioUnitario
-            // 
-            this.colPrecioUnitario.HeaderText = "P. Unitario";
-            this.colPrecioUnitario.Name = "colPrecioUnitario";
-            // 
-            // colSubTotal
-            // 
-            this.colSubTotal.HeaderText = "Subtotal";
-            this.colSubTotal.Name = "colSubTotal";
-            // 
-            // colEliminar
-            // 
-            this.colEliminar.HeaderText = "Eliminar";
-            this.colEliminar.Name = "colEliminar";
-            // 
-            // colTipo
-            // 
-            this.colTipo.HeaderText = "Tipo";
-            this.colTipo.Name = "colTipo";
-            this.colTipo.ReadOnly = true;
-            this.colTipo.Visible = false;
-            // 
-            // colEsPromo
-            // 
-            this.colEsPromo.HeaderText = "colEsPromo";
-            this.colEsPromo.Name = "colEsPromo";
-            this.colEsPromo.ReadOnly = true;
-            this.colEsPromo.Visible = false;
             // 
             // frmVentas
             // 

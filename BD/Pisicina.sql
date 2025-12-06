@@ -90,7 +90,7 @@ CREATE TABLE EntradaTipo (
     Estado BIT NOT NULL DEFAULT 1
 );
 GO
-
+select * from EntradaTipo;
 /* ===========================
    5. INVENTARIO (SNACKS)
    =========================== */

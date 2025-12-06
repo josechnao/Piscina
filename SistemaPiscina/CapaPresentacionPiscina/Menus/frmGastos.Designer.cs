@@ -264,6 +264,7 @@
             // 
             // dtpHasta
             // 
+            this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpHasta.Location = new System.Drawing.Point(672, 60);
             this.dtpHasta.Name = "dtpHasta";
             this.dtpHasta.Size = new System.Drawing.Size(140, 20);
@@ -281,6 +282,7 @@
             // 
             // dtpDesde
             // 
+            this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtpDesde.Location = new System.Drawing.Point(515, 60);
             this.dtpDesde.Name = "dtpDesde";
             this.dtpDesde.Size = new System.Drawing.Size(140, 20);

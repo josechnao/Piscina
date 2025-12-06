@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+
+        body {
+            font-family: monospace;
+            font-size: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ticket {
+            width: 280px; /* Aproximado a 80mm */
+            padding: 5px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 6px 0;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .item-row {
+            margin-bottom: 4px;
+        }
+
+        .item-title {
+            font-weight: bold;
+        }
+
+        .item-desc {
+            margin-left: 15px;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ticket">
+
+        <div class="center">
+            <strong>{{NombreNegocio}}</strong>
+        </div>
+
+        <hr>
+
+        Fecha/Hora: {{FechaHora}} <br>
+        Cajero: {{Cajero}} <br>
+        Ticket: {{NumeroTicket}} <br>
+
+        <hr>
+
+        <table>
+            <tr>
+                <th>Cant</th>
+                <th>Item</th>
+                <th class="right">P.Unit</th>
+                <th class="right">SubT</th>
+            </tr>
+        </table>
+
+        <!-- Aquí irá el detalle -->
+        {{DETALLE}}
+
+        <hr>
+
+        Pago: {{MetodoPago}} <br>
+
+        <hr>
+
+        <strong>TOTAL → </strong> {{Total}} Bs
+
+        <hr>
+
+        <div class="center">¡Gracias por elegir Aguavida!</div>
+
+    </div>
+</body>
+</html>
