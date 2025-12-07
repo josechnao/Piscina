@@ -52,6 +52,7 @@
     <Compile Include="ECajaTurno.cs" />
     <Compile Include="ECategoriaGasto.cs" />
     <Compile Include="EGasto.cs" />
+    <Compile Include="ENegocio.cs" />
     <Compile Include="EntradaTipo.cs" />
     <Compile Include="EVentaDetalleEncabezado.cs" />
     <Compile Include="EVentaDetalleItem.cs" />

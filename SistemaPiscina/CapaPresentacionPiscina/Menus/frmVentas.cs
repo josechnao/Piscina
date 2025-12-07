@@ -29,6 +29,9 @@ namespace CapaPresentacionPiscina.Menus
         private int? _idCajaTurnoActual;   // ← ahora nullable
         private string _rolUsuario;
 
+        // 🔥 Guarda el total real aunque se muestre 0 en cortesía
+        private decimal _totalReal = 0;
+
         // Constructor que usa el formulario en tiempo de ejecución
         public frmVentas(int idUsuario, int? idCajaTurnoActual, string rolUsuario)
         {
@@ -205,8 +208,21 @@ namespace CapaPresentacionPiscina.Menus
                 }
             }
 
-            txtTotal.Text = total.ToString("0.00");
+            // 🔥 Guardamos el total real siempre
+            _totalReal = total;
+
+            // Si NO es cortesía → mostrar total real
+            if (cbMetodoPago.SelectedItem != null &&
+                cbMetodoPago.SelectedItem.ToString() == "CORTESIA")
+            {
+                txtTotal.Text = "0.00"; // solo visual
+            }
+            else
+            {
+                txtTotal.Text = total.ToString("0.00");
+            }
         }
+
 
         private void btnAdultoAdd_Click(object sender, EventArgs e)
         {
@@ -619,13 +635,16 @@ namespace CapaPresentacionPiscina.Menus
 
             if (metodo == "CORTESIA")
             {
+                // 🔥 MOSTRAR visualmente total 0, pero no tocamos el total real
                 txtTotal.Text = "0.00";
             }
             else
             {
-                CalcularTotal();
+                // 🔥 Mostrar total real
+                txtTotal.Text = _totalReal.ToString("0.00");
             }
         }
+
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
@@ -771,13 +790,9 @@ namespace CapaPresentacionPiscina.Menus
                 return;
             }
 
-            decimal total;
-            if (!decimal.TryParse(txtTotal.Text, out total))
-            {
-                MessageBox.Show("El total a cobrar no es válido.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            // 🔥 Total real siempre, NO el txtTotal si es cortesía
+            decimal total = _totalReal;
+
 
             string metodoPago = cbMetodoPago.Text; // EFECTIVO / QR / CORTESIA
 
@@ -920,7 +935,10 @@ namespace CapaPresentacionPiscina.Menus
             html = html.Replace("{{Cajero}}", cajero);
             html = html.Replace("{{NumeroTicket}}", numeroTicket);
             html = html.Replace("{{MetodoPago}}", metodoPago);
-            html = html.Replace("{{Total}}", total.ToString("0.00"));
+            // TOTAL mostrado en ticket según método de pago
+            string totalMostrar = metodoPago == "CORTESIA" ? "0.00" : total.ToString("0.00");
+            html = html.Replace("{{Total}}", totalMostrar);
+
 
             // 4. Construir detalle
             StringBuilder detalle = new StringBuilder();

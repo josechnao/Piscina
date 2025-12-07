@@ -30,14 +30,14 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cboMetodoPago = new System.Windows.Forms.ComboBox();
-            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
-            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
             this.btnLimpiar = new FontAwesome.Sharp.IconButton();
             this.btnBuscar = new FontAwesome.Sharp.IconButton();
+            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
+            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
+            this.cboMetodoPago = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.dgvReporteVentas = new System.Windows.Forms.DataGridView();
             this.IdVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.NumeroVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -46,6 +46,9 @@
             this.MetodoPago = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnVerDetalle = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtTotal = new System.Windows.Forms.TextBox();
+            this.btnExportar = new FontAwesome.Sharp.IconButton();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvReporteVentas)).BeginInit();
             this.SuspendLayout();
@@ -77,63 +80,6 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtrado de Ventas";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(117, 17);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "Metodo de Pago :";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(394, 40);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(52, 17);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Desde :";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(598, 40);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(50, 17);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Hasta :";
-            // 
-            // cboMetodoPago
-            // 
-            this.cboMetodoPago.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cboMetodoPago.FormattingEnabled = true;
-            this.cboMetodoPago.Location = new System.Drawing.Point(23, 75);
-            this.cboMetodoPago.Name = "cboMetodoPago";
-            this.cboMetodoPago.Size = new System.Drawing.Size(201, 23);
-            this.cboMetodoPago.TabIndex = 3;
-            // 
-            // dtpDesde
-            // 
-            this.dtpDesde.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpDesde.Location = new System.Drawing.Point(397, 72);
-            this.dtpDesde.Name = "dtpDesde";
-            this.dtpDesde.Size = new System.Drawing.Size(126, 23);
-            this.dtpDesde.TabIndex = 4;
-            // 
-            // dtpHasta
-            // 
-            this.dtpHasta.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.dtpHasta.Location = new System.Drawing.Point(601, 73);
-            this.dtpHasta.Name = "dtpHasta";
-            this.dtpHasta.Size = new System.Drawing.Size(126, 23);
-            this.dtpHasta.TabIndex = 5;
             // 
             // btnLimpiar
             // 
@@ -175,6 +121,63 @@
             this.btnBuscar.UseVisualStyleBackColor = false;
             this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
+            // dtpHasta
+            // 
+            this.dtpHasta.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpHasta.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpHasta.Location = new System.Drawing.Point(601, 73);
+            this.dtpHasta.Name = "dtpHasta";
+            this.dtpHasta.Size = new System.Drawing.Size(126, 23);
+            this.dtpHasta.TabIndex = 5;
+            // 
+            // dtpDesde
+            // 
+            this.dtpDesde.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtpDesde.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.dtpDesde.Location = new System.Drawing.Point(397, 72);
+            this.dtpDesde.Name = "dtpDesde";
+            this.dtpDesde.Size = new System.Drawing.Size(126, 23);
+            this.dtpDesde.TabIndex = 4;
+            // 
+            // cboMetodoPago
+            // 
+            this.cboMetodoPago.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboMetodoPago.FormattingEnabled = true;
+            this.cboMetodoPago.Location = new System.Drawing.Point(23, 75);
+            this.cboMetodoPago.Name = "cboMetodoPago";
+            this.cboMetodoPago.Size = new System.Drawing.Size(201, 23);
+            this.cboMetodoPago.TabIndex = 3;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(598, 40);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(50, 17);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Hasta :";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(394, 40);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(52, 17);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Desde :";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(20, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(117, 17);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Metodo de Pago :";
+            // 
             // dgvReporteVentas
             // 
             this.dgvReporteVentas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -190,7 +193,7 @@
             this.dgvReporteVentas.Location = new System.Drawing.Point(20, 231);
             this.dgvReporteVentas.Name = "dgvReporteVentas";
             this.dgvReporteVentas.ReadOnly = true;
-            this.dgvReporteVentas.Size = new System.Drawing.Size(922, 438);
+            this.dgvReporteVentas.Size = new System.Drawing.Size(922, 397);
             this.dgvReporteVentas.TabIndex = 2;
             this.dgvReporteVentas.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReporteVentas_CellContentClick);
             // 
@@ -205,33 +208,78 @@
             // 
             this.NumeroVenta.HeaderText = "N° Venta";
             this.NumeroVenta.Name = "NumeroVenta";
+            this.NumeroVenta.ReadOnly = true;
             // 
             // FechaHora
             // 
             this.FechaHora.HeaderText = "Fecha/Hora";
             this.FechaHora.Name = "FechaHora";
+            this.FechaHora.ReadOnly = true;
             // 
             // Cajero
             // 
             this.Cajero.HeaderText = "Cajero";
             this.Cajero.Name = "Cajero";
+            this.Cajero.ReadOnly = true;
             // 
             // MetodoPago
             // 
             this.MetodoPago.HeaderText = "Método de Pago";
             this.MetodoPago.Name = "MetodoPago";
+            this.MetodoPago.ReadOnly = true;
             // 
             // Total
             // 
             this.Total.HeaderText = "Total";
             this.Total.Name = "Total";
+            this.Total.ReadOnly = true;
             // 
             // btnVerDetalle
             // 
             this.btnVerDetalle.HeaderText = "Ver Detalle";
             this.btnVerDetalle.Name = "btnVerDetalle";
+            this.btnVerDetalle.ReadOnly = true;
             this.btnVerDetalle.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.btnVerDetalle.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(567, 644);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(82, 17);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "Suma Total :";
+            // 
+            // txtTotal
+            // 
+            this.txtTotal.Location = new System.Drawing.Point(655, 643);
+            this.txtTotal.Name = "txtTotal";
+            this.txtTotal.ReadOnly = true;
+            this.txtTotal.Size = new System.Drawing.Size(100, 23);
+            this.txtTotal.TabIndex = 22;
+            // 
+            // btnExportar
+            // 
+            this.btnExportar.BackColor = System.Drawing.Color.LimeGreen;
+            this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnExportar.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.btnExportar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExportar.ForeColor = System.Drawing.Color.White;
+            this.btnExportar.IconChar = FontAwesome.Sharp.IconChar.FilePdf;
+            this.btnExportar.IconColor = System.Drawing.Color.White;
+            this.btnExportar.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnExportar.IconSize = 16;
+            this.btnExportar.Location = new System.Drawing.Point(791, 643);
+            this.btnExportar.Name = "btnExportar";
+            this.btnExportar.Size = new System.Drawing.Size(129, 26);
+            this.btnExportar.TabIndex = 57;
+            this.btnExportar.Text = "Exportar PDF";
+            this.btnExportar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnExportar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExportar.UseVisualStyleBackColor = false;
+            this.btnExportar.Click += new System.EventHandler(this.btnExportar_Click);
             // 
             // frmReporteVentas
             // 
@@ -239,6 +287,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(954, 681);
+            this.Controls.Add(this.btnExportar);
+            this.Controls.Add(this.txtTotal);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.dgvReporteVentas);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -280,5 +331,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn MetodoPago;
         private System.Windows.Forms.DataGridViewTextBoxColumn Total;
         private System.Windows.Forms.DataGridViewButtonColumn btnVerDetalle;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtTotal;
+        private FontAwesome.Sharp.IconButton btnExportar;
     }
 }

@@ -42,3 +42,7 @@ C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\Cap
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.exe.config
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Menus.frmReporteVentas.resources
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\CapaPresentacionPiscina.Modals.frmModalDetalleVenta.resources
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\BouncyCastle.Cryptography.dll
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\itextsharp.dll
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\BouncyCastle.Cryptography.xml
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\itextsharp.xml

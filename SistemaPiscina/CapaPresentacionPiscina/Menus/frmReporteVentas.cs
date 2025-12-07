@@ -1,6 +1,9 @@
-﻿using CapaEntidadPiscina;
+﻿using CapaEntidad;
+using CapaEntidadPiscina;
+using CapaNegocio;
 using CapaNegocioPiscina;
 using CapaPresentacionPiscina.Modals;
+using CapaPresentacionPiscina.Utilidades;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -28,15 +31,51 @@ namespace CapaPresentacionPiscina.Menus
             cboMetodoPago.Items.Add("QR");
             cboMetodoPago.Items.Add("CORTESIA");
 
-            cboMetodoPago.SelectedIndex = 0; // por defecto "Todos"
+            cboMetodoPago.SelectedIndex = 0;
 
-            // Por estética, puedes setear las fechas al día actual
-            dtpDesde.Value = new DateTime(2025, 1, 1);
+            // Fechas solo visuales, no afectan la carga inicial
+            dtpDesde.Value = DateTime.Today;
             dtpHasta.Value = DateTime.Today;
 
-            // 3. Cargar ventas automáticamente
-            CargarVentas();
+            // SOLO ESTO 🎯
+            CargarVentasSinFiltro();
         }
+
+
+        private void CargarVentasSinFiltro()
+        {
+            CN_ReporteVentas objNegocio = new CN_ReporteVentas();
+
+            // Rango exagerado para traer TODO
+            DateTime desde = new DateTime(2000, 1, 1);
+            DateTime hasta = DateTime.Today.AddDays(1);
+
+            var lista = objNegocio.ListarVentas(desde, hasta, null);
+
+            dgvReporteVentas.Rows.Clear();
+
+            foreach (var item in lista)
+            {
+                // Si es CORTESIA, mostrar 0.00 siempre
+                string totalMostrar = item.MetodoPago == "CORTESIA"
+                    ? "0.00"
+                    : item.Total.ToString("0.00");
+
+                dgvReporteVentas.Rows.Add(
+                    item.IdVenta,
+                    item.NumeroVenta,
+                    item.FechaHora.ToString("dd/MM/yyyy HH:mm"),
+                    item.Cajero,
+                    item.MetodoPago,
+                    totalMostrar,
+                    "Ver"
+                );
+            }
+
+
+            CalcularTotal();
+        }
+
         private void CargarVentas()
         {
             CN_ReporteVentas objNegocio = new CN_ReporteVentas();
@@ -49,32 +88,40 @@ namespace CapaPresentacionPiscina.Menus
 
             dgvReporteVentas.Rows.Clear();
 
-            foreach (EVentaReporte v in lista)
+            foreach (var item in lista)
             {
+                // Si es CORTESIA, mostrar 0.00 siempre
+                string totalMostrar = item.MetodoPago == "CORTESIA"
+                    ? "0.00"
+                    : item.Total.ToString("0.00");
+
                 dgvReporteVentas.Rows.Add(
-                    v.IdVenta,
-                    v.NumeroVenta,
-                    v.FechaHora.ToString("dd/MM/yyyy HH:mm"),
-                    v.Cajero,
-                    v.MetodoPago,
-                    v.Total.ToString("0.00"),
-                    "Ver" // texto si usas botón normal (para icono deja string vacío "")
+                    item.IdVenta,
+                    item.NumeroVenta,
+                    item.FechaHora.ToString("dd/MM/yyyy HH:mm"),
+                    item.Cajero,
+                    item.MetodoPago,
+                    totalMostrar,
+                    "Ver"
                 );
             }
+
         }
+
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             CargarVentas();
+            CalcularTotal();
         }
 
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
-            cboMetodoPago.SelectedIndex = 0;       // Método de pago = Todos
-            dtpDesde.Value = new DateTime(2025, 1, 1);
-            dtpHasta.Value = DateTime.Today;      // Hasta hoy
+            cboMetodoPago.SelectedIndex = 0;
+            dtpDesde.Value = DateTime.Today;
+            dtpHasta.Value = DateTime.Today;
 
-            CargarVentas();                       // 🔥 Recarga todas las ventas
+            CargarVentasSinFiltro();
         }
 
 
@@ -88,5 +135,51 @@ namespace CapaPresentacionPiscina.Menus
                 modal.ShowDialog();
             }
         }
+        private void CalcularTotal()
+        {
+            decimal suma = 0;
+
+            foreach (DataGridViewRow row in dgvReporteVentas.Rows)
+            {
+                if (row.Cells["Total"].Value != null &&
+                    !string.IsNullOrWhiteSpace(row.Cells["Total"].Value.ToString()))
+                {
+                    if (decimal.TryParse(row.Cells["Total"].Value.ToString(), out decimal valor))
+                    {
+                        suma += valor;
+                    }
+                }
+            }
+
+            txtTotal.Text = suma.ToString("0.00");
+        }
+
+
+        private void btnExportar_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog save = new SaveFileDialog();
+            save.Filter = "Archivo PDF (*.pdf)|*.pdf";
+            save.FileName = "ReporteVentas.pdf";
+
+            if (save.ShowDialog() == DialogResult.OK)
+            {
+                CN_Negocios oNegocio = new CN_Negocios();
+                ENegocio datos = oNegocio.ObtenerDatosNegocio();
+
+                PDF_Reportes.ExportarReporteVentas(
+                    save.FileName,
+                    datos.Logo,              // byte[]
+                    datos.NombreNegocio,
+                    datos.Direccion,
+                    datos.Ciudad,
+                    dgvReporteVentas,
+                    txtTotal.Text
+                );
+
+                MessageBox.Show("Reporte exportado correctamente.", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
     }
 }
