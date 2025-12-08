@@ -31,6 +31,11 @@
             this.panelMenu = new System.Windows.Forms.Panel();
             this.panelMenuBotones = new System.Windows.Forms.Panel();
             this.btnMantenedor = new FontAwesome.Sharp.IconButton();
+            this.pnlSubMenuReportes = new System.Windows.Forms.Panel();
+            this.btnResumenGeneral = new FontAwesome.Sharp.IconButton();
+            this.btnReporteCajeros = new FontAwesome.Sharp.IconButton();
+            this.btnReporteCompras = new FontAwesome.Sharp.IconButton();
+            this.btnReporteVentas = new FontAwesome.Sharp.IconButton();
             this.btnReportes = new FontAwesome.Sharp.IconButton();
             this.btnGastos = new FontAwesome.Sharp.IconButton();
             this.btnEntradasPromo = new FontAwesome.Sharp.IconButton();
@@ -52,20 +57,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.panelSeparador = new System.Windows.Forms.Panel();
             this.panelContenedor = new System.Windows.Forms.Panel();
-            this.pnlSubMenuReportes = new System.Windows.Forms.Panel();
-            this.btnReporteVentas = new FontAwesome.Sharp.IconButton();
-            this.btnReporteCompras = new FontAwesome.Sharp.IconButton();
-            this.btnReporteCajeros = new FontAwesome.Sharp.IconButton();
-            this.btnResumenGeneral = new FontAwesome.Sharp.IconButton();
             this.panelMenu.SuspendLayout();
             this.panelMenuBotones.SuspendLayout();
+            this.pnlSubMenuReportes.SuspendLayout();
             this.pnlSubMenuProductos.SuspendLayout();
             this.panelUsuarioInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconUsuario)).BeginInit();
             this.panelCerrarSesion.SuspendLayout();
             this.panelHeaderMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).BeginInit();
-            this.pnlSubMenuReportes.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelMenu
@@ -125,6 +125,114 @@
             this.btnMantenedor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnMantenedor.UseVisualStyleBackColor = true;
             this.btnMantenedor.Click += new System.EventHandler(this.btnMantenedor_Click);
+            // 
+            // pnlSubMenuReportes
+            // 
+            this.pnlSubMenuReportes.Controls.Add(this.btnResumenGeneral);
+            this.pnlSubMenuReportes.Controls.Add(this.btnReporteCajeros);
+            this.pnlSubMenuReportes.Controls.Add(this.btnReporteCompras);
+            this.pnlSubMenuReportes.Controls.Add(this.btnReporteVentas);
+            this.pnlSubMenuReportes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlSubMenuReportes.Location = new System.Drawing.Point(0, 524);
+            this.pnlSubMenuReportes.Name = "pnlSubMenuReportes";
+            this.pnlSubMenuReportes.Size = new System.Drawing.Size(210, 186);
+            this.pnlSubMenuReportes.TabIndex = 11;
+            this.pnlSubMenuReportes.Visible = false;
+            // 
+            // btnResumenGeneral
+            // 
+            this.btnResumenGeneral.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnResumenGeneral.FlatAppearance.BorderSize = 0;
+            this.btnResumenGeneral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnResumenGeneral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnResumenGeneral.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnResumenGeneral.ForeColor = System.Drawing.Color.White;
+            this.btnResumenGeneral.IconChar = FontAwesome.Sharp.IconChar.FileInvoiceDollar;
+            this.btnResumenGeneral.IconColor = System.Drawing.Color.White;
+            this.btnResumenGeneral.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnResumenGeneral.IconSize = 22;
+            this.btnResumenGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnResumenGeneral.Location = new System.Drawing.Point(0, 135);
+            this.btnResumenGeneral.Name = "btnResumenGeneral";
+            this.btnResumenGeneral.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnResumenGeneral.Size = new System.Drawing.Size(210, 45);
+            this.btnResumenGeneral.TabIndex = 7;
+            this.btnResumenGeneral.Text = "Resumen Financiero General";
+            this.btnResumenGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnResumenGeneral.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnResumenGeneral.UseVisualStyleBackColor = true;
+            // 
+            // btnReporteCajeros
+            // 
+            this.btnReporteCajeros.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReporteCajeros.FlatAppearance.BorderSize = 0;
+            this.btnReporteCajeros.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnReporteCajeros.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReporteCajeros.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReporteCajeros.ForeColor = System.Drawing.Color.White;
+            this.btnReporteCajeros.IconChar = FontAwesome.Sharp.IconChar.UserClock;
+            this.btnReporteCajeros.IconColor = System.Drawing.Color.White;
+            this.btnReporteCajeros.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnReporteCajeros.IconSize = 22;
+            this.btnReporteCajeros.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteCajeros.Location = new System.Drawing.Point(0, 90);
+            this.btnReporteCajeros.Name = "btnReporteCajeros";
+            this.btnReporteCajeros.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnReporteCajeros.Size = new System.Drawing.Size(210, 45);
+            this.btnReporteCajeros.TabIndex = 6;
+            this.btnReporteCajeros.Text = "Reporte de Cajeros";
+            this.btnReporteCajeros.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteCajeros.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReporteCajeros.UseVisualStyleBackColor = true;
+            this.btnReporteCajeros.Click += new System.EventHandler(this.btnReporteCajeros_Click);
+            // 
+            // btnReporteCompras
+            // 
+            this.btnReporteCompras.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReporteCompras.FlatAppearance.BorderSize = 0;
+            this.btnReporteCompras.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnReporteCompras.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReporteCompras.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReporteCompras.ForeColor = System.Drawing.Color.White;
+            this.btnReporteCompras.IconChar = FontAwesome.Sharp.IconChar.TruckRampBox;
+            this.btnReporteCompras.IconColor = System.Drawing.Color.White;
+            this.btnReporteCompras.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnReporteCompras.IconSize = 22;
+            this.btnReporteCompras.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteCompras.Location = new System.Drawing.Point(0, 45);
+            this.btnReporteCompras.Name = "btnReporteCompras";
+            this.btnReporteCompras.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnReporteCompras.Size = new System.Drawing.Size(210, 45);
+            this.btnReporteCompras.TabIndex = 5;
+            this.btnReporteCompras.Text = "Reporte de Compras";
+            this.btnReporteCompras.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteCompras.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReporteCompras.UseVisualStyleBackColor = true;
+            this.btnReporteCompras.Click += new System.EventHandler(this.btnReporteCompras_Click);
+            // 
+            // btnReporteVentas
+            // 
+            this.btnReporteVentas.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnReporteVentas.FlatAppearance.BorderSize = 0;
+            this.btnReporteVentas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
+            this.btnReporteVentas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReporteVentas.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReporteVentas.ForeColor = System.Drawing.Color.White;
+            this.btnReporteVentas.IconChar = FontAwesome.Sharp.IconChar.ChartLine;
+            this.btnReporteVentas.IconColor = System.Drawing.Color.White;
+            this.btnReporteVentas.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnReporteVentas.IconSize = 22;
+            this.btnReporteVentas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteVentas.Location = new System.Drawing.Point(0, 0);
+            this.btnReporteVentas.Name = "btnReporteVentas";
+            this.btnReporteVentas.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.btnReporteVentas.Size = new System.Drawing.Size(210, 45);
+            this.btnReporteVentas.TabIndex = 4;
+            this.btnReporteVentas.Text = "Reporte Ventas";
+            this.btnReporteVentas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReporteVentas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnReporteVentas.UseVisualStyleBackColor = true;
+            this.btnReporteVentas.Click += new System.EventHandler(this.btnReporteVentas_Click);
             // 
             // btnReportes
             // 
@@ -499,112 +607,6 @@
             this.panelContenedor.TabIndex = 1;
             this.panelContenedor.Paint += new System.Windows.Forms.PaintEventHandler(this.panelContenedor_Paint);
             // 
-            // pnlSubMenuReportes
-            // 
-            this.pnlSubMenuReportes.Controls.Add(this.btnResumenGeneral);
-            this.pnlSubMenuReportes.Controls.Add(this.btnReporteCajeros);
-            this.pnlSubMenuReportes.Controls.Add(this.btnReporteCompras);
-            this.pnlSubMenuReportes.Controls.Add(this.btnReporteVentas);
-            this.pnlSubMenuReportes.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSubMenuReportes.Location = new System.Drawing.Point(0, 524);
-            this.pnlSubMenuReportes.Name = "pnlSubMenuReportes";
-            this.pnlSubMenuReportes.Size = new System.Drawing.Size(210, 186);
-            this.pnlSubMenuReportes.TabIndex = 11;
-            this.pnlSubMenuReportes.Visible = false;
-            // 
-            // btnReporteVentas
-            // 
-            this.btnReporteVentas.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReporteVentas.FlatAppearance.BorderSize = 0;
-            this.btnReporteVentas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnReporteVentas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReporteVentas.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReporteVentas.ForeColor = System.Drawing.Color.White;
-            this.btnReporteVentas.IconChar = FontAwesome.Sharp.IconChar.ChartLine;
-            this.btnReporteVentas.IconColor = System.Drawing.Color.White;
-            this.btnReporteVentas.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnReporteVentas.IconSize = 22;
-            this.btnReporteVentas.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteVentas.Location = new System.Drawing.Point(0, 0);
-            this.btnReporteVentas.Name = "btnReporteVentas";
-            this.btnReporteVentas.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnReporteVentas.Size = new System.Drawing.Size(210, 45);
-            this.btnReporteVentas.TabIndex = 4;
-            this.btnReporteVentas.Text = "Reporte Ventas";
-            this.btnReporteVentas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteVentas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReporteVentas.UseVisualStyleBackColor = true;
-            this.btnReporteVentas.Click += new System.EventHandler(this.btnReporteVentas_Click);
-            // 
-            // btnReporteCompras
-            // 
-            this.btnReporteCompras.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReporteCompras.FlatAppearance.BorderSize = 0;
-            this.btnReporteCompras.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnReporteCompras.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReporteCompras.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReporteCompras.ForeColor = System.Drawing.Color.White;
-            this.btnReporteCompras.IconChar = FontAwesome.Sharp.IconChar.TruckLoading;
-            this.btnReporteCompras.IconColor = System.Drawing.Color.White;
-            this.btnReporteCompras.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnReporteCompras.IconSize = 22;
-            this.btnReporteCompras.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteCompras.Location = new System.Drawing.Point(0, 45);
-            this.btnReporteCompras.Name = "btnReporteCompras";
-            this.btnReporteCompras.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnReporteCompras.Size = new System.Drawing.Size(210, 45);
-            this.btnReporteCompras.TabIndex = 5;
-            this.btnReporteCompras.Text = "Reporte de Compras";
-            this.btnReporteCompras.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteCompras.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReporteCompras.UseVisualStyleBackColor = true;
-            // 
-            // btnReporteCajeros
-            // 
-            this.btnReporteCajeros.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnReporteCajeros.FlatAppearance.BorderSize = 0;
-            this.btnReporteCajeros.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnReporteCajeros.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnReporteCajeros.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnReporteCajeros.ForeColor = System.Drawing.Color.White;
-            this.btnReporteCajeros.IconChar = FontAwesome.Sharp.IconChar.UserClock;
-            this.btnReporteCajeros.IconColor = System.Drawing.Color.White;
-            this.btnReporteCajeros.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnReporteCajeros.IconSize = 22;
-            this.btnReporteCajeros.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteCajeros.Location = new System.Drawing.Point(0, 90);
-            this.btnReporteCajeros.Name = "btnReporteCajeros";
-            this.btnReporteCajeros.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnReporteCajeros.Size = new System.Drawing.Size(210, 45);
-            this.btnReporteCajeros.TabIndex = 6;
-            this.btnReporteCajeros.Text = "Reporte de Cajeros";
-            this.btnReporteCajeros.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnReporteCajeros.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnReporteCajeros.UseVisualStyleBackColor = true;
-            // 
-            // btnResumenGeneral
-            // 
-            this.btnResumenGeneral.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnResumenGeneral.FlatAppearance.BorderSize = 0;
-            this.btnResumenGeneral.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(50)))), ((int)(((byte)(60)))));
-            this.btnResumenGeneral.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnResumenGeneral.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnResumenGeneral.ForeColor = System.Drawing.Color.White;
-            this.btnResumenGeneral.IconChar = FontAwesome.Sharp.IconChar.FileInvoiceDollar;
-            this.btnResumenGeneral.IconColor = System.Drawing.Color.White;
-            this.btnResumenGeneral.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnResumenGeneral.IconSize = 22;
-            this.btnResumenGeneral.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnResumenGeneral.Location = new System.Drawing.Point(0, 135);
-            this.btnResumenGeneral.Name = "btnResumenGeneral";
-            this.btnResumenGeneral.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.btnResumenGeneral.Size = new System.Drawing.Size(210, 45);
-            this.btnResumenGeneral.TabIndex = 7;
-            this.btnResumenGeneral.Text = "Resumen Financiero General";
-            this.btnResumenGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnResumenGeneral.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnResumenGeneral.UseVisualStyleBackColor = true;
-            // 
             // frmInicioPiscina
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -621,6 +623,7 @@
             this.Load += new System.EventHandler(this.frmInicioPiscina_Load);
             this.panelMenu.ResumeLayout(false);
             this.panelMenuBotones.ResumeLayout(false);
+            this.pnlSubMenuReportes.ResumeLayout(false);
             this.pnlSubMenuProductos.ResumeLayout(false);
             this.panelUsuarioInfo.ResumeLayout(false);
             this.panelUsuarioInfo.PerformLayout();
@@ -629,7 +632,6 @@
             this.panelHeaderMenu.ResumeLayout(false);
             this.panelHeaderMenu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.iconLogo)).EndInit();
-            this.pnlSubMenuReportes.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

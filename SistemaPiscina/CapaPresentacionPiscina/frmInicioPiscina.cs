@@ -279,5 +279,15 @@ namespace CapaPresentacionPiscina
 
             AbrirFormularioEnPanel(new frmReporteVentas());
         }
+
+        private void btnReporteCompras_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new frmReporteCompras());
+        }
+
+        private void btnReporteCajeros_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new frmReporteCajaTurno());
+        }
     }
 }

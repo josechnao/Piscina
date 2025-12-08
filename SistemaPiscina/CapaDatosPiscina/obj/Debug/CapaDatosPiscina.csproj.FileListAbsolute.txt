@@ -1,12 +1,3 @@
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.dll
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.pdb
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaEntidadPiscina.dll
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaEntidadPiscina.pdb
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.csproj.AssemblyReference.cache
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.csproj.CoreCompileInputs.cache
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDato.097090FB.Up2Date
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.dll
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.pdb
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.dll
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.pdb
 C:\Users\pc\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaEntidadPiscina.dll
@@ -25,3 +16,12 @@ C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\Ca
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDato.097090FB.Up2Date
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.dll
 C:\Users\HP\Desktop\Piscina\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.pdb
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.dll
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaDatosPiscina.pdb
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaEntidadPiscina.dll
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\bin\Debug\CapaEntidadPiscina.pdb
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.csproj.AssemblyReference.cache
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.csproj.CoreCompileInputs.cache
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDato.097090FB.Up2Date
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.dll
+C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaDatosPiscina\obj\Debug\CapaDatosPiscina.pdb

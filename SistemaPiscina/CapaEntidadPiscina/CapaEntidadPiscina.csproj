@@ -54,6 +54,13 @@
     <Compile Include="EGasto.cs" />
     <Compile Include="ENegocio.cs" />
     <Compile Include="EntradaTipo.cs" />
+    <Compile Include="EProveedorCombo.cs" />
+    <Compile Include="EReporteCajaTurnoGasto.cs" />
+    <Compile Include="EReporteCajaTurnoResumen.cs" />
+    <Compile Include="EReporteCajaTurnoVenta.cs" />
+    <Compile Include="EReporteCompra.cs" />
+    <Compile Include="EReporteCompraCabecera.cs" />
+    <Compile Include="EReporteCompraDetalle.cs" />
     <Compile Include="EVentaDetalleEncabezado.cs" />
     <Compile Include="EVentaDetalleItem.cs" />
     <Compile Include="EVentaReporte.cs" />

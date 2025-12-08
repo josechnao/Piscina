@@ -251,6 +251,18 @@
     <Compile Include="Menus\frmProveedores.Designer.cs">
       <DependentUpon>frmProveedores.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menus\frmReporteCajaTurno.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menus\frmReporteCajaTurno.Designer.cs">
+      <DependentUpon>frmReporteCajaTurno.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menus\frmReporteCompras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menus\frmReporteCompras.Designer.cs">
+      <DependentUpon>frmReporteCompras.cs</DependentUpon>
+    </Compile>
     <Compile Include="Menus\frmReporteVentas.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -281,6 +293,12 @@
     <Compile Include="Modals\frmCerrarCaja.Designer.cs">
       <DependentUpon>frmCerrarCaja.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modals\frmDetalleCajaTurno.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\frmDetalleCajaTurno.Designer.cs">
+      <DependentUpon>frmDetalleCajaTurno.cs</DependentUpon>
+    </Compile>
     <Compile Include="Modals\frmModalDetalleVenta.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -305,9 +323,16 @@
     <Compile Include="Modals\frmPreviewTicket.Designer.cs">
       <DependentUpon>frmPreviewTicket.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modals\mdDetalleCompra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\mdDetalleCompra.Designer.cs">
+      <DependentUpon>mdDetalleCompra.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilidades\PDF_Reportes.cs" />
+    <Compile Include="Utilidades\PDF_ReportesCompras.cs" />
     <EmbeddedResource Include="frmInicioPiscina.resx">
       <DependentUpon>frmInicioPiscina.cs</DependentUpon>
     </EmbeddedResource>
@@ -335,6 +360,12 @@
     <EmbeddedResource Include="Menus\frmProveedores.resx">
       <DependentUpon>frmProveedores.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Menus\frmReporteCajaTurno.resx">
+      <DependentUpon>frmReporteCajaTurno.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menus\frmReporteCompras.resx">
+      <DependentUpon>frmReporteCompras.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Menus\frmReporteVentas.resx">
       <DependentUpon>frmReporteVentas.cs</DependentUpon>
     </EmbeddedResource>
@@ -350,6 +381,9 @@
     <EmbeddedResource Include="Modals\frmCerrarCaja.resx">
       <DependentUpon>frmCerrarCaja.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Modals\frmDetalleCajaTurno.resx">
+      <DependentUpon>frmDetalleCajaTurno.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modals\frmModalDetalleVenta.resx">
       <DependentUpon>frmModalDetalleVenta.cs</DependentUpon>
     </EmbeddedResource>
@@ -361,6 +395,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Modals\frmPreviewTicket.resx">
       <DependentUpon>frmPreviewTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modals\mdDetalleCompra.resx">
+      <DependentUpon>mdDetalleCompra.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

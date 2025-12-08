@@ -192,7 +192,7 @@ CREATE TABLE CajaTurno (
 );
 GO
 
-
+select * from CajaTurno;
 
 /* ===========================
    8. VENTAS

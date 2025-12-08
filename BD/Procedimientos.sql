@@ -901,15 +901,16 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT 
-        -- Monto de apertura de la caja
+        -- Monto de apertura
         (SELECT MontoInicial 
          FROM CajaTurno 
          WHERE IdCajaTurno = @IdCajaTurno) AS MontoInicial,
 
-        -- Ventas del turno
+        -- Ventas válidas del turno (sin cortesia)
         (SELECT ISNULL(SUM(MontoTotal), 0) 
          FROM Venta 
-         WHERE IdCajaTurno = @IdCajaTurno) AS TotalVentas,
+         WHERE IdCajaTurno = @IdCajaTurno
+           AND MetodoPago <> 'CORTESIA') AS TotalVentas,
 
         -- Gastos del turno
         (SELECT ISNULL(SUM(Monto), 0) 
@@ -917,6 +918,7 @@ BEGIN
          WHERE IdCajaTurno = @IdCajaTurno) AS TotalGastos;
 END;
 GO
+
 
 
 CREATE PROCEDURE SP_CERRAR_CAJA
@@ -1460,3 +1462,308 @@ BEGIN
     ORDER BY NombreItem;
 END;
 GO
+
+-------------------------
+----PROCEDIMIENTO PARA REPORTE COMPRAS
+-------------------------
+
+CREATE PROCEDURE SP_REPORTE_LISTAR_PROVEEDORES
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        IdProveedor,
+        Nombre
+    FROM Proveedor
+    WHERE Estado = 1
+    ORDER BY Nombre;
+END;
+GO
+
+CREATE PROCEDURE SP_REPORTE_LISTAR_COMPRAS
+(
+    @FechaInicio DATE,
+    @FechaFin DATE,
+    @IdProveedor INT = 0,
+    @DocumentoProveedor VARCHAR(20) = '',
+    @NumeroDocumento VARCHAR(50) = '',
+    @NumeroCorrelativo VARCHAR(20) = ''
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        c.IdCompra,
+        c.NumeroCorrelativo,
+        p.Nombre AS Proveedor,
+        p.Documento AS DocumentoProveedor,
+        c.NumeroDocumento,
+        CONVERT(VARCHAR(19), c.FechaRegistro, 120) AS Fecha,
+        c.MontoTotal AS TotalCompra,
+        u.NombreCompleto AS UsuarioNombre
+    FROM Compra c
+    INNER JOIN Proveedor p ON c.IdProveedor = p.IdProveedor
+    INNER JOIN Usuario u ON c.IdUsuario = u.IdUsuario
+    WHERE
+        CONVERT(DATE, c.FechaRegistro) BETWEEN @FechaInicio AND @FechaFin
+        AND (@IdProveedor = 0 OR c.IdProveedor = @IdProveedor)
+        AND (p.Documento LIKE '%' + @DocumentoProveedor + '%')
+        AND (c.NumeroDocumento LIKE '%' + @NumeroDocumento + '%')
+        AND (CAST(c.NumeroCorrelativo AS VARCHAR(20)) LIKE '%' + @NumeroCorrelativo + '%')
+    ORDER BY c.FechaRegistro DESC;
+END;
+GO
+
+
+
+CREATE PROCEDURE SP_REPORTE_DETALLE_COMPRA
+(
+    @IdCompra INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- =============================
+    -- 1) ENCABEZADO DEL MODAL
+    -- =============================
+    SELECT
+        p.Nombre AS ProveedorNombre,
+        p.Documento AS DocumentoProveedor,
+        p.Telefono AS TelefonoProveedor,
+        c.NumeroCorrelativo,
+        c.NumeroDocumento,
+        CONVERT(VARCHAR(19), c.FechaRegistro, 120) AS Fecha,
+        u.NombreCompleto AS UsuarioNombre,
+        c.MontoTotal
+    FROM Compra c
+    INNER JOIN Proveedor p ON c.IdProveedor = p.IdProveedor
+    INNER JOIN Usuario u ON c.IdUsuario = u.IdUsuario
+    WHERE c.IdCompra = @IdCompra;
+
+
+    -- =============================
+    -- 2) DETALLE DE LA COMPRA
+    -- =============================
+    SELECT
+        pr.Nombre AS Producto,
+        pr.Descripcion,
+        dc.Cantidad,
+        dc.PrecioCompra,
+        dc.PrecioVenta,
+        dc.SubTotal
+    FROM DetalleCompra dc
+    INNER JOIN Producto pr ON dc.IdProducto = pr.IdProducto
+    WHERE dc.IdCompra = @IdCompra;
+END;
+GO
+
+-------------------------
+----PROCEDIMIENTO PARA REPORTE CAJA TURNO
+-------------------------
+
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
+(
+    @FechaDesde DATE,
+    @FechaHasta DATE,
+    @IdUsuario INT = 0
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.NombreCompleto AS Cajero,
+        ct.IdCajaTurno,
+        ct.FechaApertura,
+        ct.FechaCierre,
+
+        ct.MontoInicial,
+        ct.MontoFinal,
+
+        /* Cantidad de ventas del turno */
+        COUNT(v.IdVenta) AS TotalVentas,
+
+        /* Suma de ventas que NO sean cortesía */
+        SUM(
+            CASE 
+                WHEN v.MetodoPago = 'CORTESIA' THEN 0 
+                ELSE ISNULL(v.MontoTotal,0) 
+            END
+        ) AS VentasSumaTotal,
+
+        /* Cantidad total de gastos (activos + inactivos) */
+        COUNT(g.IdGasto) AS TotalGastos,
+
+        /* Suma SOLO de gastos activos */
+        SUM(
+            CASE 
+                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0)
+                ELSE 0
+            END
+        ) AS GastoTotalSuma,
+
+        /* Resumen de método de pago */
+        CONCAT(
+            'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
+            ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
+            ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
+        ) AS MetodoPagoResumen,
+
+        /* Diferencia real en caja (solo efectivo cuenta como ingreso) */
+        (
+            (ct.MontoInicial +
+             SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN v.MontoTotal ELSE 0 END)
+             -
+             SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+            )
+            - ct.MontoFinal
+        ) AS Diferencia,
+
+        ct.Observacion
+
+    FROM CajaTurno ct
+    INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
+    LEFT JOIN Venta v ON v.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN Gasto g ON g.IdCajaTurno = ct.IdCajaTurno
+
+    WHERE 
+        CONVERT(DATE, ct.FechaApertura) BETWEEN @FechaDesde AND @FechaHasta
+        AND (@IdUsuario = 0 OR ct.IdUsuario = @IdUsuario)
+
+    GROUP BY 
+        u.NombreCompleto,
+        ct.IdCajaTurno,
+        ct.FechaApertura,
+        ct.FechaCierre,
+        ct.MontoInicial,
+        ct.MontoFinal,
+        ct.Observacion
+
+    ORDER BY ct.FechaApertura DESC;
+END
+GO
+
+
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
+(
+    @IdCajaTurno INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        u.NombreCompleto AS Cajero,
+        ct.IdCajaTurno,
+        ct.FechaApertura,
+        ct.FechaCierre,
+
+        ct.MontoInicial,
+        ct.MontoFinal,
+
+        /* Cantidad de ventas */
+        COUNT(v.IdVenta) AS TotalVentas,
+
+        /* Suma de ventas SIN cortesía */
+        SUM(
+            CASE 
+                WHEN v.MetodoPago = 'CORTESIA' THEN 0 
+                ELSE ISNULL(v.MontoTotal,0) 
+            END
+        ) AS VentasSumaTotal,
+
+        /* Cantidad total gastos */
+        COUNT(g.IdGasto) AS TotalGastos,
+
+        /* Suma solo de gastos activos */
+        SUM(
+            CASE 
+                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) 
+                ELSE 0 
+            END
+        ) AS GastoTotalSuma,
+
+        CONCAT(
+            'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
+            ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
+            ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
+        ) AS MetodoPagoResumen,
+
+        (
+            (ct.MontoInicial +
+             SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN v.MontoTotal ELSE 0 END)
+             -
+             SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+            )
+            - ct.MontoFinal
+        ) AS Diferencia,
+
+        ct.Observacion
+
+    FROM CajaTurno ct
+    INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
+    LEFT JOIN Venta v ON v.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN Gasto g ON g.IdCajaTurno = ct.IdCajaTurno
+
+    WHERE ct.IdCajaTurno = @IdCajaTurno
+
+    GROUP BY 
+        u.NombreCompleto,
+        ct.IdCajaTurno,
+        ct.FechaApertura,
+        ct.FechaCierre,
+        ct.MontoInicial,
+        ct.MontoFinal,
+        ct.Observacion;
+END
+GO
+
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_VENTAS
+(
+    @IdCajaTurno INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        v.IdVenta,
+        v.NumeroVenta AS NroTicket,
+        v.MontoTotal,
+        v.MetodoPago,
+        v.FechaRegistro
+    FROM Venta v
+    WHERE v.IdCajaTurno = @IdCajaTurno
+    ORDER BY v.FechaRegistro ASC;
+END
+GO
+
+
+
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_GASTOS
+(
+    @IdCajaTurno INT
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        cg.Descripcion AS Categoria,
+        g.Descripcion,
+        g.Monto,
+        g.FechaRegistro,
+        g.Estado
+    FROM Gasto g
+    INNER JOIN CategoriaGasto cg ON cg.IdCategoriaGasto = g.IdCategoriaGasto
+    WHERE g.IdCajaTurno = @IdCajaTurno
+    ORDER BY g.FechaRegistro ASC;
+END
+GO
+EXEC SP_REPORTE_CAJATURNO_RESUMEN 
+    '2025-01-12 00:00:00', 
+    '2025-12-07 23:59:59', 
+    0;
