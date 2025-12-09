@@ -512,6 +512,7 @@
             // 
             // cbCategoria
             // 
+            this.cbCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbCategoria.FormattingEnabled = true;
             this.cbCategoria.Location = new System.Drawing.Point(244, 11);
             this.cbCategoria.Name = "cbCategoria";
@@ -524,7 +525,7 @@
             this.label9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(171, 14);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 13);
+            this.label9.Size = new System.Drawing.Size(66, 13);
             this.label9.TabIndex = 7;
             this.label9.Text = "Buscar Por :";
             // 
@@ -683,25 +684,25 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(662, 21);
+            this.label4.Location = new System.Drawing.Point(667, 21);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(57, 13);
+            this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Telefono :";
             // 
             // txtTelefono
             // 
-            this.txtTelefono.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTelefono.Location = new System.Drawing.Point(727, 17);
+            this.txtTelefono.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtTelefono.Location = new System.Drawing.Point(731, 15);
             this.txtTelefono.Name = "txtTelefono";
-            this.txtTelefono.Size = new System.Drawing.Size(118, 22);
+            this.txtTelefono.Size = new System.Drawing.Size(118, 25);
             this.txtTelefono.TabIndex = 5;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(218, 21);
+            this.label3.Location = new System.Drawing.Point(223, 21);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(73, 13);
             this.label3.TabIndex = 4;
@@ -711,7 +712,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(442, 21);
+            this.label2.Location = new System.Drawing.Point(447, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(54, 13);
             this.label2.TabIndex = 2;
@@ -719,10 +720,10 @@
             // 
             // txtNombreCliente
             // 
-            this.txtNombreCliente.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreCliente.Location = new System.Drawing.Point(502, 17);
+            this.txtNombreCliente.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNombreCliente.Location = new System.Drawing.Point(506, 15);
             this.txtNombreCliente.Name = "txtNombreCliente";
-            this.txtNombreCliente.Size = new System.Drawing.Size(118, 22);
+            this.txtNombreCliente.Size = new System.Drawing.Size(118, 25);
             this.txtNombreCliente.TabIndex = 1;
             // 
             // panel2
@@ -741,11 +742,12 @@
             // 
             // txtTotal
             // 
+            this.txtTotal.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtTotal.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTotal.Location = new System.Drawing.Point(163, 50);
             this.txtTotal.Name = "txtTotal";
             this.txtTotal.ReadOnly = true;
-            this.txtTotal.Size = new System.Drawing.Size(82, 22);
+            this.txtTotal.Size = new System.Drawing.Size(82, 15);
             this.txtTotal.TabIndex = 7;
             // 
             // label8
@@ -770,6 +772,7 @@
             // 
             // cbMetodoPago
             // 
+            this.cbMetodoPago.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cbMetodoPago.FormattingEnabled = true;
             this.cbMetodoPago.Location = new System.Drawing.Point(16, 51);
             this.cbMetodoPago.Name = "cbMetodoPago";
@@ -902,11 +905,12 @@
             // 
             // txtDocumento
             // 
-            this.txtDocumento.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDocumento.Location = new System.Drawing.Point(300, 17);
+            this.txtDocumento.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtDocumento.Location = new System.Drawing.Point(304, 15);
             this.txtDocumento.Name = "txtDocumento";
-            this.txtDocumento.Size = new System.Drawing.Size(118, 22);
+            this.txtDocumento.Size = new System.Drawing.Size(118, 25);
             this.txtDocumento.TabIndex = 3;
+            this.txtDocumento.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtDocumento_KeyDown);
             // 
             // frmVentas
             // 

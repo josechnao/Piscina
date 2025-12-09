@@ -1031,122 +1031,6 @@ BEGIN
 END
 GO
 
-CREATE TYPE TVP_DetalleVentaEntrada AS TABLE
-(
-    IdEntradaTipo INT,
-    Cantidad INT,
-    PrecioUnitario DECIMAL(10,2),
-    PrecioAplicado DECIMAL(10,2),
-    SubTotal DECIMAL(10,2)
-)
-GO
-
-CREATE TYPE TVP_DetalleVentaProducto AS TABLE
-(
-    IdProducto INT,
-    Cantidad INT,
-    PrecioUnitario DECIMAL(10,2),
-    SubTotal DECIMAL(10,2)
-)
-GO
-
-CREATE PROCEDURE SP_REGISTRAR_VENTA_COMPLETA
-(
-    @IdUsuario INT,
-    @IdCliente INT = NULL,
-    @MetodoPago VARCHAR(20),
-    @IdCajaTurno INT,
-    @DetalleEntradas TVP_DetalleVentaEntrada READONLY,
-    @DetalleProductos TVP_DetalleVentaProducto READONLY,
-    @Resultado INT OUTPUT,
-    @Mensaje VARCHAR(500) OUTPUT
-)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    SET XACT_ABORT ON;
-
-    BEGIN TRY
-        BEGIN TRANSACTION;
-
-        DECLARE 
-            @UltimoNumero INT,
-            @CantidadDigitos INT,
-            @Prefijo VARCHAR(10),
-            @NuevoNumero INT,
-            @NumeroVenta VARCHAR(50);
-
-        -- Obtener correlativo activo
-        SELECT 
-            @UltimoNumero = UltimoNumero,
-            @CantidadDigitos = CantidadDigitos,
-            @Prefijo = Prefijo
-        FROM Correlativo
-        WHERE Estado = 1;
-
-        -- Incrementar número
-        SET @NuevoNumero = @UltimoNumero + 1;
-
-        -- Generar código final: V00001, V00002, ...
-        SET @NumeroVenta = @Prefijo +
-            RIGHT(REPLICATE('0', @CantidadDigitos) + CAST(@NuevoNumero AS VARCHAR(10)), @CantidadDigitos);
-
-        -- Insertar cabecera de venta
-        INSERT INTO Venta(IdUsuario, IdCliente, NumeroVenta, MetodoPago, MontoTotal, FechaRegistro, IdCajaTurno)
-        VALUES
-        (
-            @IdUsuario,
-            @IdCliente,
-            @NumeroVenta,
-            @MetodoPago,
-            (
-                -- SUMA TOTAL (entradas + snacks)
-                (SELECT ISNULL(SUM(SubTotal),0) FROM @DetalleEntradas) +
-                (SELECT ISNULL(SUM(SubTotal),0) FROM @DetalleProductos)
-            ),
-            GETDATE(),
-            @IdCajaTurno
-        );
-
-        DECLARE @IdVentaGenerada INT = SCOPE_IDENTITY();
-
-        -- Insertar detalle de ENTRADAS
-        INSERT INTO DetalleVentaEntrada(IdVenta, IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal)
-        SELECT @IdVentaGenerada, IdEntradaTipo, Cantidad, PrecioUnitario, PrecioAplicado, SubTotal
-        FROM @DetalleEntradas;
-
-        -- Insertar detalle de SNACKS
-        INSERT INTO DetalleVentaProducto(IdVenta, IdProducto, Cantidad, PrecioUnitario, SubTotal)
-        SELECT @IdVentaGenerada, IdProducto, Cantidad, PrecioUnitario, SubTotal
-        FROM @DetalleProductos;
-
-        -- Actualizar STOCK por cada producto vendido
-        UPDATE P
-        SET P.Stock = P.Stock - D.Cantidad
-        FROM Producto P
-        INNER JOIN @DetalleProductos D ON P.IdProducto = D.IdProducto;
-
-        -- Actualizar correlativo
-        UPDATE Correlativo
-        SET UltimoNumero = @NuevoNumero
-        WHERE Estado = 1;
-
-        -- Éxito
-        SET @Resultado = @IdVentaGenerada;
-        SET @Mensaje = @NumeroVenta; -- devolvemos el numero de venta
-
-        COMMIT TRANSACTION;
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION;
-
-        SET @Resultado = 0;
-        SET @Mensaje = ERROR_MESSAGE();
-    END CATCH
-END
-GO
-
-
 CREATE PROCEDURE SP_REGISTRAR_VENTA
 (
     @IdUsuario          INT,
@@ -1834,5 +1718,18 @@ BEGIN
         (SELECT EgresosCompras      FROM #Compras)   AS EgresosCompras,
         (SELECT EgresosGastos       FROM #Gastos)    AS EgresosGastos;
 
+END
+GO
+
+
+CREATE PROCEDURE SP_BUSCAR_CLIENTE_POR_DNI
+(
+    @DNI VARCHAR(20)
+)
+AS
+BEGIN
+    SELECT TOP 1 IdCliente, DNI, NombreCompleto, Telefono
+    FROM Cliente
+    WHERE DNI = @DNI;
 END
 GO

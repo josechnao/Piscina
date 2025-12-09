@@ -302,7 +302,7 @@ namespace CapaPresentacionPiscina.Menus
                     if (ctrl is GroupBox gb && gb.Tag is Producto p && p.IdProducto == id)
                     {
                         Label lblStock = gb.Controls["lblStock"] as Label;
-                        NumericUpDown nud = gb.Controls["nudProductos"] as NumericUpDown;
+                        NumericUpDown nud = gb.Controls["nudProducto"] as NumericUpDown;
 
                         p.Stock += cantidadDG;
                         lblStock.Text = p.Stock.ToString();
@@ -978,6 +978,63 @@ namespace CapaPresentacionPiscina.Menus
             html = html.Replace("{{DETALLE}}", detalle.ToString());
 
             return html;
+        }
+
+        private void txtDocumento_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;   // evita el beep
+                BuscarClientePorDNI();      // llama al método
+            }
+        }
+
+        private void BuscarClientePorDNI()
+        {
+            CN_Cliente cn = new CN_Cliente();
+            Cliente cli = cn.BuscarPorDNI(txtDocumento.Text.Trim());
+
+            if (cli != null)
+            {
+                // Existe → autocompletar
+                txtNombreCliente.Text = cli.NombreCompleto;
+                txtTelefono.Text = cli.Telefono;
+
+                MostrarToast("Cliente encontrado.");
+            }
+            else
+            {
+                // No existe → limpiar y avisar
+                txtNombreCliente.Text = "";
+                txtTelefono.Text = "";
+
+                MostrarToast("Cliente no registrado. Ingrese los datos.");
+            }
+        }
+
+        private void MostrarToast(string mensaje)
+        {
+            Label toast = new Label();
+            toast.Text = mensaje;
+            toast.AutoSize = true;
+            toast.BackColor = Color.Black;
+            toast.ForeColor = Color.White;
+            toast.Padding = new Padding(10);
+            toast.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+            toast.Location = new Point(20, 20);
+            toast.BorderStyle = BorderStyle.FixedSingle;
+
+            this.Controls.Add(toast);
+            toast.BringToFront();
+
+            var timer = new Timer();
+            timer.Interval = 2000; // 2 segundos
+            timer.Tick += (s, e) =>
+            {
+                this.Controls.Remove(toast);
+                timer.Stop();
+            };
+            timer.Start();
         }
 
 
