@@ -107,3 +107,4 @@ SELECT @idAdmin, IdPermiso FROM Permiso;
 
 
 
+select * from Venta;

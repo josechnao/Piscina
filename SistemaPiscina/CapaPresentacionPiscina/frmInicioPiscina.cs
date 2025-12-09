@@ -289,5 +289,10 @@ namespace CapaPresentacionPiscina
         {
             AbrirFormularioEnPanel(new frmReporteCajaTurno());
         }
+
+        private void btnResumenGeneral_Click(object sender, EventArgs e)
+        {
+            AbrirFormularioEnPanel(new frmReporteGral());
+        }
     }
 }

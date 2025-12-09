@@ -161,6 +161,7 @@
             this.btnResumenGeneral.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnResumenGeneral.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnResumenGeneral.UseVisualStyleBackColor = true;
+            this.btnResumenGeneral.Click += new System.EventHandler(this.btnResumenGeneral_Click);
             // 
             // btnReporteCajeros
             // 

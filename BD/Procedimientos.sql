@@ -1564,7 +1564,7 @@ GO
 ----PROCEDIMIENTO PARA REPORTE CAJA TURNO
 -------------------------
 
-CREATE PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
+ALTER PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
 (
     @FechaDesde DATE,
     @FechaHasta DATE,
@@ -1579,47 +1579,31 @@ BEGIN
         ct.IdCajaTurno,
         ct.FechaApertura,
         ct.FechaCierre,
-
         ct.MontoInicial,
         ct.MontoFinal,
 
-        /* Cantidad de ventas del turno */
         COUNT(v.IdVenta) AS TotalVentas,
 
-        /* Suma de ventas que NO sean cortesía */
-        SUM(
-            CASE 
-                WHEN v.MetodoPago = 'CORTESIA' THEN 0 
-                ELSE ISNULL(v.MontoTotal,0) 
-            END
-        ) AS VentasSumaTotal,
+        SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(v.MontoTotal,0) END) AS VentasSumaTotal,
 
-        /* Cantidad total de gastos (activos + inactivos) */
         COUNT(g.IdGasto) AS TotalGastos,
 
-        /* Suma SOLO de gastos activos */
-        SUM(
-            CASE 
-                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0)
-                ELSE 0
-            END
-        ) AS GastoTotalSuma,
+        SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END) AS GastoTotalSuma,
 
-        /* Resumen de método de pago */
         CONCAT(
             'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
             ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
             ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
         ) AS MetodoPagoResumen,
 
-        /* Diferencia real en caja (solo efectivo cuenta como ingreso) */
+        /* Cálculo corregido */
         (
-            (ct.MontoInicial +
-             SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN v.MontoTotal ELSE 0 END)
-             -
-             SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+            ct.MontoFinal -
+            (
+                ct.MontoInicial +
+                SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN ISNULL(v.MontoTotal,0) ELSE 0 END) -
+                SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
             )
-            - ct.MontoFinal
         ) AS Diferencia,
 
         ct.Observacion
@@ -1633,21 +1617,22 @@ BEGIN
         CONVERT(DATE, ct.FechaApertura) BETWEEN @FechaDesde AND @FechaHasta
         AND (@IdUsuario = 0 OR ct.IdUsuario = @IdUsuario)
 
-    GROUP BY 
-        u.NombreCompleto,
-        ct.IdCajaTurno,
-        ct.FechaApertura,
-        ct.FechaCierre,
-        ct.MontoInicial,
-        ct.MontoFinal,
-        ct.Observacion
+    GROUP BY u.NombreCompleto,
+             ct.IdCajaTurno,
+             ct.FechaApertura,
+             ct.FechaCierre,
+             ct.MontoInicial,
+             ct.MontoFinal,
+             ct.Observacion
 
     ORDER BY ct.FechaApertura DESC;
 END
 GO
 
 
-CREATE PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
+
+
+ALTER PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
 (
     @IdCajaTurno INT
 )
@@ -1660,14 +1645,13 @@ BEGIN
         ct.IdCajaTurno,
         ct.FechaApertura,
         ct.FechaCierre,
-
         ct.MontoInicial,
         ct.MontoFinal,
 
         /* Cantidad de ventas */
         COUNT(v.IdVenta) AS TotalVentas,
 
-        /* Suma de ventas SIN cortesía */
+        /* Suma de ventas sin cortesía */
         SUM(
             CASE 
                 WHEN v.MetodoPago = 'CORTESIA' THEN 0 
@@ -1675,30 +1659,31 @@ BEGIN
             END
         ) AS VentasSumaTotal,
 
-        /* Cantidad total gastos */
+        /* Número de gastos */
         COUNT(g.IdGasto) AS TotalGastos,
 
-        /* Suma solo de gastos activos */
+        /* Suma de gastos activos */
         SUM(
             CASE 
-                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) 
-                ELSE 0 
+                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0)
+                ELSE 0
             END
         ) AS GastoTotalSuma,
 
+        /* Resumen de métodos de pago */
         CONCAT(
             'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
             ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
             ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
         ) AS MetodoPagoResumen,
 
-        (
-            (ct.MontoInicial +
-             SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN v.MontoTotal ELSE 0 END)
-             -
-             SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+        /* Cálculo corregido */
+        (ct.MontoFinal - 
+            (
+                ct.MontoInicial +
+                SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN ISNULL(v.MontoTotal,0) ELSE 0 END) -
+                SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
             )
-            - ct.MontoFinal
         ) AS Diferencia,
 
         ct.Observacion
@@ -1710,16 +1695,16 @@ BEGIN
 
     WHERE ct.IdCajaTurno = @IdCajaTurno
 
-    GROUP BY 
-        u.NombreCompleto,
-        ct.IdCajaTurno,
-        ct.FechaApertura,
-        ct.FechaCierre,
-        ct.MontoInicial,
-        ct.MontoFinal,
-        ct.Observacion;
+    GROUP BY u.NombreCompleto,
+             ct.IdCajaTurno,
+             ct.FechaApertura,
+             ct.FechaCierre,
+             ct.MontoInicial,
+             ct.MontoFinal,
+             ct.Observacion;
 END
 GO
+
 
 CREATE PROCEDURE SP_REPORTE_CAJATURNO_VENTAS
 (
@@ -1763,7 +1748,91 @@ BEGIN
     ORDER BY g.FechaRegistro ASC;
 END
 GO
-EXEC SP_REPORTE_CAJATURNO_RESUMEN 
-    '2025-01-12 00:00:00', 
-    '2025-12-07 23:59:59', 
-    0;
+
+
+SELECT IdCajaTurno, MontoInicial, MontoFinal,
+       (MontoInicial + 
+        (SELECT SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN MontoTotal ELSE 0 END) 
+         FROM Venta WHERE IdCajaTurno = ct.IdCajaTurno) -
+        (SELECT SUM(CASE WHEN Estado = 1 THEN Monto ELSE 0 END)
+         FROM Gasto WHERE IdCajaTurno = ct.IdCajaTurno)
+       ) AS SaldoCorrecto
+FROM CajaTurno ct
+ORDER BY IdCajaTurno;
+
+-------------------------
+----PROCEDIMIENTO PARA REPORTE GENERAL
+-------------------------
+
+CREATE PROCEDURE SP_RESUMEN_FINANCIERO_GENERAL
+(
+    @FechaDesde DATE,
+    @FechaHasta DATE
+)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    /* ==========================================================
+       1) INGRESOS TOTALES (EXCLUYE MÉTODO CORTESÍA)
+       ========================================================== */
+    SELECT 
+        ISNULL(SUM(MontoTotal), 0) AS IngresosTotales
+    INTO #Ingresos
+    FROM Venta
+    WHERE 
+        CONVERT(DATE, FechaRegistro) BETWEEN @FechaDesde AND @FechaHasta
+        AND MetodoPago <> 'CORTESIA';
+
+
+
+    /* ==========================================================
+       2) PÉRDIDAS POR CORTESÍAS
+       (SUMA DE TODAS LAS VENTAS CON MÉTODO 'CORTESIA')
+       ========================================================== */
+    SELECT 
+        ISNULL(SUM(MontoTotal), 0) AS PerdidasCortesias
+    INTO #Perdidas
+    FROM Venta
+    WHERE 
+        CONVERT(DATE, FechaRegistro) BETWEEN @FechaDesde AND @FechaHasta
+        AND MetodoPago = 'CORTESIA';
+
+
+
+    /* ==========================================================
+       3) EGRESOS COMPRAS (NO TIENE ESTADO → SE SUMAN TODAS)
+       ========================================================== */
+    SELECT 
+        ISNULL(SUM(MontoTotal), 0) AS EgresosCompras
+    INTO #Compras
+    FROM Compra
+    WHERE 
+        CONVERT(DATE, FechaRegistro) BETWEEN @FechaDesde AND @FechaHasta;
+
+
+
+    /* ==========================================================
+       4) EGRESOS GASTOS (SOLO ESTADO = 1)
+       ========================================================== */
+    SELECT 
+        ISNULL(SUM(Monto), 0) AS EgresosGastos
+    INTO #Gastos
+    FROM Gasto
+    WHERE 
+        CONVERT(DATE, FechaRegistro) BETWEEN @FechaDesde AND @FechaHasta
+        AND Estado = 1;
+
+
+
+    /* ==========================================================
+       5) RESULTADO FINAL EN UNA SOLA FILA
+       ========================================================== */
+    SELECT  
+        (SELECT IngresosTotales     FROM #Ingresos)  AS IngresosTotales,
+        (SELECT PerdidasCortesias   FROM #Perdidas)  AS PerdidasCortesias,
+        (SELECT EgresosCompras      FROM #Compras)   AS EgresosCompras,
+        (SELECT EgresosGastos       FROM #Gastos)    AS EgresosGastos;
+
+END
+GO

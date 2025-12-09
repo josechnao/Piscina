@@ -58,20 +58,20 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.dgvDetalleGasto = new System.Windows.Forms.DataGridView();
-            this.dgvDetalleVenta = new System.Windows.Forms.DataGridView();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.IdVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.NroTicket = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MontoTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.MetodoPago = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FechaRegistro = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Categoria = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Descripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Monto = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FechaRegistroGasto = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Estado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EstadoDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgvDetalleVenta = new System.Windows.Forms.DataGridView();
+            this.IdVenta = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.NroTicket = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MontoTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MetodoPago = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FechaRegistro = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalleGasto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDetalleVenta)).BeginInit();
@@ -213,7 +213,7 @@
             // txtCierre
             // 
             this.txtCierre.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCierre.Location = new System.Drawing.Point(609, 45);
+            this.txtCierre.Location = new System.Drawing.Point(598, 45);
             this.txtCierre.Name = "txtCierre";
             this.txtCierre.ReadOnly = true;
             this.txtCierre.Size = new System.Drawing.Size(137, 25);
@@ -223,7 +223,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(606, 25);
+            this.label11.Location = new System.Drawing.Point(595, 25);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(50, 17);
             this.label11.TabIndex = 30;
@@ -232,18 +232,18 @@
             // txtObservacion
             // 
             this.txtObservacion.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtObservacion.Location = new System.Drawing.Point(790, 47);
+            this.txtObservacion.Location = new System.Drawing.Point(811, 47);
             this.txtObservacion.Multiline = true;
             this.txtObservacion.Name = "txtObservacion";
             this.txtObservacion.ReadOnly = true;
-            this.txtObservacion.Size = new System.Drawing.Size(179, 145);
+            this.txtObservacion.Size = new System.Drawing.Size(158, 145);
             this.txtObservacion.TabIndex = 29;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(787, 27);
+            this.label10.Location = new System.Drawing.Point(808, 27);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 17);
             this.label10.TabIndex = 28;
@@ -290,7 +290,7 @@
             // txtGastosCant
             // 
             this.txtGastosCant.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtGastosCant.Location = new System.Drawing.Point(609, 105);
+            this.txtGastosCant.Location = new System.Drawing.Point(598, 105);
             this.txtGastosCant.Name = "txtGastosCant";
             this.txtGastosCant.ReadOnly = true;
             this.txtGastosCant.Size = new System.Drawing.Size(137, 25);
@@ -300,7 +300,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(606, 85);
+            this.label7.Location = new System.Drawing.Point(595, 85);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(94, 17);
             this.label7.TabIndex = 22;
@@ -328,17 +328,17 @@
             // txtMetodosPago
             // 
             this.txtMetodosPago.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtMetodosPago.Location = new System.Drawing.Point(609, 167);
+            this.txtMetodosPago.Location = new System.Drawing.Point(598, 167);
             this.txtMetodosPago.Name = "txtMetodosPago";
             this.txtMetodosPago.ReadOnly = true;
-            this.txtMetodosPago.Size = new System.Drawing.Size(137, 25);
+            this.txtMetodosPago.Size = new System.Drawing.Size(196, 25);
             this.txtMetodosPago.TabIndex = 19;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(606, 147);
+            this.label4.Location = new System.Drawing.Point(595, 147);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(123, 17);
             this.label4.TabIndex = 18;
@@ -408,73 +408,6 @@
             this.dgvDetalleGasto.Size = new System.Drawing.Size(981, 167);
             this.dgvDetalleGasto.TabIndex = 26;
             // 
-            // dgvDetalleVenta
-            // 
-            this.dgvDetalleVenta.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvDetalleVenta.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDetalleVenta.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.IdVenta,
-            this.NroTicket,
-            this.MontoTotal,
-            this.MetodoPago,
-            this.FechaRegistro});
-            this.dgvDetalleVenta.Location = new System.Drawing.Point(31, 319);
-            this.dgvDetalleVenta.Name = "dgvDetalleVenta";
-            this.dgvDetalleVenta.Size = new System.Drawing.Size(981, 171);
-            this.dgvDetalleVenta.TabIndex = 27;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(23, 291);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(184, 25);
-            this.label15.TabIndex = 28;
-            this.label15.Text = "DETALLE DE VENTA";
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(26, 506);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(185, 25);
-            this.label16.TabIndex = 29;
-            this.label16.Text = "DETALLE DE GASTO";
-            // 
-            // IdVenta
-            // 
-            this.IdVenta.DataPropertyName = "IdVenta";
-            this.IdVenta.HeaderText = "IdVenta";
-            this.IdVenta.Name = "IdVenta";
-            this.IdVenta.ReadOnly = true;
-            this.IdVenta.Visible = false;
-            // 
-            // NroTicket
-            // 
-            this.NroTicket.DataPropertyName = "NroTicket";
-            this.NroTicket.HeaderText = "Nro. Ticket";
-            this.NroTicket.Name = "NroTicket";
-            // 
-            // MontoTotal
-            // 
-            this.MontoTotal.DataPropertyName = "MontoTotal";
-            this.MontoTotal.HeaderText = "Total (Bs)";
-            this.MontoTotal.Name = "MontoTotal";
-            // 
-            // MetodoPago
-            // 
-            this.MetodoPago.DataPropertyName = "MetodoPago";
-            this.MetodoPago.HeaderText = "Método de Pago";
-            this.MetodoPago.Name = "MetodoPago";
-            // 
-            // FechaRegistro
-            // 
-            this.FechaRegistro.DataPropertyName = "FechaRegistro";
-            this.FechaRegistro.HeaderText = "Fecha / Hora";
-            this.FechaRegistro.Name = "FechaRegistro";
-            // 
             // Categoria
             // 
             this.Categoria.DataPropertyName = "Categoria";
@@ -510,6 +443,73 @@
             // 
             this.EstadoDescripcion.HeaderText = "Estado";
             this.EstadoDescripcion.Name = "EstadoDescripcion";
+            // 
+            // dgvDetalleVenta
+            // 
+            this.dgvDetalleVenta.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvDetalleVenta.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDetalleVenta.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.IdVenta,
+            this.NroTicket,
+            this.MontoTotal,
+            this.MetodoPago,
+            this.FechaRegistro});
+            this.dgvDetalleVenta.Location = new System.Drawing.Point(31, 319);
+            this.dgvDetalleVenta.Name = "dgvDetalleVenta";
+            this.dgvDetalleVenta.Size = new System.Drawing.Size(981, 171);
+            this.dgvDetalleVenta.TabIndex = 27;
+            // 
+            // IdVenta
+            // 
+            this.IdVenta.DataPropertyName = "IdVenta";
+            this.IdVenta.HeaderText = "IdVenta";
+            this.IdVenta.Name = "IdVenta";
+            this.IdVenta.ReadOnly = true;
+            this.IdVenta.Visible = false;
+            // 
+            // NroTicket
+            // 
+            this.NroTicket.DataPropertyName = "NroTicket";
+            this.NroTicket.HeaderText = "Nro. Ticket";
+            this.NroTicket.Name = "NroTicket";
+            // 
+            // MontoTotal
+            // 
+            this.MontoTotal.DataPropertyName = "MontoTotal";
+            this.MontoTotal.HeaderText = "Total (Bs)";
+            this.MontoTotal.Name = "MontoTotal";
+            // 
+            // MetodoPago
+            // 
+            this.MetodoPago.DataPropertyName = "MetodoPago";
+            this.MetodoPago.HeaderText = "Método de Pago";
+            this.MetodoPago.Name = "MetodoPago";
+            // 
+            // FechaRegistro
+            // 
+            this.FechaRegistro.DataPropertyName = "FechaRegistro";
+            this.FechaRegistro.HeaderText = "Fecha / Hora";
+            this.FechaRegistro.Name = "FechaRegistro";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(23, 291);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(184, 25);
+            this.label15.TabIndex = 28;
+            this.label15.Text = "DETALLE DE VENTA";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(26, 506);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(185, 25);
+            this.label16.TabIndex = 29;
+            this.label16.Text = "DETALLE DE GASTO";
             // 
             // frmDetalleCajaTurno
             // 

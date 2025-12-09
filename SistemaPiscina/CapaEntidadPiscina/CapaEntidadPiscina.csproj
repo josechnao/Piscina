@@ -61,6 +61,7 @@
     <Compile Include="EReporteCompra.cs" />
     <Compile Include="EReporteCompraCabecera.cs" />
     <Compile Include="EReporteCompraDetalle.cs" />
+    <Compile Include="EResumenFinanciero.cs" />
     <Compile Include="EVentaDetalleEncabezado.cs" />
     <Compile Include="EVentaDetalleItem.cs" />
     <Compile Include="EVentaReporte.cs" />
