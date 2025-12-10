@@ -217,20 +217,24 @@ namespace CapaPresentacionPiscina.Menus
             foreach (var item in lista)
             {
                 dgvGastos.Rows.Add(
-                    item.IdGasto,                 // 0 - IdGastos (oculta)
-                    "",                           // 1 - btnSeleccionar
-                    item.CategoriaDescripcion,    // 2 - Categoria
-                    item.Descripcion,             // 3 - Descripcion
-                    item.Monto.ToString("0.00"),  // 4 - Monto
-                    item.UsuarioNombre,           // 5 - UsuarioNombre
-                    item.RolDescripcion,          // 6 - RolDescripcion
-                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"), // 7
-                    item.Estado ? "Activo" : "Inactivo",             // 8
-                    item.IdCategoriaGasto,        // 9 - IdCategoriaGasto (oculta)
-                    item.IdUsuario,               // 10 - IdUsuario (oculta)
-                    item.IdCajaTurno              // 11 - IdCajaTurno (oculta)
+                    item.IdGasto,                 // IdGastos
+                    "",                           // btnSeleccionar
+                    item.CategoriaDescripcion,
+                    item.Descripcion,
+                    item.Monto.ToString("0.00"),
+                    item.UsuarioNombre,
+                    item.RolDescripcion,
+                    item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"),
+
+                    item.Estado ? "Activo" : "Inactivo",   // columna visible
+                    item.Estado ? 1 : 0,                   // EstadoValor (columna oculta)
+
+                    item.IdCategoriaGasto,
+                    item.IdUsuario,
+                    item.IdCajaTurno
                 );
             }
+
         }
 
 
@@ -254,9 +258,11 @@ namespace CapaPresentacionPiscina.Menus
                     dgvGastos.Rows[e.RowIndex].Cells["IdGastos"].Value
                 );
 
-                bool estadoActual = Convert.ToBoolean(
-                    dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value
+                int valor = Convert.ToInt32(
+                    dgvGastos.Rows[e.RowIndex].Cells["EstadoValor"].Value
                 );
+
+                bool estadoActual = valor == 1;
 
                 string pregunta = estadoActual
                     ? "¿Está seguro de INACTIVAR este gasto?"
@@ -272,7 +278,10 @@ namespace CapaPresentacionPiscina.Menus
 
                     if (respuesta)
                     {
-                        dgvGastos.Rows[e.RowIndex].Cells["Estado"].Value = nuevoEstado;
+                        // ACTUALIZAR AMBAS COLUMNAS
+                        dgvGastos.Rows[e.RowIndex].Cells["EstadoValor"].Value =
+                            nuevoEstado ? 1 : 0;
+
                         dgvGastos.Rows[e.RowIndex].Cells["btnEstado"].Value =
                             nuevoEstado ? "Activo" : "Inactivo";
                     }
@@ -285,6 +294,8 @@ namespace CapaPresentacionPiscina.Menus
 
                 return;
             }
+
+
 
             // 2) SELECCIONAR PARA EDITAR
             if (nombreColumna == "btnSeleccionar")
@@ -395,6 +406,7 @@ namespace CapaPresentacionPiscina.Menus
                     item.UsuarioNombre,
                     item.RolDescripcion,
                     item.FechaRegistro.ToString("yyyy-MM-dd HH:mm"),
+                    item.Estado ? 1 : 0,   // EstadoValor
                     item.Estado ? "Activo" : "Inactivo",
                     item.IdCategoriaGasto,
                     item.IdUsuario,

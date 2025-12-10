@@ -333,10 +333,6 @@ END
 -------------------------
 
 
-IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_LISTARPRODUCTOS')
-    DROP PROCEDURE SP_LISTARPRODUCTOS;
-GO
-
 CREATE PROCEDURE SP_LISTARPRODUCTOS
 AS
 BEGIN
@@ -358,10 +354,6 @@ END
 GO
 
 
-IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_REGISTRARPRODUCTO')
-    DROP PROCEDURE SP_REGISTRARPRODUCTO;
-GO
-
 CREATE PROCEDURE SP_REGISTRARPRODUCTO
 (
     @Codigo      VARCHAR(50),
@@ -380,9 +372,6 @@ END
 GO
 
 
-IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_EDITARPRODUCTO')
-    DROP PROCEDURE SP_EDITARPRODUCTO;
-GO
 
 CREATE PROCEDURE SP_EDITARPRODUCTO
 (
@@ -406,9 +395,6 @@ BEGIN
 END
 GO
 
-IF EXISTS(SELECT * FROM sys.objects WHERE name = 'SP_CAMBIARESTADO_PRODUCTO')
-    DROP PROCEDURE SP_CAMBIARESTADO_PRODUCTO;
-GO
 
 CREATE PROCEDURE SP_CAMBIARESTADO_PRODUCTO
 (
@@ -821,7 +807,7 @@ BEGIN
 END;
 GO
 
-ALTER PROCEDURE SP_LISTAR_GASTOS_ADMIN
+CREATE PROCEDURE SP_LISTAR_GASTOS_ADMIN
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -847,7 +833,6 @@ BEGIN
 END;
 GO
 
-EXEC SP_LISTAR_GASTOS_ADMIN
 
 
 /* ==========================================
@@ -1273,7 +1258,7 @@ END;
 GO
 
 
-ALTER PROCEDURE SP_REPORTE_VENTA_DETALLE
+CREATE PROCEDURE SP_REPORTE_VENTA_DETALLE
 (
     @IdVenta INT
 )
@@ -1448,7 +1433,7 @@ GO
 ----PROCEDIMIENTO PARA REPORTE CAJA TURNO
 -------------------------
 
-ALTER PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
 (
     @FechaDesde DATE,
     @FechaHasta DATE,
@@ -1458,6 +1443,29 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    /* ==== Ventas agregadas por turno ==== */
+    ;WITH VentasAgg AS
+    (
+        SELECT
+            IdCajaTurno,
+            COUNT(*) AS TotalVentas,
+            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(MontoTotal,0) END) AS VentasSumaTotal,
+            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN ISNULL(MontoTotal,0) ELSE 0 END) AS VentasEfectivo,
+            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END) AS CantEfectivo,
+            SUM(CASE WHEN MetodoPago = 'QR'       THEN 1 ELSE 0 END) AS CantQR,
+            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END) AS CantCortesia
+        FROM Venta
+        GROUP BY IdCajaTurno
+    ),
+    GastosAgg AS
+    (
+        SELECT
+            IdCajaTurno,
+            COUNT(*) AS TotalGastos,
+            SUM(CASE WHEN Estado = 1 THEN ISNULL(Monto,0) ELSE 0 END) AS GastoTotalSuma
+        FROM Gasto
+        GROUP BY IdCajaTurno
+    )
     SELECT 
         u.NombreCompleto AS Cajero,
         ct.IdCajaTurno,
@@ -1466,27 +1474,25 @@ BEGIN
         ct.MontoInicial,
         ct.MontoFinal,
 
-        COUNT(v.IdVenta) AS TotalVentas,
+        ISNULL(v.TotalVentas,0)      AS TotalVentas,
+        ISNULL(v.VentasSumaTotal,0)  AS VentasSumaTotal,
 
-        SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(v.MontoTotal,0) END) AS VentasSumaTotal,
-
-        COUNT(g.IdGasto) AS TotalGastos,
-
-        SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END) AS GastoTotalSuma,
+        ISNULL(g.TotalGastos,0)      AS TotalGastos,
+        ISNULL(g.GastoTotalSuma,0)   AS GastoTotalSuma,
 
         CONCAT(
-            'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
-            ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
-            ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
+            'Efectivo: ', ISNULL(v.CantEfectivo,0),
+            ' | QR: ',    ISNULL(v.CantQR,0),
+            ' | Cortesía: ', ISNULL(v.CantCortesia,0)
         ) AS MetodoPagoResumen,
 
-        /* Cálculo corregido */
+        /* Diferencia = Final - (Inicial + ventas EFECTIVO - gastos) */
         (
             ct.MontoFinal -
             (
                 ct.MontoInicial +
-                SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN ISNULL(v.MontoTotal,0) ELSE 0 END) -
-                SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+                ISNULL(v.VentasEfectivo,0) -
+                ISNULL(g.GastoTotalSuma,0)
             )
         ) AS Diferencia,
 
@@ -1494,20 +1500,12 @@ BEGIN
 
     FROM CajaTurno ct
     INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
-    LEFT JOIN Venta v ON v.IdCajaTurno = ct.IdCajaTurno
-    LEFT JOIN Gasto g ON g.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN VentasAgg v ON v.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN GastosAgg g ON g.IdCajaTurno = ct.IdCajaTurno
 
     WHERE 
         CONVERT(DATE, ct.FechaApertura) BETWEEN @FechaDesde AND @FechaHasta
         AND (@IdUsuario = 0 OR ct.IdUsuario = @IdUsuario)
-
-    GROUP BY u.NombreCompleto,
-             ct.IdCajaTurno,
-             ct.FechaApertura,
-             ct.FechaCierre,
-             ct.MontoInicial,
-             ct.MontoFinal,
-             ct.Observacion
 
     ORDER BY ct.FechaApertura DESC;
 END
@@ -1516,7 +1514,8 @@ GO
 
 
 
-ALTER PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
+
+CREATE PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
 (
     @IdCajaTurno INT
 )
@@ -1524,6 +1523,30 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
+    ;WITH VentasAgg AS
+    (
+        SELECT
+            IdCajaTurno,
+            COUNT(*) AS TotalVentas,
+            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(MontoTotal,0) END) AS VentasSumaTotal,
+            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN ISNULL(MontoTotal,0) ELSE 0 END) AS VentasEfectivo,
+            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END) AS CantEfectivo,
+            SUM(CASE WHEN MetodoPago = 'QR'       THEN 1 ELSE 0 END) AS CantQR,
+            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END) AS CantCortesia
+        FROM Venta
+        WHERE IdCajaTurno = @IdCajaTurno
+        GROUP BY IdCajaTurno
+    ),
+    GastosAgg AS
+    (
+        SELECT
+            IdCajaTurno,
+            COUNT(*) AS TotalGastos,
+            SUM(CASE WHEN Estado = 1 THEN ISNULL(Monto,0) ELSE 0 END) AS GastoTotalSuma
+        FROM Gasto
+        WHERE IdCajaTurno = @IdCajaTurno
+        GROUP BY IdCajaTurno
+    )
     SELECT 
         u.NombreCompleto AS Cajero,
         ct.IdCajaTurno,
@@ -1532,41 +1555,23 @@ BEGIN
         ct.MontoInicial,
         ct.MontoFinal,
 
-        /* Cantidad de ventas */
-        COUNT(v.IdVenta) AS TotalVentas,
+        ISNULL(v.TotalVentas,0)      AS TotalVentas,
+        ISNULL(v.VentasSumaTotal,0)  AS VentasSumaTotal,
+        ISNULL(g.TotalGastos,0)      AS TotalGastos,
+        ISNULL(g.GastoTotalSuma,0)   AS GastoTotalSuma,
 
-        /* Suma de ventas sin cortesía */
-        SUM(
-            CASE 
-                WHEN v.MetodoPago = 'CORTESIA' THEN 0 
-                ELSE ISNULL(v.MontoTotal,0) 
-            END
-        ) AS VentasSumaTotal,
-
-        /* Número de gastos */
-        COUNT(g.IdGasto) AS TotalGastos,
-
-        /* Suma de gastos activos */
-        SUM(
-            CASE 
-                WHEN g.Estado = 1 THEN ISNULL(g.Monto,0)
-                ELSE 0
-            END
-        ) AS GastoTotalSuma,
-
-        /* Resumen de métodos de pago */
         CONCAT(
-            'Efectivo: ', SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END),
-            ' | QR: ', SUM(CASE WHEN v.MetodoPago = 'QR' THEN 1 ELSE 0 END),
-            ' | Cortesía: ', SUM(CASE WHEN v.MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END)
+            'Efectivo: ', ISNULL(v.CantEfectivo,0),
+            ' | QR: ',    ISNULL(v.CantQR,0),
+            ' | Cortesía: ', ISNULL(v.CantCortesia,0)
         ) AS MetodoPagoResumen,
 
-        /* Cálculo corregido */
-        (ct.MontoFinal - 
+        (
+            ct.MontoFinal -
             (
                 ct.MontoInicial +
-                SUM(CASE WHEN v.MetodoPago = 'EFECTIVO' THEN ISNULL(v.MontoTotal,0) ELSE 0 END) -
-                SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END)
+                ISNULL(v.VentasEfectivo,0) -
+                ISNULL(g.GastoTotalSuma,0)
             )
         ) AS Diferencia,
 
@@ -1574,20 +1579,13 @@ BEGIN
 
     FROM CajaTurno ct
     INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
-    LEFT JOIN Venta v ON v.IdCajaTurno = ct.IdCajaTurno
-    LEFT JOIN Gasto g ON g.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN VentasAgg v ON v.IdCajaTurno = ct.IdCajaTurno
+    LEFT JOIN GastosAgg g ON g.IdCajaTurno = ct.IdCajaTurno
 
-    WHERE ct.IdCajaTurno = @IdCajaTurno
-
-    GROUP BY u.NombreCompleto,
-             ct.IdCajaTurno,
-             ct.FechaApertura,
-             ct.FechaCierre,
-             ct.MontoInicial,
-             ct.MontoFinal,
-             ct.Observacion;
+    WHERE ct.IdCajaTurno = @IdCajaTurno;
 END
 GO
+
 
 
 CREATE PROCEDURE SP_REPORTE_CAJATURNO_VENTAS
@@ -1632,17 +1630,6 @@ BEGIN
     ORDER BY g.FechaRegistro ASC;
 END
 GO
-
-
-SELECT IdCajaTurno, MontoInicial, MontoFinal,
-       (MontoInicial + 
-        (SELECT SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN MontoTotal ELSE 0 END) 
-         FROM Venta WHERE IdCajaTurno = ct.IdCajaTurno) -
-        (SELECT SUM(CASE WHEN Estado = 1 THEN Monto ELSE 0 END)
-         FROM Gasto WHERE IdCajaTurno = ct.IdCajaTurno)
-       ) AS SaldoCorrecto
-FROM CajaTurno ct
-ORDER BY IdCajaTurno;
 
 -------------------------
 ----PROCEDIMIENTO PARA REPORTE GENERAL

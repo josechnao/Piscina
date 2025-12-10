@@ -112,6 +112,3 @@ INSERT INTO RolPermiso (IdRol, IdPermiso)
 SELECT @idAdmin, IdPermiso
 FROM Permiso;
 GO
-
-
-select * from Cliente;

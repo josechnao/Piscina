@@ -61,10 +61,10 @@
             this.RolDescripcion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FechaRegistro = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnEstado = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.EstadoValor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdCategoriaGasto = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdUsuario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdCajaTurno = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Estado = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.pnlFiltro.SuspendLayout();
@@ -166,6 +166,7 @@
             // 
             // cboCategoria
             // 
+            this.cboCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboCategoria.FormattingEnabled = true;
             this.cboCategoria.Location = new System.Drawing.Point(25, 45);
             this.cboCategoria.Name = "cboCategoria";
@@ -226,6 +227,7 @@
             // 
             // cboFiltroRol
             // 
+            this.cboFiltroRol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboFiltroRol.FormattingEnabled = true;
             this.cboFiltroRol.Location = new System.Drawing.Point(316, 56);
             this.cboFiltroRol.Name = "cboFiltroRol";
@@ -300,6 +302,7 @@
             // 
             // cboFiltroCategoria
             // 
+            this.cboFiltroCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cboFiltroCategoria.FormattingEnabled = true;
             this.cboFiltroCategoria.Location = new System.Drawing.Point(104, 60);
             this.cboFiltroCategoria.Name = "cboFiltroCategoria";
@@ -347,10 +350,10 @@
             this.RolDescripcion,
             this.FechaRegistro,
             this.btnEstado,
+            this.EstadoValor,
             this.IdCategoriaGasto,
             this.IdUsuario,
-            this.IdCajaTurno,
-            this.Estado});
+            this.IdCajaTurno});
             this.dgvGastos.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvGastos.Location = new System.Drawing.Point(0, 254);
             this.dgvGastos.Name = "dgvGastos";
@@ -418,6 +421,13 @@
             this.btnEstado.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.btnEstado.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // EstadoValor
+            // 
+            this.EstadoValor.HeaderText = "Estado";
+            this.EstadoValor.Name = "EstadoValor";
+            this.EstadoValor.ReadOnly = true;
+            this.EstadoValor.Visible = false;
+            // 
             // IdCategoriaGasto
             // 
             this.IdCategoriaGasto.HeaderText = "IdCategoriaGasto";
@@ -438,13 +448,6 @@
             this.IdCajaTurno.Name = "IdCajaTurno";
             this.IdCajaTurno.ReadOnly = true;
             this.IdCajaTurno.Visible = false;
-            // 
-            // Estado
-            // 
-            this.Estado.HeaderText = "Estado";
-            this.Estado.Name = "Estado";
-            this.Estado.ReadOnly = true;
-            this.Estado.Visible = false;
             // 
             // frmGastos
             // 
@@ -510,9 +513,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RolDescripcion;
         private System.Windows.Forms.DataGridViewTextBoxColumn FechaRegistro;
         private System.Windows.Forms.DataGridViewButtonColumn btnEstado;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EstadoValor;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdCategoriaGasto;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdUsuario;
         private System.Windows.Forms.DataGridViewTextBoxColumn IdCajaTurno;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Estado;
     }
 }

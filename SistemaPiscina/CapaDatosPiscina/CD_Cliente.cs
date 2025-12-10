@@ -13,7 +13,7 @@ namespace CapaDatosPiscina
 
             using (SqlConnection con = new SqlConnection(Conexion.cadena))
             {
-                SqlCommand cmd = new SqlCommand("SP_BUSCARCLIENTE_POR_DNI", con);
+                SqlCommand cmd = new SqlCommand("SP_BUSCAR_CLIENTE_POR_DNI", con);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@DNI", dni);
 
