@@ -165,13 +165,11 @@ namespace CapaPresentacionPiscina
 
         private void btnRegistrarProducto_Click(object sender, EventArgs e)
         {
-            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmProductos());
         }
 
         private void btnCategoria_Click(object sender, EventArgs e)
         {
-            OcultarSubMenus();
             AbrirFormularioEnPanel(new frmCategoria());
         }
 

@@ -5,10 +5,6 @@ GO
 -------------------------
 ----PROCEDIMIENTO PARA LOGUEO
 -------------------------
-IF OBJECT_ID('SP_LOGIN', 'P') IS NOT NULL
-    DROP PROCEDURE SP_LOGIN;
-GO
-
 CREATE PROCEDURE SP_LOGIN
 (
     @Documento VARCHAR(50),
@@ -55,6 +51,8 @@ BEGIN
     ORDER BY u.IdUsuario ASC;
 END
 GO
+
+
 
 CREATE PROCEDURE SP_GUARDAR_USUARIO
 (
@@ -326,12 +324,11 @@ BEGIN
     FROM Categoria
     WHERE Estado = 1
 END
-
+GO
 
 -------------------------
 ----PROCEDIMIENTO PARA PRODUCTOS
 -------------------------
-
 
 CREATE PROCEDURE SP_LISTARPRODUCTOS
 AS
@@ -1433,7 +1430,7 @@ GO
 ----PROCEDIMIENTO PARA REPORTE CAJA TURNO
 -------------------------
 
-CREATE PROCEDURE SP_REPORTE_CAJATURNO_RESUMEN
+CREATE PROCEDURE dbo.SP_REPORTE_CAJATURNO_RESUMEN
 (
     @FechaDesde DATE,
     @FechaHasta DATE,
@@ -1443,28 +1440,46 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    /* ==== Ventas agregadas por turno ==== */
     ;WITH VentasAgg AS
     (
         SELECT
-            IdCajaTurno,
+            v.IdCajaTurno,
             COUNT(*) AS TotalVentas,
-            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(MontoTotal,0) END) AS VentasSumaTotal,
-            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN ISNULL(MontoTotal,0) ELSE 0 END) AS VentasEfectivo,
-            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END) AS CantEfectivo,
-            SUM(CASE WHEN MetodoPago = 'QR'       THEN 1 ELSE 0 END) AS CantQR,
-            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END) AS CantCortesia
-        FROM Venta
-        GROUP BY IdCajaTurno
+
+            -- Total ventas que cuentan (TODO menos CORTESIA): informativo
+            SUM(
+                CASE 
+                    WHEN UPPER(LTRIM(RTRIM(v.MetodoPago))) <> 'CORTESIA' 
+                    THEN ISNULL(v.MontoTotal,0) 
+                    ELSE 0 
+                END
+            ) AS VentasSumaTotal,
+
+            -- Ventas que entran al "total en sistema" para caja: EFECTIVO + QR
+            SUM(
+                CASE 
+                    WHEN UPPER(LTRIM(RTRIM(v.MetodoPago))) IN ('EFECTIVO','QR')
+                    THEN ISNULL(v.MontoTotal,0)
+                    ELSE 0
+                END
+            ) AS VentasCaja,
+
+            SUM(CASE WHEN UPPER(LTRIM(RTRIM(v.MetodoPago))) = 'EFECTIVO' THEN 1 ELSE 0 END) AS CantEfectivo,
+            SUM(CASE WHEN UPPER(LTRIM(RTRIM(v.MetodoPago))) = 'QR'       THEN 1 ELSE 0 END) AS CantQR,
+            SUM(CASE WHEN UPPER(LTRIM(RTRIM(v.MetodoPago))) = 'CORTESIA' THEN 1 ELSE 0 END) AS CantCortesia
+        FROM Venta v
+        WHERE v.IdCajaTurno IS NOT NULL
+        GROUP BY v.IdCajaTurno
     ),
     GastosAgg AS
     (
         SELECT
-            IdCajaTurno,
+            g.IdCajaTurno,
             COUNT(*) AS TotalGastos,
-            SUM(CASE WHEN Estado = 1 THEN ISNULL(Monto,0) ELSE 0 END) AS GastoTotalSuma
-        FROM Gasto
-        GROUP BY IdCajaTurno
+            SUM(CASE WHEN g.Estado = 1 THEN ISNULL(g.Monto,0) ELSE 0 END) AS GastoTotalSuma
+        FROM Gasto g
+        WHERE g.IdCajaTurno IS NOT NULL
+        GROUP BY g.IdCajaTurno
     )
     SELECT 
         u.NombreCompleto AS Cajero,
@@ -1476,6 +1491,7 @@ BEGIN
 
         ISNULL(v.TotalVentas,0)      AS TotalVentas,
         ISNULL(v.VentasSumaTotal,0)  AS VentasSumaTotal,
+        ISNULL(v.VentasCaja,0)       AS VentasCaja,
 
         ISNULL(g.TotalGastos,0)      AS TotalGastos,
         ISNULL(g.GastoTotalSuma,0)   AS GastoTotalSuma,
@@ -1486,36 +1502,38 @@ BEGIN
             ' | Cortesía: ', ISNULL(v.CantCortesia,0)
         ) AS MetodoPagoResumen,
 
-        /* Diferencia = Final - (Inicial + ventas EFECTIVO - gastos) */
+        -- TotalSistema = Inicial + VentasCaja - GastosActivos
+        (
+            ct.MontoInicial +
+            ISNULL(v.VentasCaja,0) -
+            ISNULL(g.GastoTotalSuma,0)
+        ) AS TotalSistema,
+
+        -- Diferencia = Final - TotalSistema
         (
             ct.MontoFinal -
             (
                 ct.MontoInicial +
-                ISNULL(v.VentasEfectivo,0) -
+                ISNULL(v.VentasCaja,0) -
                 ISNULL(g.GastoTotalSuma,0)
             )
         ) AS Diferencia,
 
         ct.Observacion
-
     FROM CajaTurno ct
     INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
     LEFT JOIN VentasAgg v ON v.IdCajaTurno = ct.IdCajaTurno
     LEFT JOIN GastosAgg g ON g.IdCajaTurno = ct.IdCajaTurno
-
     WHERE 
         CONVERT(DATE, ct.FechaApertura) BETWEEN @FechaDesde AND @FechaHasta
         AND (@IdUsuario = 0 OR ct.IdUsuario = @IdUsuario)
-
     ORDER BY ct.FechaApertura DESC;
 END
 GO
 
 
 
-
-
-CREATE PROCEDURE SP_REPORTE_CAJATURNO_DETALLE_TURNO
+CREATE PROCEDURE dbo.SP_REPORTE_CAJATURNO_DETALLE_TURNO
 (
     @IdCajaTurno INT
 )
@@ -1528,8 +1546,11 @@ BEGIN
         SELECT
             IdCajaTurno,
             COUNT(*) AS TotalVentas,
-            SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 0 ELSE ISNULL(MontoTotal,0) END) AS VentasSumaTotal,
-            SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN ISNULL(MontoTotal,0) ELSE 0 END) AS VentasEfectivo,
+
+            -- TOTAL VENTAS QUE CUENTAN PARA CAJA: todo menos CORTESIA
+            SUM(CASE WHEN MetodoPago <> 'CORTESIA' THEN ISNULL(MontoTotal,0) ELSE 0 END) AS VentasCaja,
+
+            -- Conteos por método (solo informativo)
             SUM(CASE WHEN MetodoPago = 'EFECTIVO' THEN 1 ELSE 0 END) AS CantEfectivo,
             SUM(CASE WHEN MetodoPago = 'QR'       THEN 1 ELSE 0 END) AS CantQR,
             SUM(CASE WHEN MetodoPago = 'CORTESIA' THEN 1 ELSE 0 END) AS CantCortesia
@@ -1556,7 +1577,7 @@ BEGIN
         ct.MontoFinal,
 
         ISNULL(v.TotalVentas,0)      AS TotalVentas,
-        ISNULL(v.VentasSumaTotal,0)  AS VentasSumaTotal,
+        ISNULL(v.VentasCaja,0)       AS VentasSumaTotal,     -- <- si tu UI usa “Ventas Suma”, esto debe ser SIN cortesia
         ISNULL(g.TotalGastos,0)      AS TotalGastos,
         ISNULL(g.GastoTotalSuma,0)   AS GastoTotalSuma,
 
@@ -1566,26 +1587,24 @@ BEGIN
             ' | Cortesía: ', ISNULL(v.CantCortesia,0)
         ) AS MetodoPagoResumen,
 
-        (
+        -- DIFERENCIA REAL: Final - (Inicial + VentasCaja - Gastos)
+        Diferencia = (
             ct.MontoFinal -
             (
                 ct.MontoInicial +
-                ISNULL(v.VentasEfectivo,0) -
+                ISNULL(v.VentasCaja,0) -
                 ISNULL(g.GastoTotalSuma,0)
             )
-        ) AS Diferencia,
+        ),
 
         ct.Observacion
-
     FROM CajaTurno ct
     INNER JOIN Usuario u ON u.IdUsuario = ct.IdUsuario
     LEFT JOIN VentasAgg v ON v.IdCajaTurno = ct.IdCajaTurno
     LEFT JOIN GastosAgg g ON g.IdCajaTurno = ct.IdCajaTurno
-
     WHERE ct.IdCajaTurno = @IdCajaTurno;
 END
 GO
-
 
 
 CREATE PROCEDURE SP_REPORTE_CAJATURNO_VENTAS

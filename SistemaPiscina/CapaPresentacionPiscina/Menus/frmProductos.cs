@@ -201,6 +201,9 @@ namespace CapaPresentacionPiscina.Menus
 
         private void Limpiar()
         {
+            idProductoSeleccionado = 0;   // 🔴 ESTO ES LO QUE FALTABA
+            indiceSeleccionado = -1;
+
             txtCodigo.Text = "";
             txtNombre.Text = "";
             txtDescripcion.Text = "";
@@ -209,6 +212,7 @@ namespace CapaPresentacionPiscina.Menus
 
             txtCodigo.Focus();
         }
+
 
         private void dgvData_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {

@@ -25,6 +25,9 @@ VALUES ('1', 'Administrador General', '1', 1);
 GO
 
 
+/* ===========================
+   AGREGAR CATEGORIA
+   =========================== */
 INSERT INTO Categoria (Descripcion, Estado)
 VALUES ('Bebidas', 1),
        ('Postres', 1);
