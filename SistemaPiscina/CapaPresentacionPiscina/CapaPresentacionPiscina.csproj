@@ -209,6 +209,9 @@
       <DependentUpon>frmLoginPiscina.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\PdfGenerator.cs" />
+    <Compile Include="Helpers\Printing\EscPosCommands.cs" />
+    <Compile Include="Helpers\Printing\TicketPrinter.cs" />
+    <Compile Include="Helpers\RawPrinterHelper.cs" />
     <Compile Include="Menus\frmCategoria.cs">
       <SubType>Form</SubType>
     </Compile>

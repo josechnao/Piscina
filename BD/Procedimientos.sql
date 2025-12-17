@@ -745,30 +745,7 @@ BEGIN
 END;
 GO
 
-CREATE PROCEDURE SP_LISTAR_GASTOS_ADMIN
-AS
-BEGIN
-    SET NOCOUNT ON;
 
-    SELECT 
-        g.IdGasto,
-        g.IdCategoriaGasto,
-        cg.Descripcion AS Categoria,
-        g.IdUsuario,
-        u.NombreCompleto AS Usuario,
-        r.Descripcion AS RolDescripcion,
-        g.IdCajaTurno,
-        g.Monto,
-        g.Descripcion,
-        g.FechaRegistro,
-        g.Estado
-    FROM Gasto g
-    INNER JOIN CategoriaGasto cg ON g.IdCategoriaGasto = cg.IdCategoriaGasto
-    INNER JOIN Usuario u ON g.IdUsuario = u.IdUsuario
-    INNER JOIN Rol r ON u.IdRol = r.IdRol
-    ORDER BY g.FechaRegistro DESC;
-END;
-GO
 
 CREATE PROCEDURE SP_FILTRAR_GASTOS_CAJERO
 (
@@ -803,6 +780,7 @@ BEGIN
     ORDER BY g.FechaRegistro DESC;
 END;
 GO
+
 
 CREATE PROCEDURE SP_LISTAR_GASTOS_ADMIN
 AS

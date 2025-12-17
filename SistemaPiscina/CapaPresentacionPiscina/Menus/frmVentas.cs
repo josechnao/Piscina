@@ -1,4 +1,6 @@
-﻿using CapaEntidadPiscina;
+﻿using CapaEntidad;
+using CapaEntidadPiscina;
+using CapaNegocio;
 using CapaNegocioPiscina;
 using CapaPresentacionPiscina.Helpers;
 using System;
@@ -834,14 +836,43 @@ namespace CapaPresentacionPiscina.Menus
 
             if (idVentaGenerada != 0)
             {
+
                 MessageBox.Show(
                     $"Venta registrada correctamente.\nNúmero: {numeroVenta}",
                     "Venta registrada",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
+
+                // ===============================
+                // 🔹 IMPRIMIR TICKET DIRECTO
+                // ===============================
+
+                // Obtener datos del negocio desde BD
+                CN_Negocio cnNegocio = new CN_Negocio();
+                Negocio negocio = cnNegocio.ObtenerDatos();
+                // (usa el método que ya tengas, NO lo hardcodees)
+
+                List<ItemTicket> items = ObtenerItemsTicket();
+
+                TicketPrinter.Imprimir(
+                    nombreNegocio: negocio.NombreNegocio,
+                    fechaHora: DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                    cajero: SesionUsuario.UsuarioActual.NombreCompleto,
+                    numeroTicket: numeroVenta,
+                    cliente: txtNombreCliente.Text.Trim(),
+                    documento: txtDocumento.Text.Trim(),
+                    telefono: txtTelefono.Text.Trim(),
+                    items: items,
+                    total: metodoPago == "CORTESIA" ? 0 : total,
+                    metodoPago: metodoPago
+                );
+
+
                 // 1. Generamos el HTML del ticket
                 string htmlTicket = GenerarHtmlTicket(numeroVenta, total, metodoPago);
+
+
 
                 if (!string.IsNullOrEmpty(htmlTicket))
                 {
@@ -876,6 +907,28 @@ namespace CapaPresentacionPiscina.Menus
                     MessageBoxIcon.Error);
             }
         }
+
+        private List<ItemTicket> ObtenerItemsTicket()
+        {
+            List<ItemTicket> items = new List<ItemTicket>();
+
+            foreach (DataGridViewRow row in dgvVenta.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                items.Add(new ItemTicket
+                {
+                    Cantidad = Convert.ToInt32(row.Cells["colCantidad"].Value),
+                    Nombre = row.Cells["colNombre"].Value.ToString(),
+                    Descripcion = row.Cells["colDescripcion"].Value?.ToString() ?? "",
+                    PrecioUnitario = Convert.ToDecimal(row.Cells["colPrecioUnitario"].Value),
+                    SubTotal = Convert.ToDecimal(row.Cells["colSubTotal"].Value)
+                });
+            }
+
+            return items;
+        }
+
         private void LimpiarFormulario()
         {
             // Limpia textbox del cliente
@@ -905,7 +958,7 @@ namespace CapaPresentacionPiscina.Menus
 
         private string GenerarHtmlTicket(string numeroTicket, decimal total, string metodoPago)
         {
-            // 1. Ruta de la plantilla
+            // 1. Ruta de la plantilla HTML
             string rutaPlantilla = Path.Combine(
                 Application.StartupPath,
                 "Plantillas",
@@ -926,21 +979,35 @@ namespace CapaPresentacionPiscina.Menus
             // 3. Datos generales
             string nombreNegocio = "Aguavida";
             string fechaHora = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+
             string cajero = SesionUsuario.UsuarioActual != null
                 ? SesionUsuario.UsuarioActual.NombreCompleto
                 : "----";
 
+            // 4. 🔹 Datos del cliente (YA ESTÁN EN EL FORM)
+            string clienteNombre = txtNombreCliente.Text.Trim();
+            string clienteDocumento = txtDocumento.Text.Trim();
+            string clienteTelefono = txtTelefono.Text.Trim();
+
+            // 5. Reemplazar variables simples
             html = html.Replace("{{NombreNegocio}}", nombreNegocio);
             html = html.Replace("{{FechaHora}}", fechaHora);
             html = html.Replace("{{Cajero}}", cajero);
             html = html.Replace("{{NumeroTicket}}", numeroTicket);
             html = html.Replace("{{MetodoPago}}", metodoPago);
-            // TOTAL mostrado en ticket según método de pago
-            string totalMostrar = metodoPago == "CORTESIA" ? "0.00" : total.ToString("0.00");
+
+            html = html.Replace("{{ClienteNombre}}", clienteNombre);
+            html = html.Replace("{{ClienteDocumento}}", clienteDocumento);
+            html = html.Replace("{{ClienteTelefono}}", clienteTelefono);
+
+            // TOTAL mostrado (cortesía = 0)
+            string totalMostrar = metodoPago == "CORTESIA"
+                ? "0.00"
+                : total.ToString("0.00");
+
             html = html.Replace("{{Total}}", totalMostrar);
 
-
-            // 4. Construir detalle
+            // 6. Construir DETALLE de items
             StringBuilder detalle = new StringBuilder();
 
             foreach (DataGridViewRow fila in dgvVenta.Rows)
@@ -954,31 +1021,32 @@ namespace CapaPresentacionPiscina.Menus
                 string subt = Convert.ToDecimal(fila.Cells["colSubTotal"].Value).ToString("0.00");
 
                 detalle.Append($@"
-                <table class='item-row'>
-                    <tr>
-                        <td>{cant}</td>
-                        <td>{nombre}</td>
-                        <td class='right'>{punit}</td>
-                        <td class='right'>{subt}</td>
-                    </tr>");
+        <table class='item-row'>
+            <tr>
+                <td>{cant}</td>
+                <td>{nombre}</td>
+                <td class='right'>{punit}</td>
+                <td class='right'>{subt}</td>
+            </tr>");
 
-                                if (!string.IsNullOrWhiteSpace(desc))
-                                {
-                                    detalle.Append($@"
-                    <tr>
-                        <td></td>
-                        <td colspan='3' class='item-desc'>{desc}</td>
-                    </tr>");
+                if (!string.IsNullOrWhiteSpace(desc))
+                {
+                    detalle.Append($@"
+            <tr>
+                <td></td>
+                <td colspan='3' class='item-desc'>{desc}</td>
+            </tr>");
                 }
 
                 detalle.Append("</table>");
             }
 
-            // 🔥 CAMBIO IMPORTANTE: Reemplaza el placeholder correcto
+            // 7. Reemplazar detalle
             html = html.Replace("{{DETALLE}}", detalle.ToString());
 
             return html;
         }
+
 
         private void txtDocumento_KeyDown(object sender, KeyEventArgs e)
         {

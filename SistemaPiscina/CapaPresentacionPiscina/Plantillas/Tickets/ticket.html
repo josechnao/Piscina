@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <style>
-
         body {
-            font-family: monospace;
-            font-size: 12px;
             margin: 0;
             padding: 0;
+            background: white;
         }
 
         .ticket {
-            width: 280px; /* Aproximado a 80mm */
-            padding: 5px;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px dashed #000;
-            margin: 6px 0;
+            width: 72mm; /* 🔥 ancho REAL imprimible */
+            padding: 2mm; /* margen interno mínimo */
+            font-family: "Courier New", Courier, monospace;
+            font-size: 10.5pt; /* equivalente visual a FONT A */
+            line-height: 1.2;
+            color: #000;
         }
 
         .center {
@@ -30,64 +26,120 @@
             text-align: right;
         }
 
+        hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 4px 0;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed; /* 🔥 evita desorden */
         }
 
-        .item-row {
-            margin-bottom: 4px;
-        }
-
-        .item-title {
+        th {
             font-weight: bold;
+            text-align: left;
+            padding-bottom: 2px;
         }
+
+            th:nth-child(1),
+            td:nth-child(1) {
+                width: 10%;
+            }
+
+            th:nth-child(2),
+            td:nth-child(2) {
+                width: 45%;
+            }
+
+            th:nth-child(3),
+            td:nth-child(3) {
+                width: 20%;
+                text-align: right;
+            }
+
+            th:nth-child(4),
+            td:nth-child(4) {
+                width: 25%;
+                text-align: right;
+            }
 
         .item-desc {
-            margin-left: 15px;
-            font-size: 11px;
+            font-size: 9.5pt;
+            padding-left: 6mm;
+        }
+
+        .total {
+            font-weight: bold;
+            font-size: 11pt;
         }
     </style>
+
 </head>
 
 <body>
     <div class="ticket">
 
-        <div class="center">
-            <strong>{{NombreNegocio}}</strong>
+        <!-- NEGOCIO -->
+        <div class="center bold" style="font-size:16px;">
+            {{NombreNegocio}}
         </div>
 
         <hr>
 
+        <!-- DATOS VENTA -->
         Fecha/Hora: {{FechaHora}} <br>
         Cajero: {{Cajero}} <br>
         Ticket: {{NumeroTicket}} <br>
 
         <hr>
 
-        <table>
-            <tr>
-                <th>Cant</th>
-                <th>Item</th>
-                <th class="right">P.Unit</th>
-                <th class="right">SubT</th>
-            </tr>
-        </table>
-
-        <!-- Aquí irá el detalle -->
-        {{DETALLE}}
+        <!-- CLIENTE -->
+        <div>
+            <span class="bold">Cliente:</span>
+            {{ClienteNombre}} &nbsp; | &nbsp; CI: {{ClienteDocumento}} <br>
+            Teléfono: {{ClienteTelefono}}
+        </div>
 
         <hr>
 
+        <!-- CABECERA TABLA -->
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-cant">Cant</th>
+                    <th class="col-item">Item</th>
+                    <th class="col-unit">P.Unit</th>
+                    <th class="col-sub">SubT</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <!-- DETALLE -->
+                {{DETALLE}}
+            </tbody>
+        </table>
+
+        <hr>
+
+        <!-- PAGO -->
         Pago: {{MetodoPago}} <br>
 
         <hr>
 
-        <strong>TOTAL → </strong> {{Total}} Bs
+        <!-- TOTAL -->
+        <div class="total">
+            TOTAL → {{Total}} Bs
+        </div>
 
         <hr>
 
-        <div class="center">¡Gracias por elegir Aguavida!</div>
+        <!-- PIE -->
+        <div class="center">
+            ¡Gracias por elegir Aguavida!
+        </div>
 
     </div>
 </body>
