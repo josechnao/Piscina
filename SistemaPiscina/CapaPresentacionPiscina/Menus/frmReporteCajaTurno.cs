@@ -88,11 +88,9 @@ namespace CapaPresentacionPiscina.Menus
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             cboCajero.SelectedIndex = 0;
-            dtpDesde.Value = DateTime.Today;
-            dtpHasta.Value = DateTime.Today;
 
-            dgvTurnos.DataSource = null;
-            txtTotalTurnos.Text = "0";
+            // Importante: volver a cargar TODOS los turnos
+            CargarTurnosIniciales();
         }
 
         private void dgvTurnos_CellContentClick(object sender, DataGridViewCellEventArgs e)

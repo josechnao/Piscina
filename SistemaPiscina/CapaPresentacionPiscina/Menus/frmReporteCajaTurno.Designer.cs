@@ -28,20 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnExportar = new FontAwesome.Sharp.IconButton();
             this.label5 = new System.Windows.Forms.Label();
             this.txtTotalTurnos = new System.Windows.Forms.TextBox();
             this.dgvTurnos = new System.Windows.Forms.DataGridView();
-            this.btnLimpiar = new FontAwesome.Sharp.IconButton();
-            this.btnBuscar = new FontAwesome.Sharp.IconButton();
-            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
-            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
-            this.cboCajero = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.Cajero = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IdCajaTurno = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.FechaApertura = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -53,35 +42,25 @@
             this.Diferencia = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Observacion = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btnDetalle = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.btnLimpiar = new FontAwesome.Sharp.IconButton();
+            this.btnBuscar = new FontAwesome.Sharp.IconButton();
+            this.dtpHasta = new System.Windows.Forms.DateTimePicker();
+            this.dtpDesde = new System.Windows.Forms.DateTimePicker();
+            this.cboCajero = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvTurnos)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnExportar
-            // 
-            this.btnExportar.BackColor = System.Drawing.Color.LimeGreen;
-            this.btnExportar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnExportar.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this.btnExportar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExportar.ForeColor = System.Drawing.Color.White;
-            this.btnExportar.IconChar = FontAwesome.Sharp.IconChar.FilePdf;
-            this.btnExportar.IconColor = System.Drawing.Color.White;
-            this.btnExportar.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnExportar.IconSize = 16;
-            this.btnExportar.Location = new System.Drawing.Point(791, 644);
-            this.btnExportar.Name = "btnExportar";
-            this.btnExportar.Size = new System.Drawing.Size(129, 26);
-            this.btnExportar.TabIndex = 63;
-            this.btnExportar.Text = "Exportar PDF";
-            this.btnExportar.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnExportar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnExportar.UseVisualStyleBackColor = false;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(513, 644);
+            this.label5.Location = new System.Drawing.Point(700, 649);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(136, 17);
             this.label5.TabIndex = 61;
@@ -89,7 +68,7 @@
             // 
             // txtTotalTurnos
             // 
-            this.txtTotalTurnos.Location = new System.Drawing.Point(655, 644);
+            this.txtTotalTurnos.Location = new System.Drawing.Point(842, 649);
             this.txtTotalTurnos.Name = "txtTotalTurnos";
             this.txtTotalTurnos.ReadOnly = true;
             this.txtTotalTurnos.Size = new System.Drawing.Size(100, 20);
@@ -117,6 +96,82 @@
             this.dgvTurnos.Size = new System.Drawing.Size(922, 397);
             this.dgvTurnos.TabIndex = 60;
             this.dgvTurnos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTurnos_CellContentClick);
+            // 
+            // Cajero
+            // 
+            this.Cajero.DataPropertyName = "Cajero";
+            this.Cajero.HeaderText = "Cajero";
+            this.Cajero.Name = "Cajero";
+            this.Cajero.ReadOnly = true;
+            // 
+            // IdCajaTurno
+            // 
+            this.IdCajaTurno.DataPropertyName = "IdCajaTurno";
+            this.IdCajaTurno.HeaderText = "Turno";
+            this.IdCajaTurno.Name = "IdCajaTurno";
+            this.IdCajaTurno.ReadOnly = true;
+            // 
+            // FechaApertura
+            // 
+            this.FechaApertura.DataPropertyName = "FechaApertura";
+            this.FechaApertura.HeaderText = "Apertura";
+            this.FechaApertura.Name = "FechaApertura";
+            this.FechaApertura.ReadOnly = true;
+            // 
+            // FechaCierre
+            // 
+            this.FechaCierre.DataPropertyName = "FechaCierre";
+            this.FechaCierre.HeaderText = "Cierre";
+            this.FechaCierre.Name = "FechaCierre";
+            this.FechaCierre.ReadOnly = true;
+            // 
+            // MontoInicial
+            // 
+            this.MontoInicial.DataPropertyName = "MontoInicial";
+            this.MontoInicial.HeaderText = "Inicial";
+            this.MontoInicial.Name = "MontoInicial";
+            this.MontoInicial.ReadOnly = true;
+            // 
+            // MontoFinal
+            // 
+            this.MontoFinal.DataPropertyName = "MontoFinal";
+            this.MontoFinal.HeaderText = "Final";
+            this.MontoFinal.Name = "MontoFinal";
+            this.MontoFinal.ReadOnly = true;
+            // 
+            // TotalVentas
+            // 
+            this.TotalVentas.DataPropertyName = "TotalVentas";
+            this.TotalVentas.HeaderText = "Ventas";
+            this.TotalVentas.Name = "TotalVentas";
+            this.TotalVentas.ReadOnly = true;
+            // 
+            // TotalGastos
+            // 
+            this.TotalGastos.DataPropertyName = "TotalGastos";
+            this.TotalGastos.HeaderText = "Gastos";
+            this.TotalGastos.Name = "TotalGastos";
+            this.TotalGastos.ReadOnly = true;
+            // 
+            // Diferencia
+            // 
+            this.Diferencia.DataPropertyName = "Diferencia";
+            this.Diferencia.HeaderText = "Diferencia";
+            this.Diferencia.Name = "Diferencia";
+            this.Diferencia.ReadOnly = true;
+            // 
+            // Observacion
+            // 
+            this.Observacion.DataPropertyName = "Observacion";
+            this.Observacion.HeaderText = "Observacion";
+            this.Observacion.Name = "Observacion";
+            this.Observacion.ReadOnly = true;
+            // 
+            // btnDetalle
+            // 
+            this.btnDetalle.HeaderText = "Ver";
+            this.btnDetalle.Name = "btnDetalle";
+            this.btnDetalle.ReadOnly = true;
             // 
             // btnLimpiar
             // 
@@ -244,89 +299,12 @@
             this.label1.TabIndex = 58;
             this.label1.Text = "REPORTE DE CAJEROS";
             // 
-            // Cajero
-            // 
-            this.Cajero.DataPropertyName = "Cajero";
-            this.Cajero.HeaderText = "Cajero";
-            this.Cajero.Name = "Cajero";
-            this.Cajero.ReadOnly = true;
-            // 
-            // IdCajaTurno
-            // 
-            this.IdCajaTurno.DataPropertyName = "IdCajaTurno";
-            this.IdCajaTurno.HeaderText = "Turno";
-            this.IdCajaTurno.Name = "IdCajaTurno";
-            this.IdCajaTurno.ReadOnly = true;
-            // 
-            // FechaApertura
-            // 
-            this.FechaApertura.DataPropertyName = "FechaApertura";
-            this.FechaApertura.HeaderText = "Apertura";
-            this.FechaApertura.Name = "FechaApertura";
-            this.FechaApertura.ReadOnly = true;
-            // 
-            // FechaCierre
-            // 
-            this.FechaCierre.DataPropertyName = "FechaCierre";
-            this.FechaCierre.HeaderText = "Cierre";
-            this.FechaCierre.Name = "FechaCierre";
-            this.FechaCierre.ReadOnly = true;
-            // 
-            // MontoInicial
-            // 
-            this.MontoInicial.DataPropertyName = "MontoInicial";
-            this.MontoInicial.HeaderText = "Inicial";
-            this.MontoInicial.Name = "MontoInicial";
-            this.MontoInicial.ReadOnly = true;
-            // 
-            // MontoFinal
-            // 
-            this.MontoFinal.DataPropertyName = "MontoFinal";
-            this.MontoFinal.HeaderText = "Final";
-            this.MontoFinal.Name = "MontoFinal";
-            this.MontoFinal.ReadOnly = true;
-            // 
-            // TotalVentas
-            // 
-            this.TotalVentas.DataPropertyName = "TotalVentas";
-            this.TotalVentas.HeaderText = "Ventas";
-            this.TotalVentas.Name = "TotalVentas";
-            this.TotalVentas.ReadOnly = true;
-            // 
-            // TotalGastos
-            // 
-            this.TotalGastos.DataPropertyName = "TotalGastos";
-            this.TotalGastos.HeaderText = "Gastos";
-            this.TotalGastos.Name = "TotalGastos";
-            this.TotalGastos.ReadOnly = true;
-            // 
-            // Diferencia
-            // 
-            this.Diferencia.DataPropertyName = "Diferencia";
-            this.Diferencia.HeaderText = "Diferencia";
-            this.Diferencia.Name = "Diferencia";
-            this.Diferencia.ReadOnly = true;
-            // 
-            // Observacion
-            // 
-            this.Observacion.DataPropertyName = "Observacion";
-            this.Observacion.HeaderText = "Observacion";
-            this.Observacion.Name = "Observacion";
-            this.Observacion.ReadOnly = true;
-            // 
-            // btnDetalle
-            // 
-            this.btnDetalle.HeaderText = "Ver";
-            this.btnDetalle.Name = "btnDetalle";
-            this.btnDetalle.ReadOnly = true;
-            // 
             // frmReporteCajaTurno
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(954, 681);
-            this.Controls.Add(this.btnExportar);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtTotalTurnos);
             this.Controls.Add(this.dgvTurnos);
@@ -347,8 +325,6 @@
         }
 
         #endregion
-
-        private FontAwesome.Sharp.IconButton btnExportar;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtTotalTurnos;
         private System.Windows.Forms.DataGridView dgvTurnos;

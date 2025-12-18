@@ -372,11 +372,25 @@ namespace CapaPresentacionPiscina.Menus
                         ForeColor = Color.FromArgb(40, 40, 40)
                     };
 
+
+                    Label lblStockText = new Label
+                    {
+                        Name = "lblStockText",
+                        Text = gbPlantilla.Controls["lblStockText"].Text,   // ← TEXTO FIJO
+                        AutoSize = false,
+                        Size = gbPlantilla.Controls["lblStockText"].Size,
+                        Location = gbPlantilla.Controls["lblStockText"].Location,
+                        Font = gbPlantilla.Controls["lblStockText"].Font,
+                        ForeColor = gbPlantilla.Controls["lblStockText"].ForeColor,
+                        BackColor = Color.Transparent
+                    };
+
+
                     // === LABEL STOCK ===
                     Label lblStock = new Label
                     {
                         Name = "lblStock",
-                        Text = "Stock: " + p.Stock.ToString(),
+                        Text = p.Stock.ToString(),
                         AutoSize = false,
                         Size = gbPlantilla.Controls["lblStock"].Size,
                         Location = gbPlantilla.Controls["lblStock"].Location,
@@ -507,9 +521,11 @@ namespace CapaPresentacionPiscina.Menus
                     // ==========================
                     gb.Controls.Add(lblDesc);
                     gb.Controls.Add(lblPrecio);
+                    gb.Controls.Add(lblStockText); 
                     gb.Controls.Add(lblStock);
                     gb.Controls.Add(nudCant);
                     gb.Controls.Add(btnAdd);
+
 
                     flpProductos.Controls.Add(gb);
                 }

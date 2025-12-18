@@ -27,11 +27,11 @@ GO
 
 /* ===========================
    AGREGAR CATEGORIA
-   =========================== */
+   =========================== 
 INSERT INTO Categoria (Descripcion, Estado)
 VALUES ('Bebidas', 1),
        ('Postres', 1);
-GO
+GO*/
 
 
 /* ===========================

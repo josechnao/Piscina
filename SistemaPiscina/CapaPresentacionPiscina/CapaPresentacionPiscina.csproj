@@ -7,7 +7,7 @@
     <ProjectGuid>{0DAA4192-C81F-48FB-8567-0E4967928191}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>CapaPresentacionPiscina</RootNamespace>
-    <AssemblyName>CapaPresentacionPiscina</AssemblyName>
+    <AssemblyName>SistemaVenta</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BouncyCastle.Cryptography, Version=2.0.0.0, Culture=neutral, PublicKeyToken=072edcf4a5328938, processorArchitecture=MSIL">
@@ -448,6 +451,7 @@
     <Content Include="libwkhtmltox.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="logo.ico" />
     <Content Include="Plantillas\Tickets\ticket.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

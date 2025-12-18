@@ -62,19 +62,25 @@ public static class TicketPrinter
         ));
 
         // ===== TABLA =====
+        int colCant = 4;
+        int colNombre = 26;
+        int colPrecio = 8;
+        int colSubTotal = 8;
+
         buffer.AddRange(EscPosCommands.Line(Linea()));
         buffer.AddRange(EscPosCommands.Line(
-            $"{Pad("Cant", 4)} {Pad("Item", 12)} {PadRight("P.Unit", 7)} {PadRight("SubT", 7)}"
+            $"{Pad("Cant", colCant)} {Pad("Item", colNombre)}{PadRight("P.Unit", colPrecio)}{PadRight("SubT", colSubTotal)}"
         ));
 
         // ===== ITEMS =====
         foreach (var it in items)
         {
             buffer.AddRange(EscPosCommands.Line(
-                $"{Pad(it.Cantidad.ToString(), 4)} " +
-                $"{Pad(NormalizarTexto(it.Nombre), 12)} " +
-                $"{PadRight(it.PrecioUnitario.ToString("0.00"), 7)} " +
-                $"{PadRight(it.SubTotal.ToString("0.00"), 7)}"
+                $"{Pad(it.Cantidad.ToString(), colCant)} " +
+                $"{Pad(NormalizarTexto(it.Nombre), colNombre)}" +
+                $"{PadRight(it.PrecioUnitario.ToString("0.00"), colPrecio)}" +
+                $"{PadRight(it.SubTotal.ToString("0.00"), colSubTotal)}"
+
             ));
 
             if (!string.IsNullOrWhiteSpace(it.Descripcion))

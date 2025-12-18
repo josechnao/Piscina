@@ -95,6 +95,7 @@
             this.pnlCliente = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtDocumento = new System.Windows.Forms.TextBox();
+            this.lblStockText = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudBebe)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudNino)).BeginInit();
@@ -351,6 +352,7 @@
             // gbPlantilla
             // 
             this.gbPlantilla.Controls.Add(this.btnAdd);
+            this.gbPlantilla.Controls.Add(this.lblStockText);
             this.gbPlantilla.Controls.Add(this.nudProducto);
             this.gbPlantilla.Controls.Add(this.lblStock);
             this.gbPlantilla.Controls.Add(this.lblPrecioProducto);
@@ -401,11 +403,11 @@
             // 
             this.lblStock.AutoSize = true;
             this.lblStock.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStock.Location = new System.Drawing.Point(8, 56);
+            this.lblStock.Location = new System.Drawing.Point(50, 58);
             this.lblStock.Name = "lblStock";
-            this.lblStock.Size = new System.Drawing.Size(85, 13);
+            this.lblStock.Size = new System.Drawing.Size(31, 13);
             this.lblStock.TabIndex = 5;
-            this.lblStock.Text = "..........................";
+            this.lblStock.Text = "........";
             // 
             // lblPrecioProducto
             // 
@@ -525,7 +527,7 @@
             this.label9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(171, 14);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.Size = new System.Drawing.Size(67, 13);
             this.label9.TabIndex = 7;
             this.label9.Text = "Buscar Por :";
             // 
@@ -686,7 +688,7 @@
             this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(667, 21);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 13);
+            this.label4.Size = new System.Drawing.Size(57, 13);
             this.label4.TabIndex = 6;
             this.label4.Text = "Telefono :";
             // 
@@ -912,6 +914,16 @@
             this.txtDocumento.TabIndex = 3;
             this.txtDocumento.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtDocumento_KeyDown);
             // 
+            // lblStockText
+            // 
+            this.lblStockText.AutoSize = true;
+            this.lblStockText.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStockText.Location = new System.Drawing.Point(8, 58);
+            this.lblStockText.Name = "lblStockText";
+            this.lblStockText.Size = new System.Drawing.Size(38, 13);
+            this.lblStockText.TabIndex = 7;
+            this.lblStockText.Text = "Stock:";
+            // 
             // frmVentas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1032,5 +1044,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn colEliminar;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTipo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEsPromo;
+        private System.Windows.Forms.Label lblStockText;
     }
 }
