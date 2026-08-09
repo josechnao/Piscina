@@ -82,12 +82,20 @@
 <body>
     <div class="ticket">
 
-        <!-- NEGOCIO -->
-        <div class="center bold" style="font-size:16px;">
-            {{NombreNegocio}}
+		{{LogoNegocio}}
+		<!-- NEGOCIO -->
+		<div class="center bold" style="font-size:16px;">
+			{{NombreNegocio}}
+		</div>
+
+		<div class="center">
+			{{DireccionNegocio}} <br>
+				{{CiudadNegocio}} <br>
+            Tel: {{TelefonoNegocio}}
         </div>
 
-        <hr>
+
+		<hr>
 
         <!-- DATOS VENTA -->
         Fecha/Hora: {{FechaHora}} <br>
@@ -138,8 +146,8 @@
 
         <!-- PIE -->
         <div class="center">
-            ¡Gracias por elegir Aguavida!
-        </div>
+			¡Gracias por elegir {{NombreNegocio}}!
+		</div>
 
     </div>
 </body>

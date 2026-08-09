@@ -103,4 +103,3 @@ C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\Sis
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\bin\Debug\SistemaVenta.pdb
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\SistemaVenta.exe
 C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\SistemaVenta.pdb
-C:\Users\HP\Desktop\Piscina\SistemaPiscina\CapaPresentacionPiscina\obj\Debug\SistemaVenta.exe.config

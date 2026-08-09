@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using CapaPresentacionPiscina.Helpers;
+using CapaPresentacionPiscina.Helpers.Printing;
 
 public static class TicketPrinter
 {
@@ -11,8 +12,12 @@ public static class TicketPrinter
     // ================================
     // MÉTODO PRINCIPAL
     // ================================
-    public static void Imprimir(
+    public static bool Imprimir(
+        byte[] logoNegocio,
         string nombreNegocio,
+        string direccionNegocio,
+        string ciudadNegocio,
+        string telefonoNegocio,
         string fechaHora,
         string cajero,
         string numeroTicket,
@@ -26,19 +31,34 @@ public static class TicketPrinter
     {
         List<byte> buffer = new List<byte>();
 
-        // ===== CONFIGURACIÓN BASE =====
-        buffer.AddRange(EscPosCommands.LineSpacingDefault());
-        buffer.AddRange(EscPosCommands.CodePage850());
-        buffer.AddRange(EscPosCommands.FontA());
-        buffer.AddRange(EscPosCommands.AlignLeft());
+        // ===== LOGO =====
+        if (logoNegocio != null && logoNegocio.Length > 0)
+        {
+            buffer.AddRange(EscPosCommands.AlignCenter());
+            buffer.AddRange(EscPosImage.ConvertirLogo(logoNegocio));
+            buffer.AddRange(EscPosCommands.AlignLeft());
+        }
 
-        // ===== CABECERA =====
+        // ===== CABECERA NEGOCIO =====
         buffer.AddRange(EscPosCommands.BoldOn());
         buffer.AddRange(EscPosCommands.Line(
             Centrar(NormalizarTexto(nombreNegocio))
         ));
         buffer.AddRange(EscPosCommands.BoldOff());
 
+        buffer.AddRange(EscPosCommands.Line(
+            Centrar(NormalizarTexto(direccionNegocio))
+        ));
+
+        buffer.AddRange(EscPosCommands.Line(
+            Centrar(NormalizarTexto(ciudadNegocio))
+        ));
+
+        buffer.AddRange(EscPosCommands.Line(
+            Centrar(NormalizarTexto($"Tel: {telefonoNegocio}"))
+        ));
+
+        buffer.AddRange(EscPosCommands.Line(Linea()));
         buffer.AddRange(EscPosCommands.Line(Linea()));
 
         // ===== DATOS GENERALES =====
@@ -106,7 +126,7 @@ public static class TicketPrinter
         // ===== PIE =====
         buffer.AddRange(EscPosCommands.Line(""));
         buffer.AddRange(EscPosCommands.Line(
-            Centrar(NormalizarTexto("Gracias por elegir Aguavida!"))
+            Centrar(NormalizarTexto($"Gracias por elegir {nombreNegocio}!"))
         ));
         buffer.AddRange(EscPosCommands.Line(""));
 
@@ -114,11 +134,14 @@ public static class TicketPrinter
         buffer.AddRange(EscPosCommands.Feed(4));
         buffer.AddRange(EscPosCommands.CutPartial());
 
+
         // ===== ENVÍO A IMPRESORA =====
-        RawPrinterHelper.SendBytesToPrinter(
+        bool resultado = RawPrinterHelper.SendBytesToPrinter(
             PRINTER_NAME,
             buffer.ToArray()
         );
+
+        return resultado;
     }
 
     // ================================

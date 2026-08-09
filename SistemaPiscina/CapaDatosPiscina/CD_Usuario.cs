@@ -46,9 +46,9 @@ namespace CapaDatosPiscina
 
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    obj = new Usuario(); // si hay error, devolvemos vacio
+                    throw new Exception("Error al iniciar sesión: " + ex.Message, ex);
                 }
             }
 

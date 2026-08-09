@@ -861,28 +861,49 @@ namespace CapaPresentacionPiscina.Menus
 
 
                 // ===============================
-                // 🔹 IMPRIMIR TICKET DIRECTO
+                // PREGUNTAR SI DESEA IMPRIMIR
                 // ===============================
 
-                // Obtener datos del negocio desde BD
-                CN_Negocio cnNegocio = new CN_Negocio();
-                Negocio negocio = cnNegocio.ObtenerDatos();
-                // (usa el método que ya tengas, NO lo hardcodees)
-
-                List<ItemTicket> items = ObtenerItemsTicket();
-
-                TicketPrinter.Imprimir(
-                    nombreNegocio: negocio.NombreNegocio,
-                    fechaHora: DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
-                    cajero: SesionUsuario.UsuarioActual.NombreCompleto,
-                    numeroTicket: numeroVenta,
-                    cliente: txtNombreCliente.Text.Trim(),
-                    documento: txtDocumento.Text.Trim(),
-                    telefono: txtTelefono.Text.Trim(),
-                    items: items,
-                    total: metodoPago == "CORTESIA" ? 0 : total,
-                    metodoPago: metodoPago
+                DialogResult respuestaImpresion = MessageBox.Show(
+                    "¿Desea imprimir el ticket de esta venta?",
+                    "Imprimir ticket",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
                 );
+
+                if (respuestaImpresion == DialogResult.Yes)
+                {
+                    // Obtener datos del negocio desde BD
+                    CN_Negocio cnNegocio = new CN_Negocio();
+                    Negocio negocio = cnNegocio.ObtenerDatos();
+
+                    List<ItemTicket> items = ObtenerItemsTicket();
+
+                    bool impresionCorrecta = TicketPrinter.Imprimir(
+                        logoNegocio: negocio.Logo,
+
+                        nombreNegocio: negocio.NombreNegocio,
+                        direccionNegocio: negocio.Direccion,
+                        ciudadNegocio: negocio.Ciudad,
+                        telefonoNegocio: negocio.Telefono,
+
+                        fechaHora: DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                        cajero: SesionUsuario.UsuarioActual.NombreCompleto,
+                        numeroTicket: numeroVenta,
+
+                        cliente: txtNombreCliente.Text.Trim(),
+                        documento: txtDocumento.Text.Trim(),
+                        telefono: txtTelefono.Text.Trim(),
+
+                        items: items,
+                        metodoPago: metodoPago,
+
+                        total: metodoPago == "CORTESIA"
+                            ? 0
+                            : total
+                    );
+
+                }
 
 
                 // 1. Generamos el HTML del ticket
@@ -992,8 +1013,28 @@ namespace CapaPresentacionPiscina.Menus
             // 2. Leer plantilla
             string html = File.ReadAllText(rutaPlantilla, Encoding.UTF8);
 
-            // 3. Datos generales
-            string nombreNegocio = "Aguavida";
+            // 3. Datos reales del negocio desde la BD
+            CN_Negocio cnNegocio = new CN_Negocio();
+            Negocio negocio = cnNegocio.ObtenerDatos();
+
+            string nombreNegocio = negocio.NombreNegocio;
+            string direccionNegocio = negocio.Direccion;
+            string ciudadNegocio = negocio.Ciudad;
+            string telefonoNegocio = negocio.Telefono;
+
+            string logoNegocioHtml = "";
+
+            if (negocio.Logo != null && negocio.Logo.Length > 0)
+            {
+                string logoBase64 = Convert.ToBase64String(negocio.Logo);
+
+                logoNegocioHtml = $@"
+        <div class='center'>
+            <img src='data:image/png;base64,{logoBase64}'
+                 style='max-width:45mm; max-height:25mm; object-fit:contain;' />
+        </div>";
+            }
+
             string fechaHora = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
             string cajero = SesionUsuario.UsuarioActual != null
@@ -1006,7 +1047,12 @@ namespace CapaPresentacionPiscina.Menus
             string clienteTelefono = txtTelefono.Text.Trim();
 
             // 5. Reemplazar variables simples
+            html = html.Replace("{{LogoNegocio}}", logoNegocioHtml);
             html = html.Replace("{{NombreNegocio}}", nombreNegocio);
+            html = html.Replace("{{DireccionNegocio}}", direccionNegocio);
+            html = html.Replace("{{CiudadNegocio}}", ciudadNegocio);
+            html = html.Replace("{{TelefonoNegocio}}", telefonoNegocio);
+
             html = html.Replace("{{FechaHora}}", fechaHora);
             html = html.Replace("{{Cajero}}", cajero);
             html = html.Replace("{{NumeroTicket}}", numeroTicket);
