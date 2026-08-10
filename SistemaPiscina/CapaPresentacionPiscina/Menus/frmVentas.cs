@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
-
+using System.Threading.Tasks;
 
 namespace CapaPresentacionPiscina.Menus
 {
@@ -45,13 +45,37 @@ namespace CapaPresentacionPiscina.Menus
         }
 
 
-        private void frmVentas_Load(object sender, EventArgs e)
+        private async void frmVentas_Load(object sender, EventArgs e)
         {
-            CargarCategoriasFiltro();
-            CargarEntradas();
-            CargarProductos();
-            CargarPromocion();
-            CargarMetodosPago();
+            try
+            {
+                this.Cursor = Cursors.WaitCursor;
+
+                // Local, no consulta BD
+                CargarMetodosPago();
+
+                // Consultas que ya convertimos a Async
+                await CargarCategoriasFiltroAsync();
+                await CargarEntradasAsync();
+
+                // Estas todavía siguen síncronas y las dejamos así
+                CargarProductos();
+                CargarPromocion();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Ocurrió un error al cargar el módulo de ventas.\n\n" +
+                    "Detalle: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
+            }
         }
 
         private void CargarPromocion()
@@ -68,52 +92,38 @@ namespace CapaPresentacionPiscina.Menus
         }
 
 
-
-        private void CargarEntradas()
+        private async Task CargarEntradasAsync()
         {
-            try
+            List<EntradaTipo> lista =
+                await cnEntradaTipo.ListarEntradasVentaAsync();
+
+            if (lista == null || lista.Count == 0)
+                return;
+
+            foreach (EntradaTipo item in lista)
             {
-                List<EntradaTipo> lista = cnEntradaTipo.ListarEntradasVenta();
-
-                if (lista == null || lista.Count == 0)
+                switch (item.IdEntradaTipo)
                 {
-                    // Opcional: mensaje para saber si no está trayendo nada
-                    // MessageBox.Show("No se encontraron tipos de entrada activos.");
-                    return;
+                    case 1: // Adulto
+                        lblPrecioAdulto.Text =
+                            item.PrecioBase.ToString("0.00");
+                        break;
+
+                    case 2: // Adolescente
+                        lblPrecioAdolescente.Text =
+                            item.PrecioBase.ToString("0.00");
+                        break;
+
+                    case 3: // Niño
+                        lblPrecioNino.Text =
+                            item.PrecioBase.ToString("0.00");
+                        break;
+
+                    case 4: // Bebé
+                        lblPrecioBebe.Text =
+                            item.PrecioBase.ToString("0.00");
+                        break;
                 }
-
-                foreach (EntradaTipo item in lista)
-                {
-                    // ⚠ Aquí asumo:
-                    // IdEntradaTipo = 1 -> Adulto
-                    // IdEntradaTipo = 2 -> Adolescente
-                    // IdEntradaTipo = 3 -> Niño
-                    // IdEntradaTipo = 4 -> Bebe
-
-                    switch (item.IdEntradaTipo)
-                    {
-                        case 1: // Adulto
-                            lblPrecioAdulto.Text = item.PrecioBase.ToString("0.00");
-                            break;
-
-                        case 2: // Adolescente
-                            lblPrecioAdolescente.Text = item.PrecioBase.ToString("0.00");
-                            break;
-
-                        case 3: // Niño
-                            lblPrecioNino.Text = item.PrecioBase.ToString("0.00");
-                            break;
-
-                        case 4: // Bebe
-                            lblPrecioBebe.Text = item.PrecioBase.ToString("0.00");
-                            break;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cargar precios de entradas: " + ex.Message,
-                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -521,7 +531,7 @@ namespace CapaPresentacionPiscina.Menus
                     // ==========================
                     gb.Controls.Add(lblDesc);
                     gb.Controls.Add(lblPrecio);
-                    gb.Controls.Add(lblStockText); 
+                    gb.Controls.Add(lblStockText);
                     gb.Controls.Add(lblStock);
                     gb.Controls.Add(nudCant);
                     gb.Controls.Add(btnAdd);
@@ -583,16 +593,18 @@ namespace CapaPresentacionPiscina.Menus
             CalcularTotal();
         }
 
-        private void CargarCategoriasFiltro()
+        private async Task CargarCategoriasFiltroAsync()
         {
             CN_Categoria cnCat = new CN_Categoria();
-            var lista = cnCat.ListarActivas();
+
+            List<Categoria> lista =
+                await cnCat.ListarActivasAsync();
 
             cbCategoria.DataSource = lista;
             cbCategoria.DisplayMember = "Descripcion";
             cbCategoria.ValueMember = "IdCategoria";
 
-            cbCategoria.SelectedIndex = -1; 
+            cbCategoria.SelectedIndex = -1;
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -782,87 +794,138 @@ namespace CapaPresentacionPiscina.Menus
             return doc.OuterXml;
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private async void btnGuardar_Click(object sender, EventArgs e)
         {
-            // 1. Validaciones base
+            // =========================================
+            // 1. VALIDACIONES
+            // =========================================
+
             if (dgvVenta.Rows.Cast<DataGridViewRow>().All(r => r.IsNewRow))
             {
-                MessageBox.Show("Debe agregar al menos una entrada o producto.",
-                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Debe agregar al menos una entrada o producto.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtDocumento.Text))
             {
-                MessageBox.Show("Ingrese el DNI del cliente.",
-                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Ingrese el DNI del cliente.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
                 txtDocumento.Focus();
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txtNombreCliente.Text))
             {
-                MessageBox.Show("Ingrese el nombre del cliente.",
-                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Ingrese el nombre del cliente.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
                 txtNombreCliente.Focus();
                 return;
             }
 
-            // 🔥 Total real siempre, NO el txtTotal si es cortesía
+            // CAJERO necesita caja abierta
+            if (_idCajaTurnoActual == null &&
+                (_rolUsuario ?? "").Trim().ToUpper() == "CAJERO")
+            {
+                MessageBox.Show(
+                    "No puedes registrar ventas sin haber abierto una caja.",
+                    "Advertencia",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
+                return;
+            }
+
             decimal total = _totalReal;
 
+            string metodoPago = cbMetodoPago.Text;
 
-            string metodoPago = cbMetodoPago.Text; // EFECTIVO / QR / CORTESIA
-
-            // 2. Construir XML
             string xmlDetalle = ConstruirXmlDetalle();
 
             if (string.IsNullOrWhiteSpace(xmlDetalle))
             {
-                MessageBox.Show("No se pudo construir el detalle de la venta.",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(
+                    "No se pudo construir el detalle de la venta.",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+
                 return;
             }
 
-            // 3. Llamar a la capa de negocio
-            CN_Venta cnVenta = new CN_Venta();
+            // =========================================
+            // 2. BLOQUEAR INTERFAZ DE GUARDADO
+            // =========================================
 
-            string numeroVenta;
-            string mensaje;
+            btnGuardar.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
 
-            if (_idCajaTurnoActual == null && _rolUsuario.ToUpper() == "CAJERO")
+            try
             {
-                MessageBox.Show("No puedes registrar ventas sin haber abierto una caja.",
-                    "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                CN_Venta cnVenta = new CN_Venta();
 
-            int idVentaGenerada = cnVenta.RegistrarVenta(
-                _idUsuario,                    // ya lo tienes en el form
-                _idCajaTurnoActual.HasValue ? _idCajaTurnoActual.Value : (int?)null, // ← si es null, envía 0
-                txtDocumento.Text.Trim(),
-                txtNombreCliente.Text.Trim(),
-                txtTelefono.Text.Trim(),
-                metodoPago,
-                total,
-                xmlDetalle,
-                out numeroVenta,
-                out mensaje
-            );
+                // =========================================
+                // 3. REGISTRAR VENTA DE FORMA ASÍNCRONA
+                // =========================================
 
-            if (idVentaGenerada != 0)
-            {
+                ResultadoVenta resultado =
+                    await cnVenta.RegistrarVentaAsync(
+                        _idUsuario,
+                        _idCajaTurnoActual,
+                        txtDocumento.Text.Trim(),
+                        txtNombreCliente.Text.Trim(),
+                        txtTelefono.Text.Trim(),
+                        metodoPago,
+                        total,
+                        xmlDetalle
+                    );
+
+                // =========================================
+                // 4. VALIDAR RESULTADO
+                // =========================================
+
+                if (!resultado.Exito)
+                {
+                    MessageBox.Show(
+                        "No se pudo registrar la venta.\n" +
+                        resultado.Mensaje,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    return;
+                }
+
+                string numeroVenta = resultado.NumeroVenta;
 
                 MessageBox.Show(
                     $"Venta registrada correctamente.\nNúmero: {numeroVenta}",
                     "Venta registrada",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
+                    MessageBoxIcon.Information
+                );
 
 
-                // ===============================
-                // PREGUNTAR SI DESEA IMPRIMIR
-                // ===============================
+                // =========================================
+                // 5. PREGUNTAR SI DESEA IMPRIMIR
+                // =========================================
 
                 DialogResult respuestaImpresion = MessageBox.Show(
                     "¿Desea imprimir el ticket de esta venta?",
@@ -873,8 +936,8 @@ namespace CapaPresentacionPiscina.Menus
 
                 if (respuestaImpresion == DialogResult.Yes)
                 {
-                    // Obtener datos del negocio desde BD
                     CN_Negocio cnNegocio = new CN_Negocio();
+
                     Negocio negocio = cnNegocio.ObtenerDatos();
 
                     List<ItemTicket> items = ObtenerItemsTicket();
@@ -887,8 +950,15 @@ namespace CapaPresentacionPiscina.Menus
                         ciudadNegocio: negocio.Ciudad,
                         telefonoNegocio: negocio.Telefono,
 
-                        fechaHora: DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
-                        cajero: SesionUsuario.UsuarioActual.NombreCompleto,
+                        fechaHora: DateTime.Now.ToString(
+                            "dd/MM/yyyy HH:mm"
+                        ),
+
+                        cajero:
+                            SesionUsuario.UsuarioActual != null
+                                ? SesionUsuario.UsuarioActual.NombreCompleto
+                                : "----",
+
                         numeroTicket: numeroVenta,
 
                         cliente: txtNombreCliente.Text.Trim(),
@@ -898,50 +968,105 @@ namespace CapaPresentacionPiscina.Menus
                         items: items,
                         metodoPago: metodoPago,
 
-                        total: metodoPago == "CORTESIA"
-                            ? 0
-                            : total
+                        total:
+                            metodoPago == "CORTESIA"
+                                ? 0
+                                : total
                     );
 
+                    if (impresionCorrecta)
+                    {
+                        MessageBox.Show(
+                            "Ticket enviado correctamente a la impresora.",
+                            "Impresión",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information
+                        );
+                    }
+                    else
+                    {
+                        MessageBox.Show(
+                            "No se pudo enviar el ticket a la impresora.",
+                            "Impresión",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning
+                        );
+                    }
                 }
 
+                // =========================================
+                // 6. GENERAR PDF
+                // =========================================
 
-                // 1. Generamos el HTML del ticket
-                string htmlTicket = GenerarHtmlTicket(numeroVenta, total, metodoPago);
-
-
+                string htmlTicket = GenerarHtmlTicket(
+                    numeroVenta,
+                    total,
+                    metodoPago
+                );
 
                 if (!string.IsNullOrEmpty(htmlTicket))
                 {
-                    // 📌 1. Crear carpeta TicketsVenta en el escritorio
-                    string escritorio = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                    string carpetaTickets = Path.Combine(escritorio, "TicketsVenta");
+                    string escritorio =
+                        Environment.GetFolderPath(
+                            Environment.SpecialFolder.Desktop
+                        );
+
+                    string carpetaTickets =
+                        Path.Combine(
+                            escritorio,
+                            "TicketsVenta"
+                        );
 
                     if (!Directory.Exists(carpetaTickets))
-                        Directory.CreateDirectory(carpetaTickets);
+                    {
+                        Directory.CreateDirectory(
+                            carpetaTickets
+                        );
+                    }
 
-                    // 📌 2. Definir nombre del PDF
-                    string nombrePdf = $"Ticket_{numeroVenta}.pdf";
-                    string rutaPdf = Path.Combine(carpetaTickets, nombrePdf);
+                    string nombrePdf =
+                        $"Ticket_{numeroVenta}.pdf";
 
-                    // 📌 3. Generar PDF
-                    PdfGenerator.GenerarPdf(htmlTicket, rutaPdf);
+                    string rutaPdf =
+                        Path.Combine(
+                            carpetaTickets,
+                            nombrePdf
+                        );
 
-                    // 📌 4. Abrir PDF generado
-                    System.Diagnostics.Process.Start(rutaPdf);
+                    PdfGenerator.GenerarPdf(
+                        htmlTicket,
+                        rutaPdf
+                    );
+
+                    System.Diagnostics.Process.Start(
+                        rutaPdf
+                    );
                 }
+                
+                // =========================================
+                // 7. LIMPIAR FORMULARIO
+                // =========================================
 
-                // 🔹 LIMPIA TODO DESPUÉS DE GUARDAR
                 LimpiarFormulario();
             }
-
-            else
+            catch (Exception ex)
             {
                 MessageBox.Show(
-                    "No se pudo registrar la venta.\n" + mensaje,
+                    "Ocurrió un error durante el registro de la venta.\n\n" +
+                    "Detalle: " + ex.Message,
                     "Error",
                     MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    MessageBoxIcon.Error
+                );
+            }
+            finally
+            {
+                // =========================================
+                // 8. RESTAURAR INTERFAZ SIEMPRE
+                // =========================================
+
+                this.Cursor = Cursors.Default;
+                btnGuardar.Enabled = true;
             }
         }
 

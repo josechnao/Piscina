@@ -1,75 +1,133 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using CapaEntidadPiscina;
+using System.Threading.Tasks;
 
 namespace CapaDatosPiscina
 {
     public class CD_Venta
     {
-        public int RegistrarVenta(
-            int idUsuario,
-            int? idCajaTurno,      // ← ahora nullable
-            string dni,
-            string nombreCompleto,
-            string telefono,
-            string metodoPago,
-            decimal montoTotal,
-            string xmlDetalle,
-            out string numeroVenta,
-            out string mensaje
-        )
+
+        public async Task<ResultadoVenta> RegistrarVentaAsync(
+    int idUsuario,
+    int? idCajaTurno,
+    string dni,
+    string nombreCompleto,
+    string telefono,
+    string metodoPago,
+    decimal montoTotal,
+    string xmlDetalle
+)
         {
-            int idVentaGenerado = 0;
-            numeroVenta = string.Empty;
-            mensaje = string.Empty;
+            ResultadoVenta respuesta = new ResultadoVenta
+            {
+                IdVenta = 0,
+                NumeroVenta = string.Empty,
+                Mensaje = string.Empty,
+                Exito = false
+            };
 
             using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("SP_REGISTRAR_VENTA", oconexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@IdUsuario", idUsuario);
-
-                    // 🔥 ENVÍO CORRECTO DE CAJA TURNO (NULL SI ES ADMIN)
-                    cmd.Parameters.AddWithValue("@IdCajaTurno",
-                        (object)idCajaTurno ?? DBNull.Value);
-
-                    cmd.Parameters.AddWithValue("@DNI", dni);
-                    cmd.Parameters.AddWithValue("@NombreCompleto", nombreCompleto);
-                    cmd.Parameters.AddWithValue("@Telefono", (object)telefono ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@MetodoPago", metodoPago);
-                    cmd.Parameters.AddWithValue("@MontoTotal", montoTotal);
-                    cmd.Parameters.AddWithValue("@Detalle", xmlDetalle);
-
-                    // Parámetros OUTPUT del SP
-                    cmd.Parameters.Add("@Resultado", SqlDbType.Bit).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("@IdVentaGenerado", SqlDbType.Int).Direction = ParameterDirection.Output;
-                    cmd.Parameters.Add("@NumeroVentaGenerado", SqlDbType.VarChar, 50).Direction = ParameterDirection.Output;
-
-                    oconexion.Open();
-                    cmd.ExecuteNonQuery();
-
-                    bool resultado = Convert.ToBoolean(cmd.Parameters["@Resultado"].Value);
-                    mensaje = cmd.Parameters["@Mensaje"].Value.ToString();
-
-                    if (resultado)
+                    using (SqlCommand cmd = new SqlCommand("SP_REGISTRAR_VENTA", oconexion))
                     {
-                        idVentaGenerado = Convert.ToInt32(cmd.Parameters["@IdVentaGenerado"].Value);
-                        numeroVenta = cmd.Parameters["@NumeroVentaGenerado"].Value.ToString();
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Evita que la interfaz quede esperando demasiado
+                        cmd.CommandTimeout = 15;
+
+                        cmd.Parameters.Add("@IdUsuario", SqlDbType.Int).Value = idUsuario;
+
+                        cmd.Parameters.Add("@IdCajaTurno", SqlDbType.Int).Value =
+                            (object)idCajaTurno ?? DBNull.Value;
+
+                        cmd.Parameters.Add("@DNI", SqlDbType.VarChar, 50).Value = dni;
+
+                        cmd.Parameters.Add("@NombreCompleto", SqlDbType.VarChar, 150).Value =
+                            nombreCompleto;
+
+                        cmd.Parameters.Add("@Telefono", SqlDbType.VarChar, 50).Value =
+                            string.IsNullOrWhiteSpace(telefono)
+                                ? (object)DBNull.Value
+                                : telefono;
+
+                        cmd.Parameters.Add("@MetodoPago", SqlDbType.VarChar, 50).Value =
+                            metodoPago;
+
+                        cmd.Parameters.Add("@MontoTotal", SqlDbType.Decimal).Value =
+                            montoTotal;
+
+                        cmd.Parameters.Add("@Detalle", SqlDbType.Xml).Value =
+                            xmlDetalle;
+
+                        cmd.Parameters.Add(
+                            "@Resultado",
+                            SqlDbType.Bit
+                        ).Direction = ParameterDirection.Output;
+
+                        cmd.Parameters.Add(
+                            "@Mensaje",
+                            SqlDbType.VarChar,
+                            500
+                        ).Direction = ParameterDirection.Output;
+
+                        cmd.Parameters.Add(
+                            "@IdVentaGenerado",
+                            SqlDbType.Int
+                        ).Direction = ParameterDirection.Output;
+
+                        cmd.Parameters.Add(
+                            "@NumeroVentaGenerado",
+                            SqlDbType.VarChar,
+                            50
+                        ).Direction = ParameterDirection.Output;
+
+                        await oconexion.OpenAsync();
+
+                        await cmd.ExecuteNonQueryAsync();
+
+                        bool exito = Convert.ToBoolean(
+                            cmd.Parameters["@Resultado"].Value
+                        );
+
+                        respuesta.Exito = exito;
+
+                        respuesta.Mensaje =
+                            cmd.Parameters["@Mensaje"].Value?.ToString() ?? "";
+
+                        if (exito)
+                        {
+                            respuesta.IdVenta = Convert.ToInt32(
+                                cmd.Parameters["@IdVentaGenerado"].Value
+                            );
+
+                            respuesta.NumeroVenta =
+                                cmd.Parameters["@NumeroVentaGenerado"].Value?.ToString() ?? "";
+                        }
                     }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(
+                        "No se pudo registrar la venta en la base de datos.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
                 }
                 catch (Exception ex)
                 {
-                    idVentaGenerado = 0;
-                    numeroVenta = string.Empty;
-                    mensaje = ex.Message;
+                    throw new Exception(
+                        "Ocurrió un error al registrar la venta.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
                 }
             }
 
-            return idVentaGenerado;
+            return respuesta;
         }
     }
 }

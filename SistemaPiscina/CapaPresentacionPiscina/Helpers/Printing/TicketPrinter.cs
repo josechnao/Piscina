@@ -59,7 +59,6 @@ public static class TicketPrinter
         ));
 
         buffer.AddRange(EscPosCommands.Line(Linea()));
-        buffer.AddRange(EscPosCommands.Line(Linea()));
 
         // ===== DATOS GENERALES =====
         buffer.AddRange(EscPosCommands.Line(

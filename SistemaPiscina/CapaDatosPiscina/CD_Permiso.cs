@@ -11,28 +11,60 @@ namespace CapaDatosPiscina
 {
     public class CD_Permiso
     {
-        public List<Permiso> Listar(int idRol)
+        
+        public async Task<List<Permiso>> ListarAsync(int idRol)
         {
             List<Permiso> lista = new List<Permiso>();
 
             using (SqlConnection con = new SqlConnection(Conexion.cadena))
             {
-                SqlCommand cmd = new SqlCommand("SP_LISTAR_PERMISOS_POR_ROL", con);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IdRol", idRol);
-
-                con.Open();
-
-                using (SqlDataReader dr = cmd.ExecuteReader())
+                try
                 {
-                    while (dr.Read())
+                    using (SqlCommand cmd = new SqlCommand(
+                        "SP_LISTAR_PERMISOS_POR_ROL",
+                        con))
                     {
-                        lista.Add(new Permiso()
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 8;
+
+                        cmd.Parameters.Add(
+                            "@IdRol",
+                            SqlDbType.Int
+                        ).Value = idRol;
+
+                        await con.OpenAsync();
+
+                        using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
                         {
-                            NombreMenu = dr["NombreMenu"].ToString(),
-                            NombreFormulario = dr["NombreFormulario"].ToString()
-                        });
+                            while (await dr.ReadAsync())
+                            {
+                                lista.Add(new Permiso()
+                                {
+                                    NombreMenu =
+                                        dr["NombreMenu"].ToString(),
+
+                                    NombreFormulario =
+                                        dr["NombreFormulario"].ToString()
+                                });
+                            }
+                        }
                     }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(
+                        "No se pudieron cargar los permisos desde la base de datos.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        "Ocurrió un error al cargar los permisos.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
                 }
             }
 

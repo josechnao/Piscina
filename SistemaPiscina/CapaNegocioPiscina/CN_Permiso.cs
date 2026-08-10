@@ -12,10 +12,9 @@ namespace CapaNegocioPiscina
     {
         private CD_Permiso objDatos = new CD_Permiso();
 
-        public List<Permiso> Listar(int idRol)
+        public async Task<List<Permiso>> ListarAsync(int idRol)
         {
-            return objDatos.Listar(idRol);
+            return await objDatos.ListarAsync(idRol);
         }
     }
-
 }

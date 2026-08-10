@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using CapaEntidadPiscina;
+using System.Threading.Tasks;
 
 namespace CapaDatosPiscina
 {
     public class CD_EntradaTipo
     {
+
+
         public List<EntradaTipo> Listar()
         {
             List<EntradaTipo> lista = new List<EntradaTipo>();
@@ -47,6 +50,59 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+        public async Task<List<EntradaTipo>> ListarEntradasVentaAsync()
+        {
+            List<EntradaTipo> lista = new List<EntradaTipo>();
+
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    using (SqlCommand cmd = new SqlCommand(
+                        "SP_LISTAR_ENTRADASTIPO_ACTIVAS",
+                        oconexion))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 8;
+
+                        await oconexion.OpenAsync();
+
+                        using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await dr.ReadAsync())
+                            {
+                                lista.Add(new EntradaTipo()
+                                {
+                                    IdEntradaTipo = Convert.ToInt32(dr["IdEntradaTipo"]),
+                                    Descripcion = dr["Descripcion"].ToString(),
+                                    PrecioBase = Convert.ToDecimal(dr["PrecioBase"]),
+                                    Estado = Convert.ToBoolean(dr["Estado"])
+                                });
+                            }
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(
+                        "No se pudieron cargar los tipos de entrada activos desde la base de datos.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        "Ocurrió un error al cargar los tipos de entrada.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
+                }
+            }
+
+            return lista;
+        }
+
 
 
         public bool ActualizarPrecio(int idEntradaTipo, decimal nuevoPrecio, out string mensaje)

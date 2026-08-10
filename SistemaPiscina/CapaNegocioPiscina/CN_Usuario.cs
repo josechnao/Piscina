@@ -2,6 +2,7 @@
 using CapaEntidadPiscina;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CapaNegocioPiscina
 {
@@ -9,14 +10,14 @@ namespace CapaNegocioPiscina
     {
         private CD_Usuario objCapaDatos = new CD_Usuario();
 
-        public Usuario Login(string documento, string clave)
+        public async Task<Usuario> LoginAsync(string documento, string clave)
         {
             if (string.IsNullOrWhiteSpace(documento) || string.IsNullOrWhiteSpace(clave))
             {
-                return new Usuario(); // devuelve vacío si faltan datos
+                return new Usuario();
             }
 
-            return objCapaDatos.Login(documento, clave);
+            return await objCapaDatos.LoginAsync(documento, clave);
         }
 
         public List<Usuario> Listar()
@@ -33,7 +34,5 @@ namespace CapaNegocioPiscina
         {
             return objCapaDatos.Eliminar(idUsuario);
         }
-
-
     }
 }

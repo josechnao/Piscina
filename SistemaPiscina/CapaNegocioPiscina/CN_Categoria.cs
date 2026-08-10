@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using CapaDatosPiscina;
 using CapaEntidadPiscina;
+using System.Threading.Tasks;
 
 namespace CapaNegocioPiscina
 {
@@ -15,6 +16,12 @@ namespace CapaNegocioPiscina
         public List<Categoria> ListarActivas()
         {
             return objCapaDatos.ListarActivas();   // ESTE ERA EL ERROR
+        }
+
+
+        public async Task<List<Categoria>> ListarActivasAsync()
+        {
+            return await objCapaDatos.ListarActivasAsync();
         }
 
         public int Registrar(Categoria obj, out string Mensaje)

@@ -22,6 +22,7 @@ namespace CapaPresentacionPiscina
         public int usuarioActual { get; set; }
 
         private int idRolActual;
+        public bool CerrarSesionSolicitada { get; private set; } = false;
 
         public frmInicioPiscina(string usuarioNombre, int idUsuario, string rol)
         {
@@ -66,64 +67,82 @@ namespace CapaPresentacionPiscina
 
             formHijo.Show();
         }
-        private void frmInicioPiscina_Load(object sender, EventArgs e)
+        private async void frmInicioPiscina_Load(object sender, EventArgs e)
         {
-            CN_Permiso cnPermiso = new CN_Permiso();
-            var permisos = cnPermiso.Listar(idRolActual);
-
-            // 1. Ocultar todos los botones primero
-            btnVentas.Visible = false;
-            btnGastos.Visible = false;
-            btnProveedores.Visible = false;
-            btnProductos.Visible = false;
-            btnUsuarios.Visible = false;
-            btnReportes.Visible = false;
-            btnCompras.Visible = false;
-            btnMantenedor.Visible = false;
-            btnEntradasPromo.Visible = false; 
-
-            // 2. Mostrar solo los permitidos
-            foreach (var permiso in permisos)
+            try
             {
-                switch (permiso.NombreMenu)
+                this.Cursor = Cursors.WaitCursor;
+
+                CN_Permiso cnPermiso = new CN_Permiso();
+
+                var permisos = await cnPermiso.ListarAsync(idRolActual);
+
+                // Ocultar todos primero
+                btnVentas.Visible = false;
+                btnGastos.Visible = false;
+                btnProveedores.Visible = false;
+                btnProductos.Visible = false;
+                btnUsuarios.Visible = false;
+                btnReportes.Visible = false;
+                btnCompras.Visible = false;
+                btnMantenedor.Visible = false;
+                btnEntradasPromo.Visible = false;
+
+                foreach (var permiso in permisos)
                 {
-                    case "Ventas":
-                        btnVentas.Visible = true;
-                        break;
+                    switch (permiso.NombreMenu)
+                    {
+                        case "Ventas":
+                            btnVentas.Visible = true;
+                            break;
 
-                    case "Gastos":
-                        btnGastos.Visible = true;
-                        break;
+                        case "Gastos":
+                            btnGastos.Visible = true;
+                            break;
 
-                    case "Compras":
-                        btnCompras.Visible = true;
-                        break;
+                        case "Compras":
+                            btnCompras.Visible = true;
+                            break;
 
-                    case "Usuarios":
-                        btnUsuarios.Visible = true;
-                        break;
+                        case "Usuarios":
+                            btnUsuarios.Visible = true;
+                            break;
 
-                    case "Reportes":
-                        btnReportes.Visible = true;
-                        break;
+                        case "Reportes":
+                            btnReportes.Visible = true;
+                            break;
 
-                    case "Productos":
-                        btnProductos.Visible = true;
-                        break;
+                        case "Productos":
+                            btnProductos.Visible = true;
+                            break;
 
-                    case "Proveedores":
-                        btnProveedores.Visible = true;
-                        break;
+                        case "Proveedores":
+                            btnProveedores.Visible = true;
+                            break;
 
-                    case "Mantenedor":
-                        btnMantenedor.Visible = true;
-                        break;
+                        case "Mantenedor":
+                            btnMantenedor.Visible = true;
+                            break;
 
-                    case "EntradasPromo":
-                        btnEntradasPromo.Visible = true;
-                        break;
-
+                        case "EntradasPromo":
+                            btnEntradasPromo.Visible = true;
+                            break;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "No se pudieron cargar los permisos del usuario.\n\n" +
+                    "Detalle: " + ex.Message,
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+            finally
+            {
+                this.Cursor = Cursors.Default;
             }
         }
 
@@ -203,59 +222,91 @@ namespace CapaPresentacionPiscina
 
         private void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            // === SI ES ADMINISTRADOR → Cierra sesión directamente ===
-            if (rolActual.ToUpper() == "ADMINISTRADOR" || rolActual.ToUpper() == "ADMIN")
+            string rol = (rolActual ?? "").Trim().ToUpper();
+
+            // =========================================
+            // ADMINISTRADOR
+            // =========================================
+            if (rol == "ADMINISTRADOR" || rol == "ADMIN")
             {
-                DialogResult r = MessageBox.Show("¿Desea cerrar sesión?", "Confirmación",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult r = MessageBox.Show(
+                    "¿Desea cerrar sesión?",
+                    "Confirmación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
 
                 if (r == DialogResult.Yes)
                 {
-                    this.Hide();
-                    new frmLoginPiscina().Show();
+                    SesionUsuario.UsuarioActual = null;
+
+                    CerrarSesionSolicitada = true;
+
+                    this.Close();
                 }
 
                 return;
             }
 
-            // === SI NO ES ADMIN → Lógica de CAJERO ===
-
-            // 1️⃣ Cajero SIN caja abierta
+            // =========================================
+            // CAJERO SIN CAJA ABIERTA
+            // =========================================
             if (!idCajaTurnoActual.HasValue)
             {
-                DialogResult r = MessageBox.Show("¿Desea cerrar sesión?", "Confirmación",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult r = MessageBox.Show(
+                    "¿Desea cerrar sesión?",
+                    "Confirmación",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question
+                );
 
                 if (r == DialogResult.Yes)
                 {
-                    this.Hide();
-                    new frmLoginPiscina().Show();
+                    SesionUsuario.UsuarioActual = null;
+
+                    CerrarSesionSolicitada = true;
+
+                    this.Close();
                 }
 
                 return;
             }
 
-            // 2️⃣ Cajero CON caja abierta → debe cerrarla obligatoriamente
-            frmCerrarCaja frm = new frmCerrarCaja(usuarioActual, idCajaTurnoActual.Value);
+            // =========================================
+            // CAJERO CON CAJA ABIERTA
+            // =========================================
+            frmCerrarCaja frm = new frmCerrarCaja(
+                usuarioActual,
+                idCajaTurnoActual.Value
+            );
 
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                // Caja cerrada correctamente
                 idCajaTurnoActual = null;
 
-                MessageBox.Show("Sesión cerrada.", "Mensaje",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Sesión cerrada.",
+                    "Mensaje",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
 
-                this.Hide();
-                new frmLoginPiscina().Show();
+                SesionUsuario.UsuarioActual = null;
+
+                CerrarSesionSolicitada = true;
+
+                this.Close();
             }
             else
             {
-                MessageBox.Show("Cierre de caja cancelado. La sesión continúa activa.",
-                    "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    "Cierre de caja cancelado. La sesión continúa activa.",
+                    "Mensaje",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
             }
         }
-
 
 
         private void btnGastos_Click(object sender, EventArgs e)
@@ -292,5 +343,7 @@ namespace CapaPresentacionPiscina
         {
             AbrirFormularioEnPanel(new frmReporteGral());
         }
+
+       
     }
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using CapaDatosPiscina;
 using CapaEntidadPiscina;
+using System.Threading.Tasks;
+
 
 namespace CapaNegocioPiscina
 {
@@ -12,6 +14,11 @@ namespace CapaNegocioPiscina
         public List<EntradaTipo> Listar()
         {
             return objCD_EntradaTipo.Listar();
+        }
+
+        public async Task<List<EntradaTipo>> ListarEntradasVentaAsync()
+        {
+            return await objCD_EntradaTipo.ListarEntradasVentaAsync();
         }
 
         public bool ActualizarPrecio(int idEntradaTipo, decimal nuevoPrecio, out string mensaje)

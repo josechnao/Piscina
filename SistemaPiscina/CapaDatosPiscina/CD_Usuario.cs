@@ -3,12 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace CapaDatosPiscina
 {
     public class CD_Usuario
     {
-        public Usuario Login(string documento, string clave)
+
+        public async Task<Usuario> LoginAsync(string documento, string clave)
         {
             Usuario obj = new Usuario();
 
@@ -16,39 +18,56 @@ namespace CapaDatosPiscina
             {
                 try
                 {
-                    SqlCommand cmd = new SqlCommand("SP_LOGIN", oconexion);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    cmd.Parameters.AddWithValue("@Documento", documento);
-                    cmd.Parameters.AddWithValue("@Clave", clave);
-
-                    oconexion.Open();
-
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    using (SqlCommand cmd = new SqlCommand("SP_LOGIN", oconexion))
                     {
-                        if (dr.Read())
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Evita esperas demasiado largas
+                        cmd.CommandTimeout = 8;
+
+                        cmd.Parameters.Add("@Documento", SqlDbType.VarChar, 50).Value = documento;
+                        cmd.Parameters.Add("@Clave", SqlDbType.VarChar, 50).Value = clave;
+
+                        await oconexion.OpenAsync();
+
+                        using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
                         {
-                            obj = new Usuario()
+                            if (await dr.ReadAsync())
                             {
-                                IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
-                                Documento = dr["Documento"].ToString(),
-                                NombreCompleto = dr["NombreCompleto"].ToString(),
-                                Clave = dr["Clave"].ToString(),
-                                Estado = Convert.ToBoolean(dr["Estado"]),
-                                oRol = new Rol()
+                                obj = new Usuario()
                                 {
-                                    IdRol = Convert.ToInt32(dr["IdRol"]),
-                                    Descripcion = dr["DescripcionRol"].ToString()
-                                }
+                                    IdUsuario = Convert.ToInt32(dr["IdUsuario"]),
+                                    Documento = dr["Documento"].ToString(),
+                                    NombreCompleto = dr["NombreCompleto"].ToString(),
+                                    Clave = dr["Clave"].ToString(),
+                                    Estado = Convert.ToBoolean(dr["Estado"]),
 
-                            };
+                                    oRol = new Rol()
+                                    {
+                                        IdRol = Convert.ToInt32(dr["IdRol"]),
+                                        Descripcion = dr["DescripcionRol"].ToString()
+                                    }
+                                };
+                            }
                         }
-
                     }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(
+                        "No se pudo conectar correctamente con la base de datos. " +
+                        "Verifique que SQL Server esté iniciado.\n\nDetalle: " +
+                        ex.Message,
+                        ex
+                    );
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Error al iniciar sesión: " + ex.Message, ex);
+                    throw new Exception(
+                        "Ocurrió un error al iniciar sesión.\n\nDetalle: " +
+                        ex.Message,
+                        ex
+                    );
                 }
             }
 

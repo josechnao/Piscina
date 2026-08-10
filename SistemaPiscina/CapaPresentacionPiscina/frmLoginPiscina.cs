@@ -35,109 +35,220 @@ namespace CapaPresentacionPiscina
 
         }
 
-        private void btnIngresar_Click(object sender, EventArgs e)
+        private async void btnIngresar_Click(object sender, EventArgs e)
         {
-            if (txtDocumento.Text.Trim() == "" || txtClave.Text.Trim() == "")
+            // =========================================
+            // 1. VALIDACIONES
+            // =========================================
+            string documento = txtDocumento.Text.Trim();
+            string clave = txtClave.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(documento) ||
+                string.IsNullOrWhiteSpace(clave))
             {
-                MessageBox.Show("Por favor ingrese su documento y clave.", "Aviso",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(
+                    "Por favor ingrese su documento y clave.",
+                    "Aviso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+
                 return;
             }
 
-            CN_Usuario oCN = new CN_Usuario();
-            Usuario usuario = oCN.Login(txtDocumento.Text.Trim(), txtClave.Text.Trim());
+            // Evita doble clic mientras procesa
+            btnIngresar.Enabled = false;
 
-            // ===========================
-            // VALIDACIÓN CORRECTA
-            // ===========================
-            if (usuario.IdUsuario != 0)
+            // Visualmente indica que está trabajando
+            Cursor.Current = Cursors.WaitCursor;
+
+            try
             {
-                // 🔥🔥🔥 ESTA LÍNEA FALTABA 🔥🔥🔥
+                // =========================================
+                // 2. LOGIN SIN BLOQUEAR LA INTERFAZ
+                // =========================================
+                CN_Usuario oCN = new CN_Usuario();
+
+                Usuario usuario = await oCN.LoginAsync(
+                    documento,
+                    clave
+                );
+
+                // =========================================
+                // 3. CREDENCIALES INCORRECTAS
+                // =========================================
+                if (usuario == null || usuario.IdUsuario == 0)
+                {
+                    MessageBox.Show(
+                        "Documento o clave incorrectos.",
+                        "Inicio de sesión",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    txtClave.Clear();
+                    txtClave.Focus();
+
+                    return;
+                }
+
+                // =========================================
+                // 4. VALIDAR ROL
+                // =========================================
+                if (usuario.oRol == null ||
+                    string.IsNullOrWhiteSpace(usuario.oRol.Descripcion))
+                {
+                    MessageBox.Show(
+                        "El usuario no tiene un rol válido asignado.",
+                        "Error de usuario",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+
+                    return;
+                }
+
+                // Guardamos usuario logueado
                 SesionUsuario.UsuarioActual = usuario;
 
-                // ===========================
-                // FLUJO ESPECIAL PARA CAJERO
-                // ===========================
-                if (usuario.oRol.Descripcion.ToUpper() == "CAJERO")
+                string rol = usuario.oRol.Descripcion.Trim().ToUpper();
+
+                // =========================================
+                // 5. FLUJO PARA CAJERO
+                // =========================================
+                if (rol == "CAJERO")
                 {
                     CN_CajaTurno cajaCN = new CN_CajaTurno();
-                    ECajaTurno caja = cajaCN.VerificarCajaAbierta(usuario.IdUsuario);
 
+                    // También hacemos esta consulta fuera del hilo visual
+                    ECajaTurno caja = await Task.Run(() =>
+                        cajaCN.VerificarCajaAbierta(usuario.IdUsuario)
+                    );
+
+                    // No tiene caja abierta
                     if (!caja.TieneCajaAbierta)
                     {
                         frmAbrirCaja frm = new frmAbrirCaja(usuario.IdUsuario);
 
                         if (frm.ShowDialog() == DialogResult.OK)
                         {
-                            frmInicioPiscina inicio = new frmInicioPiscina(
-                                usuario.NombreCompleto,
-                                usuario.IdUsuario,
-                                usuario.oRol.Descripcion
-
+                            AbrirSistema(
+                                usuario,
+                                frm.IdCajaTurnoGenerada
                             );
-
-                            inicio.rolActual = usuario.oRol.Descripcion;
-                            inicio.idCajaTurnoActual = frm.IdCajaTurnoGenerada;
-
-
-                            inicio.Show();
-                            this.Hide();
                         }
                         else
                         {
-                            MessageBox.Show("La caja no se abrió. No puede ingresar al sistema.",
-                                "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            SesionUsuario.UsuarioActual = null;
+
+                            MessageBox.Show(
+                                "La caja no se abrió. No puede ingresar al sistema.",
+                                "Advertencia",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning
+                            );
                         }
 
                         return;
                     }
-                    else
-                    {
-                        frmInicioPiscina inicio = new frmInicioPiscina(
-                            usuario.NombreCompleto,
-                            usuario.IdUsuario,
-                            usuario.oRol.Descripcion
 
-                        );
-
-                        inicio.rolActual = usuario.oRol.Descripcion;
-                        inicio.idCajaTurnoActual = caja.IdCajaTurno;
-
-
-                        inicio.Show();
-                        this.Hide();
-                        return;
-                    }
-                }
-
-                // ===========================
-                // FLUJO PARA ADMINISTRADOR
-                // ===========================
-                else
-                {
-                    frmInicioPiscina inicio = new frmInicioPiscina(
-                        usuario.NombreCompleto,
-                        usuario.IdUsuario,
-                        usuario.oRol.Descripcion
-
+                    // Ya tiene caja abierta
+                    AbrirSistema(
+                        usuario,
+                        caja.IdCajaTurno
                     );
 
-                    inicio.rolActual = usuario.oRol.Descripcion;
-                    inicio.idCajaTurnoActual = null;
-
-
-                    inicio.Show();
-                    this.Hide();
+                    return;
                 }
+
+                // =========================================
+                // 6. FLUJO ADMIN / OTROS ROLES
+                // =========================================
+                AbrirSistema(
+                    usuario,
+                    null
+                );
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Documento o clave incorrectos.", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // =========================================
+                // 7. ERROR REAL DEL SISTEMA / SQL
+                // =========================================
+                MessageBox.Show(
+                    "No se pudo iniciar sesión.\n\n" +
+                    "Detalle: " + ex.Message,
+                    "Error de conexión",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
+            finally
+            {
+                // =========================================
+                // 8. RESTAURAR INTERFAZ
+                // =========================================
+                Cursor.Current = Cursors.Default;
+                btnIngresar.Enabled = true;
             }
         }
 
+        private void AbrirSistema(Usuario usuario, int? idCajaTurno)
+        {
+            frmInicioPiscina inicio = new frmInicioPiscina(
+                usuario.NombreCompleto,
+                usuario.IdUsuario,
+                usuario.oRol.Descripcion
+            );
 
+            inicio.rolActual = usuario.oRol.Descripcion;
+            inicio.idCajaTurnoActual = idCajaTurno;
 
+            // Cuando se cierre la ventana principal,
+            // decidimos si volver al Login o cerrar toda la aplicación.
+            inicio.FormClosed += (s, e) =>
+            {
+                if (inicio.CerrarSesionSolicitada)
+                {
+                    // El usuario eligió "Cerrar sesión"
+                    SesionUsuario.UsuarioActual = null;
+
+                    // Limpiamos datos sensibles
+                    txtClave.Clear();
+
+                    // Puedes dejar el documento escrito para comodidad.
+                    // Si prefieres limpiarlo también:
+                    // txtDocumento.Clear();
+
+                    this.Show();
+                    this.Activate();
+
+                    txtDocumento.Focus();
+                }
+                else
+                {
+                    // Si cerraron frmInicio con la X,
+                    // cerramos también el Login original.
+                    // Como Program.cs ejecuta este Login,
+                    // esto termina correctamente la aplicación.
+                    this.Close();
+                }
+            };
+
+            inicio.Show();
+
+            // Ocultamos el MISMO login.
+            // No crearemos uno nuevo después.
+            this.Hide();
+        }
+
+        private void frmLoginPiscina_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "LOGIN SE HIZO VISIBLE: " + DateTime.Now.ToString("HH:mm:ss")
+                );
+            }
+        }
     }
 }

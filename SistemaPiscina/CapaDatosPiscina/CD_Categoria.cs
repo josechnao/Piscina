@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using CapaEntidadPiscina;
+using System.Threading.Tasks;
 
 namespace CapaDatosPiscina
 {
@@ -45,6 +46,66 @@ namespace CapaDatosPiscina
 
             return lista;
         }
+
+        public async Task<List<Categoria>> ListarActivasAsync()
+        {
+            List<Categoria> lista = new List<Categoria>();
+
+            using (SqlConnection oconexion = new SqlConnection(Conexion.cadena))
+            {
+                try
+                {
+                    using (SqlCommand cmd = new SqlCommand(
+                        "SP_LISTAR_CATEGORIAS_ACTIVAS",
+                        oconexion))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.CommandTimeout = 8;
+
+                        await oconexion.OpenAsync();
+
+                        using (SqlDataReader dr = await cmd.ExecuteReaderAsync())
+                        {
+                            while (await dr.ReadAsync())
+                            {
+                                lista.Add(new Categoria()
+                                {
+                                    IdCategoria = Convert.ToInt32(dr["IdCategoria"]),
+                                    Descripcion = dr["Descripcion"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    throw new Exception(
+                        "No se pudieron cargar las categorías activas desde la base de datos.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        "Ocurrió un error al cargar las categorías activas.\n\n" +
+                        "Detalle: " + ex.Message,
+                        ex
+                    );
+                }
+            }
+
+            return lista;
+        }
+
+
+
+
+
+
+
+
+
 
         public int Registrar(Categoria obj, out string Mensaje)
         {

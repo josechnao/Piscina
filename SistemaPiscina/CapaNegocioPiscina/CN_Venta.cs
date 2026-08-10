@@ -1,4 +1,6 @@
 ﻿using CapaDatosPiscina;
+using CapaEntidadPiscina;
+using System.Threading.Tasks;
 
 namespace CapaNegocioPiscina
 {
@@ -6,54 +8,53 @@ namespace CapaNegocioPiscina
     {
         private CD_Venta objDatos = new CD_Venta();
 
-        public int RegistrarVenta(
-            int idUsuario,
-            int? idCajaTurno,          // ← ahora nullable
-            string dni,
-            string nombreCompleto,
-            string telefono,
-            string metodoPago,
-            decimal montoTotal,
-            string xmlDetalle,
-            out string numeroVenta,
-            out string mensaje
-        )
+        public async Task<ResultadoVenta> RegistrarVentaAsync(
+    int idUsuario,
+    int? idCajaTurno,
+    string dni,
+    string nombreCompleto,
+    string telefono,
+    string metodoPago,
+    decimal montoTotal,
+    string xmlDetalle
+)
         {
-            // Inicialización de respuestas
-            mensaje = string.Empty;
-            numeroVenta = string.Empty;
-
-            // Validaciones
             if (string.IsNullOrWhiteSpace(dni))
             {
-                mensaje = "El DNI del cliente es obligatorio.";
-                return 0;
+                return new ResultadoVenta
+                {
+                    Exito = false,
+                    Mensaje = "El DNI del cliente es obligatorio."
+                };
             }
 
             if (string.IsNullOrWhiteSpace(nombreCompleto))
             {
-                mensaje = "El nombre del cliente es obligatorio.";
-                return 0;
+                return new ResultadoVenta
+                {
+                    Exito = false,
+                    Mensaje = "El nombre del cliente es obligatorio."
+                };
             }
 
             if (montoTotal < 0)
             {
-                mensaje = "El monto total no es válido.";
-                return 0;
+                return new ResultadoVenta
+                {
+                    Exito = false,
+                    Mensaje = "El monto total no es válido."
+                };
             }
 
-            // Enviar a la capa de datos
-            return objDatos.RegistrarVenta(
+            return await objDatos.RegistrarVentaAsync(
                 idUsuario,
-                idCajaTurno,   // ← puede ser null y está bien
+                idCajaTurno,
                 dni,
                 nombreCompleto,
                 telefono,
                 metodoPago,
                 montoTotal,
-                xmlDetalle,
-                out numeroVenta,
-                out mensaje
+                xmlDetalle
             );
         }
     }
